@@ -13,6 +13,33 @@
 </head>
 <body>
 
+<div id="preloader" class="preloader">
+  <div class="preloader-content">
+    <div class="preloader-roo">
+      <img src="assets/logo-teal.svg" alt="Deliveroo">
+    </div>
+    <div class="preloader-circle-wrap">
+      <div class="preloader-circle"></div>
+    </div>
+    <div class="preloader-text">Preparing your experience...</div>
+  </div>
+</div>
+
+<div id="gatekeeper" class="gatekeeper">
+  <div class="gatekeeper-inner">
+    <div class="gatekeeper-logo">
+      <img src="assets/logo-teal.svg" alt="Deliveroo Logo" style="filter: brightness(0) invert(1);">
+    </div>
+    <h2 class="gatekeeper-title">Private Access</h2>
+    <p class="gatekeeper-desc">Welcome to the Deliveroo West Africa preview. Please enter the temporary release password to proceed.</p>
+    <div class="gatekeeper-form">
+      <input type="password" id="gatekeeper-input" class="gatekeeper-input" placeholder="Enter password" onkeypress="if(event.key === 'Enter') unlockSite()">
+      <button class="gatekeeper-btn" onclick="unlockSite()">Unlock Preview →</button>
+      <div id="gatekeeper-error" class="gatekeeper-error">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════ -->
 <!-- ① NAV                                   -->
 <!-- ═══════════════════════════════════════ -->

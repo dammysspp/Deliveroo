@@ -319,9 +319,50 @@ window.addEventListener('load', () => {
   }
 });
 
-// Expose functions to global scope for HTML onclick handlers
 window.updateFaq = updateFaq;
 window.toggleChat = toggleChat;
 window.sendMessage = sendMessage;
 window.handleChatKeyPress = handleChatKeyPress;
 window.dismissCookies = dismissCookies;
+
+// ───────────────────────────────────────────
+// ⑦ GATEKEEPER LOGIC
+// ───────────────────────────────────────────
+const SITE_PASSWORD = 'ROO2026';
+
+function unlockSite() {
+  const input = document.getElementById('gatekeeper-input');
+  const error = document.getElementById('gatekeeper-error');
+  const gatekeeper = document.getElementById('gatekeeper');
+  const preloader = document.getElementById('preloader');
+
+  if (input.value === SITE_PASSWORD) {
+    // 1. Hide gatekeeper
+    gatekeeper.classList.add('unlocked');
+    setTimeout(() => { 
+      gatekeeper.style.display = 'none'; 
+      
+      // 2. Show preloader
+      if (preloader) {
+        preloader.style.display = 'flex';
+        // 3. Remove preloader after delay
+        setTimeout(() => {
+          preloader.classList.add('fade-out');
+        }, 3000);
+      }
+    }, 600);
+  } else {
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+    setTimeout(() => { error.style.display = 'none'; }, 3000);
+  }
+}
+
+// Ensure preloader is hidden on start until password is entered
+document.addEventListener('DOMContentLoaded', () => {
+  const preloader = document.getElementById('preloader');
+  if (preloader) preloader.style.display = 'none';
+});
+
+window.unlockSite = unlockSite;
