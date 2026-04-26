@@ -1591,24 +1591,24 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
 }
 
-/* Updated Coordinates for Flat Map */
-.p-uk { top: 28%; left: 47.8%; }
-.p-fr { top: 33%; left: 48.5%; }
-.p-it { top: 38%; left: 50.5%; }
-.p-be { top: 31%; left: 49%; }
-.p-uae { top: 48%; left: 61%; }
-.p-kw { top: 44%; left: 59%; }
-.p-qa { top: 49.5%; left: 60.5%; }
-.p-hk { top: 46%; left: 81%; }
-.p-sg { top: 68%; left: 77.5%; }
+/* Updated Coordinates for Flat Map - High Precision */
+.p-uk { top: 24%; left: 47%; }
+.p-fr { top: 31%; left: 47.5%; }
+.p-it { top: 36%; left: 49.5%; }
+.p-be { top: 28%; left: 48%; }
+.p-uae { top: 45%; left: 57%; }
+.p-kw { top: 42%; left: 56%; }
+.p-qa { top: 46%; left: 56.5%; }
+.p-hk { top: 42%; left: 74.5%; }
+.p-sg { top: 61%; left: 71%; }
 
-.p-ng { top: 61%; left: 50.5%; }
-.p-gh { top: 61%; left: 48.5%; }
-.p-ke { top: 65%; left: 58%; }
-.p-sa { top: 88%; left: 54%; }
-.p-eg { top: 38%; left: 55%; }
-.p-ma { top: 35%; left: 45%; }
-.p-sn { top: 58%; left: 42%; }
+.p-ng { top: 56%; left: 49%; }
+.p-gh { top: 57%; left: 47.5%; }
+.p-ke { top: 59%; left: 54%; }
+.p-sa { top: 83%; left: 52%; }
+.p-eg { top: 34%; left: 52%; }
+.p-ma { top: 33%; left: 44.5%; }
+.p-sn { top: 52%; left: 42%; }
 
 .country-animation-mini {
   position: absolute; bottom: 20px; right: 20px;
