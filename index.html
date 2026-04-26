@@ -742,25 +742,36 @@
   <div class="wrap">
     <h2 class="section-title reveal" style="text-align: center; margin-bottom: 60px; font-size: 40px;">Where we're launching first</h2>
     
-    <div class="countries-visual-wrap reveal">
-      <!-- Scattered background countries (Current Markets) -->
-      <div class="scattered-countries">
-        <span class="s-country c1" style="--d: 0.1s">United Kingdom</span>
-        <span class="s-country c2" style="--d: 0.2s">France</span>
-        <span class="s-country c3" style="--d: 0.3s">UAE</span>
-        <span class="s-country c4" style="--d: 0.4s">Kuwait</span>
-        <span class="s-country c5" style="--d: 0.5s">Italy</span>
-        <span class="s-country c6" style="--d: 0.6s">Belgium</span>
-        <span class="s-country c7" style="--d: 0.7s">Hong Kong</span>
-        <span class="s-country c8" style="--d: 0.8s">Singapore</span>
-        <span class="s-country c9" style="--d: 0.9s">Qatar</span>
+    <div class="globe-wrap reveal">
+      <div class="globe-container">
+        <img src="assets/globe.png" alt="Global Expansion" class="globe-img">
+        
+        <!-- Established (Green) -->
+        <div class="pointer established p-uk" data-label="United Kingdom"></div>
+        <div class="pointer established p-fr" data-label="France"></div>
+        <div class="pointer established p-it" data-label="Italy"></div>
+        <div class="pointer established p-be" data-label="Belgium"></div>
+        <div class="pointer established p-uae" data-label="UAE"></div>
+        <div class="pointer established p-kw" data-label="Kuwait"></div>
+        <div class="pointer established p-qa" data-label="Qatar"></div>
+        <div class="pointer established p-hk" data-label="Hong Kong"></div>
+        <div class="pointer established p-sg" data-label="Singapore"></div>
+
+        <!-- Upcoming (Red) -->
+        <div class="pointer upcoming p-ng" data-label="Nigeria"></div>
+        <div class="pointer upcoming p-gh" data-label="Ghana"></div>
+
+        <!-- Roo Floating -->
+        <div class="country-animation-mini">
+          <video autoplay loop muted playsinline class="roo-launch-video-mini">
+            <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
 
-      <div class="country-animation">
-        <video autoplay loop muted playsinline class="roo-launch-video">
-          <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+      <div class="globe-legend">
+        <div class="legend-item"><span class="legend-dot established"></span> Established</div>
+        <div class="legend-item"><span class="legend-dot upcoming"></span> Launching Soon</div>
       </div>
     </div>
 
