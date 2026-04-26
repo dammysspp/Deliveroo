@@ -328,7 +328,7 @@ window.dismissCookies = dismissCookies;
 // ───────────────────────────────────────────
 // ⑦ GATEKEEPER LOGIC
 // ───────────────────────────────────────────
-const SITE_PASSWORD = 'ROO2026';
+const SITE_PASSWORD = 'RETE123#';
 
 function unlockSite() {
   const input = document.getElementById('gatekeeper-input');
