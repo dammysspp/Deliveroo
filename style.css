@@ -1840,10 +1840,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: #000; border: 2px solid rgba(255,255,255,0.1);
   margin-bottom: 40px; position: relative;
   box-shadow: 0 0 80px rgba(0,193,178,0.2);
+  display: flex; align-items: center; justify-content: center;
 }
 .preloader-video {
-  width: 160%; height: 160%;
-  object-fit: contain; transform: translateY(90px);
+  width: 180%; height: 180%;
+  object-fit: contain; transform: translateY(100px);
 }
 .preloader-progress-container {
   width: 240px; height: 4px;
