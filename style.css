@@ -1829,30 +1829,37 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ⑭ PRELOADER                                */
 /* ─────────────────────────────────────────── */
 .preloader {
-  position: fixed; inset: 0; background: var(--white); z-index: 200000;
-  display: none; align-items: center; justify-content: center;
-  opacity: 1; transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+  position: fixed; inset: 0; background: #000; z-index: 200000;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  opacity: 1; transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
 }
 .preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
-.preloader-content { text-align: center; width: 280px; }
-.preloader-roo {
-  width: 80px; margin: 0 auto 32px;
-  animation: roo-float 3s ease-in-out infinite;
+.preloader-video-wrap {
+  width: 280px; height: 280px;
+  border-radius: 50%; overflow: hidden;
+  background: #000; border: 2px solid rgba(255,255,255,0.1);
+  margin-bottom: 40px; position: relative;
+  box-shadow: 0 0 80px rgba(0,193,178,0.2);
 }
-.preloader-roo img { width: 100%; height: auto; }
-.preloader-circle-wrap {
-  position: relative; width: 60px; height: 60px; margin: 0 auto 24px;
+.preloader-video {
+  width: 160%; height: 160%;
+  object-fit: contain; transform: translateY(90px);
 }
-.preloader-circle {
-  width: 100%; height: 100%;
-  border: 3px solid var(--border);
-  border-top-color: var(--teal);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.preloader-progress-container {
+  width: 240px; height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 16px;
+}
+.preloader-progress-bar {
+  width: 0%; height: 100%;
+  background: var(--teal);
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 .preloader-text {
-  font-family: var(--font-label); font-size: 12px; font-weight: 700;
-  letter-spacing: 1px; color: var(--ink-muted); text-transform: uppercase;
+  font-family: var(--font-label); font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase;
 }
 
 @keyframes roo-float {

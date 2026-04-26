@@ -345,10 +345,23 @@ function unlockSite() {
       // 2. Show preloader
       if (preloader) {
         preloader.style.display = 'flex';
-        // 3. Remove preloader after delay
-        setTimeout(() => {
-          preloader.classList.add('fade-out');
-        }, 3000);
+        
+        // 3. Animate progress bar
+        const bar = document.getElementById('preloader-bar');
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress > 100) progress = 100;
+          if (bar) bar.style.width = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              preloader.classList.add('fade-out');
+              setTimeout(() => { preloader.style.display = 'none'; }, 1000);
+            }, 500);
+          }
+        }, 200);
       }
     }, 600);
   } else {

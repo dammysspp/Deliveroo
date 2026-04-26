@@ -14,15 +14,15 @@
 <body>
 
 <div id="preloader" class="preloader">
-  <div class="preloader-content">
-    <div class="preloader-roo">
-      <img src="assets/logo-teal.svg" alt="Deliveroo">
-    </div>
-    <div class="preloader-circle-wrap">
-      <div class="preloader-circle"></div>
-    </div>
-    <div class="preloader-text">Preparing your experience...</div>
+  <div class="preloader-video-wrap">
+    <video autoplay loop muted playsinline class="preloader-video">
+      <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
+    </video>
   </div>
+  <div class="preloader-progress-container">
+    <div class="preloader-progress-bar" id="preloader-bar"></div>
+  </div>
+  <div class="preloader-text">Preparing your experience...</div>
 </div>
 
 <div id="gatekeeper" class="gatekeeper">
