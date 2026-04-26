@@ -1574,10 +1574,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .roo-launch-video {
-  width: 180%;
-  height: 180%;
+  width: 160%;
+  height: 160%;
   object-fit: contain;
-  margin-top: 40px;
+  transform: translateY(90px);
 }
 
 
