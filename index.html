@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliveroo — Lagos & Accra's Food, Delivered.</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ① NAV                                   -->
+<!-- ═══════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+  <div class="logo-ph">
+    <img src="assets/logo-teal.svg" alt="Deliveroo Logo">
+  </div>
+</a>
+      <ul class="nav-links">
+        <li><a href="#how" class="active">Order Food</a></li>
+        <li><a href="#restaurants">Restaurants</a></li>
+        <li><a href="#plus">Deliveroo Plus</a></li>
+        <li><a href="#business">For Business</a></li>
+        <li><a href="#roo">Meet Roo</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="#business" class="nav-pill ghost">List your restaurant</a>
+        <a href="#download" class="nav-pill filled">Join the waitlist</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ② HERO                                  -->
+<!-- ═══════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-blob hero-blob-1" data-parallax="0.15"></div>
+  <div class="hero-blob hero-blob-2" data-parallax="0.08"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+
+      <!-- LEFT: copy + search -->
+      <div class="hero-left">
+        <div class="hero-tag">
+          <div class="hero-tag-dot"></div>
+          <span class="hero-tag-text">Coming soon to Lagos &amp; Accra</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Your city's<br>
+          <em>best food,</em><br>
+          at your <span class="underline-word">door.</span>
+        </h1>
+
+        <p class="hero-sub">
+          From the suya spot on Admiralty Way to
+          Accra's finest waakye joints — <strong>we're bringing
+          West Africa's food culture right to your door.</strong>
+          Be the first to know when we launch.
+        </p>
+
+        <div class="hero-search">
+          <input class="hero-search-input" type="text"
+            placeholder="Enter your email to join the waitlist…" />
+          <button class="hero-search-btn">Join waitlist →</button>
+        </div>
+
+        <div class="hero-stores">
+          <a href="#download" style="display:inline-block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/app-store-badges-en.svg" alt="Download on the App Store and Google Play" style="height: 44px; width: auto;">
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">200+</div>
+            <div class="hero-stat-label">Restaurant partners<br><span style="font-size:10px;color:var(--teal);font-family:var(--font-label);font-weight:700;">Confirmed at launch</span></div>
+          </div>
+          <div>
+            <div class="hero-stat-num">&lt;30 min</div>
+            <div class="hero-stat-label">Target delivery<br><span style="font-size:10px;color:var(--teal);font-family:var(--font-label);font-weight:700;">City-wide</span></div>
+          </div>
+          <div>
+            <div class="hero-stat-num">5,000</div>
+            <div class="hero-stat-label">Riders · 90 days<br><span style="font-size:10px;color:var(--teal);font-family:var(--font-label);font-weight:700;">Lagos target</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: phone mockup -->
+      <div class="hero-right">
+        <div class="hero-phone-wrap">
+
+          <!-- floating badge left -->
+          <div class="phone-float-badge badge-left">
+            <div class="badge-icon-ph"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <span class="badge-text">
+              <span class="badge-title">Order confirmed!</span>
+              <span class="badge-sub">Arriving in 18 min</span>
+            </span>
+          </div>
+
+          <!-- phone -->
+          <div class="hero-phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="status-bar" style="position: absolute; top: 0; left: 0; right: 0; height: 40px; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; font-size: 11px; font-weight: 600; color: var(--ink);">
+                <span>9:41</span>
+                <div style="display: flex; gap: 4px; align-items:center;">
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 9H13V1L1 9Z" fill="currentColor"/></svg>
+                  <svg width="16" height="8" viewBox="0 0 16 8" fill="none"><rect x="1" y="1" width="12" height="6" rx="2" stroke="currentColor"/><rect x="2" y="2" width="10" height="4" rx="1" fill="currentColor"/><path d="M14 3H15C15.5523 3 16 3.44772 16 4V4C16 4.55228 15.5523 5 15 5H14V3Z" fill="currentColor"/></svg>
+                </div>
+              </div>
+              <div class="ps-header">
+                <div class="ps-logo"><div class="mini-logo-ph"><img src="assets/logo-teal.svg" alt="R"></div> Roo</div>
+                <div class="ps-loc"><svg width="9" height="9" viewBox="0 0 24 24" fill="var(--teal)" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg> Lekki Phase 1 ▾</div>
+              </div>
+              <div class="ps-hero-card">
+                <div class="ps-hero-img"><img src="assets/jollof.png" alt="Jollof"></div>
+                <div class="ps-hero-label">Today's pick</div>
+                <div class="ps-hero-name">Smoky<br>Jollof Rice</div>
+                <span class="ps-hero-btn">Order from ₦1,800 →</span>
+              </div>
+              <div class="ps-cats">
+                <span class="ps-cat active">Jollof</span>
+                <span class="ps-cat">Suya</span>
+                <span class="ps-cat">Waakye</span>
+                <span class="ps-cat">Grills</span>
+                <span class="ps-cat">Drinks</span>
+              </div>
+              <div class="ps-card">
+                <div class="ps-card-img ph-sm-app"><img src="assets/restaurant.png" alt="Restaurant"></div>
+                <div>
+                  <div class="ps-card-name">Buka Queen</div>
+                  <div class="ps-card-sub">Surulere · 16 min</div>
+                </div>
+                <div class="ps-card-rating">⭐ 4.9</div>
+              </div>
+              <div class="ps-card">
+                <div class="ps-card-img ph-sm"><img src="assets/suya.png" alt="Suya"></div>
+                <div>
+                  <div class="ps-card-name">Mallam Musa</div>
+                  <div class="ps-card-sub">Admiralty · 18 min</div>
+                </div>
+                <div class="ps-card-rating">⭐ 4.8</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- floating badge right -->
+          <div class="phone-float-badge badge-right">
+            <div class="badge-icon-ph"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <span class="badge-text">
+              <span class="badge-title">Roo says: try the suya!</span>
+              <span class="badge-sub">Trending near you</span>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ③ TRUST MARQUEE                         -->
+<!-- ═══════════════════════════════════════ -->
+<div class="trust-bar">
+  <div class="trust-track">
+    <!-- duplicated for seamless loop -->
+    <span class="trust-item"><span class="trust-dot"></span> 200+ restaurant partners</span>
+    <span class="trust-item"><span class="trust-dot"></span> Average 18-min delivery</span>
+    <span class="trust-item"><span class="trust-dot"></span> Roo AI — your food guide</span>
+    <span class="trust-item"><span class="trust-dot"></span> Lagos-first, then Accra</span>
+    <span class="trust-item"><span class="trust-dot"></span> iOS &amp; Android</span>
+    <span class="trust-item"><span class="trust-dot"></span> Pay with Naira or Cedis</span>
+    <span class="trust-item"><span class="trust-dot"></span> Late-night delivery available</span>
+    <span class="trust-item"><span class="trust-dot"></span> Backed by Amazon</span>
+    <span class="trust-item"><span class="trust-dot"></span> 200+ restaurant partners</span>
+    <span class="trust-item"><span class="trust-dot"></span> Average 18-min delivery</span>
+    <span class="trust-item"><span class="trust-dot"></span> Roo AI — your food guide</span>
+    <span class="trust-item"><span class="trust-dot"></span> Lagos-first, then Accra</span>
+    <span class="trust-item"><span class="trust-dot"></span> iOS &amp; Android</span>
+    <span class="trust-item"><span class="trust-dot"></span> Pay with Naira or Cedis</span>
+    <span class="trust-item"><span class="trust-dot"></span> Late-night delivery available</span>
+    <span class="trust-item"><span class="trust-dot"></span> Backed by Amazon</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NEW: COVERED SECTION                    -->
+<!-- ═══════════════════════════════════════ -->
+<section class="covered" id="covered">
+  <div class="wrap">
+    <div class="covered-header reveal">
+      <div class="covered-title-wrap">
+        <h2 class="covered-title">Deliveroo has<br>you covered</h2>
+        <div class="covered-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="sparkle-icon"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"></path></svg>
+        </div>
+      </div>
+      <p class="covered-desc">What do you need? A quick fix on a busy day? Last-minute dinner backup? Supplies for the week? Download Deliveroo and let's deliver happiness to your doorstep in minutes.</p>
+    </div>
+    <div class="covered-chips reveal reveal-delay-1">
+      <span class="cov-chip">⭐ Easy onboarding</span>
+      <span class="cov-chip">🥘 Quality meal choices</span>
+      <span class="cov-chip">✨ Fresh market picks</span>
+      <span class="cov-chip">💊 Essential healthcare supplies</span>
+      <span class="cov-chip">💥 Quick-grab groceries</span>
+    </div>
+    <div class="covered-mockups reveal reveal-delay-2">
+      <div class="cov-phone"><img src="assets/jollof.png" alt="App Preview"></div>
+      <div class="cov-phone"><img src="assets/restaurant.png" alt="App Preview"></div>
+      <div class="cov-phone"><img src="assets/suya.png" alt="App Preview"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑤ CATEGORIES                           -->
+<!-- ═══════════════════════════════════════ -->
+<section class="categories">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">What are you craving?</div>
+      <h2 class="section-title" style="margin-top:16px;">West Africa's <em style="font-style:italic;color:var(--teal);">full menu</em></h2>
+    </div>
+  </div>
+  <div class="cat-scroll-wrap">
+    <div class="cat-track">
+      <!-- first set -->
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Jollof"></div><span class="cat-label">Jollof Rice</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/suya.png" alt="Suya"></div><span class="cat-label">Suya &amp; Grills</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/waakye.png" alt="Waakye"></div><span class="cat-label">Waakye</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="Seafood"></div><span class="cat-label">Seafood</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Soups"></div><span class="cat-label">Soups &amp; Stews</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/suya.png" alt="Sides"></div><span class="cat-label">Plantain &amp; Sides</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="Pastries"></div><span class="cat-label">Pastries</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Drinks"></div><span class="cat-label">Drinks &amp; Zobo</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/waakye.png" alt="Healthy"></div><span class="cat-label">Healthy</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="International"></div><span class="cat-label">International</span></div>
+      <!-- second set (duplicate for loop) -->
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Jollof"></div><span class="cat-label">Jollof Rice</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/suya.png" alt="Suya"></div><span class="cat-label">Suya &amp; Grills</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/waakye.png" alt="Waakye"></div><span class="cat-label">Waakye</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="Seafood"></div><span class="cat-label">Seafood</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Soups"></div><span class="cat-label">Soups &amp; Stews</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/suya.png" alt="Sides"></div><span class="cat-label">Plantain &amp; Sides</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="Pastries"></div><span class="cat-label">Pastries</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/jollof.png" alt="Drinks"></div><span class="cat-label">Drinks &amp; Zobo</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/waakye.png" alt="Healthy"></div><span class="cat-label">Healthy</span></div>
+      <div class="cat-chip"><div class="cat-img cat-img-ph"><img src="assets/restaurant.png" alt="International"></div><span class="cat-label">International</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑥ FEATURED RESTAURANTS                 -->
+<!-- ═══════════════════════════════════════ -->
+<section class="restaurants" id="restaurants">
+  <div class="wrap">
+    <div class="restaurants-header reveal">
+      <div>
+        <div class="eyebrow">Sneak peek at our partners</div>
+        <h2 class="section-title" style="margin-top:16px;">Top picks coming to <em style="font-style:italic;color:var(--teal);">your city</em></h2>
+      </div>
+      <a href="#" class="see-all-link">See all restaurants ↗</a>
+    </div>
+    <div class="rest-grid">
+      <div class="rest-card reveal reveal-delay-1">
+        <div class="rest-card-img rest-img-ph"><img src="assets/restaurant.png" alt="Gourmet Kitchen"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">Gourmet Kitchen</div>
+            <span class="rest-badge featured">Featured</span>
+          </div>
+          <div class="rest-card-meta">Authentic West African · Ikoyi, Lagos</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.8 · 2.3k orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 22 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card reveal reveal-delay-2">
+        <div class="rest-card-img rest-img-ph"><img src="assets/suya.png" alt="Mallam Musa Suya"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">Mallam Musa Suya</div>
+            <span class="rest-badge popular">Popular</span>
+          </div>
+          <div class="rest-card-meta">Street Grills · Admiralty Way, Lagos</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.9 · 5.1k orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 18 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card reveal reveal-delay-3">
+        <div class="rest-card-img rest-img-ph"><img src="assets/waakye.png" alt="Mama Ashanti"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">Mama Ashanti</div>
+            <span class="rest-badge new">New</span>
+          </div>
+          <div class="rest-card-meta">Ghanaian Classics · Osu, Accra</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.7 · 890 orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 25 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card reveal reveal-delay-1">
+        <div class="rest-card-img rest-img-ph"><img src="assets/jollof.png" alt="The Jollof House"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">The Jollof House</div>
+            <span class="rest-badge featured">Featured</span>
+          </div>
+          <div class="rest-card-meta">Nigerian Classics · Lagos Island</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.9 · 7.4k orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 20 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card reveal reveal-delay-2">
+        <div class="rest-card-img rest-img-ph"><img src="assets/restaurant.png" alt="Buka Queen"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">Buka Queen</div>
+            <span class="rest-badge popular">Popular</span>
+          </div>
+          <div class="rest-card-meta">Traditional Buka · Surulere, Lagos</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.8 · 3.9k orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 16 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card reveal reveal-delay-3">
+        <div class="rest-card-img rest-img-ph"><img src="assets/waakye.png" alt="Pepper Dem Kitchen"></div>
+        <div class="rest-card-body">
+          <div class="rest-card-top">
+            <div class="rest-card-name">Pepper Dem Kitchen</div>
+            <span class="rest-badge new">New</span>
+          </div>
+          <div class="rest-card-meta">Seafood &amp; Pepper Soups · VI, Lagos</div>
+          <div class="rest-card-footer">
+            <div class="rest-rating">⭐ 4.7 · 1.2k orders</div>
+            <div class="rest-eta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M15 6L19 10H22M5 17H1V11L9 5H14L19 10M9 17H15"/></svg> 28 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑦ ROO — AI COMPANION                   -->
+<!-- ═══════════════════════════════════════ -->
+<section class="roo-section" id="roo">
+  <div class="roo-watermark" data-parallax="0.12">ROO</div>
+  <div class="wrap">
+    <div class="roo-inner">
+
+      <!-- ── Column 1: Roo character image ── -->
+      <div class="roo-character reveal">
+        <img src="assets/Roo.png" alt="Roo" class="roo-img-standalone">
+        <div class="roo-nameplate">
+          <div class="roo-nameplate-name"><em>Roo</em></div>
+          <span class="roo-nameplate-tag">Your Guide</span>
+        </div>
+      </div>
+
+      <!-- ── Column 2: Copy + traits ── -->
+      <div class="roo-left reveal reveal-delay-1">
+        <div class="eyebrow roo-eyebrow">Your digital companion</div>
+        <h2 class="roo-title">
+          Meet <em>Roo.</em><br>
+          He knows <span id="roo-city">Lagos</span><br>like no one else.
+        </h2>
+        <p class="roo-desc">
+          Roo isn't just a delivery tracker. He's your food guide, your logistical wizard, and your
+          personal dining concierge — built specifically for West African city life.
+        </p>
+        <div class="roo-traits">
+          <div class="roo-trait">
+            <div class="trait-icon trait-icon-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+            <div>
+              <div class="trait-title">Energetic but Efficient</div>
+              <div class="trait-desc">Sharp on logistics, excited about food. He confirms your order in seconds and recommends the suya spot you didn't know existed.</div>
+            </div>
+          </div>
+          <div class="roo-trait">
+            <div class="trait-icon trait-icon-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+            <div>
+              <div class="trait-title">Locally Contextual</div>
+              <div class="trait-desc">Roo knows if it's rush hour on Third Mainland, if it's raining in Accra, or if a new buka just opened near you in Ikeja.</div>
+            </div>
+          </div>
+          <div class="roo-trait">
+            <div class="trait-icon trait-icon-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+            <div>
+              <div class="trait-title">Calm When Things Go Wrong</div>
+              <div class="trait-desc">Delayed order? Roo pivots immediately — real-time updates, clear solutions, and a ₦300 credit before you even ask.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Column 3: Chat preview ── -->
+      <div class="roo-right reveal reveal-delay-2">
+        <div class="roo-chat">
+          <div class="roo-chat-notch"></div>
+          <div class="roo-status-bar">
+            <span>9:41</span>
+            <div style="display:flex;gap:4px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-18C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+            </div>
+          </div>
+          <div class="roo-chat-content">
+            <div class="chat-header">
+              <div class="chat-avatar chat-av-ph"><img src="assets/Roo.png" alt="Roo"></div>
+              <div>
+                <div class="chat-title">Roo</div>
+                <div class="chat-status"><div class="chat-dot"></div> Online now</div>
+              </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+              <!-- Initial messages handled by JS for infinite loop -->
+            </div>
+          </div>
+          <div class="roo-home-indicator"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑧ DELIVEROO PLUS                        -->
+<!-- ═══════════════════════════════════════ -->
+<section class="plus-section" id="plus">
+  <div class="bg-rooute-white" data-parallax="0.05" style="opacity: 0.03;"></div>
+  <div class="wrap">
+    <div class="plus-inner reveal">
+      <!-- left: pitch -->
+      <div style="display:flex;flex-direction:column;gap:28px;">
+        <div class="eyebrow plus-eyebrow">Deliveroo Plus</div>
+        <h2 class="plus-title">
+          Your table is<br>always reserved.
+        </h2>
+        <p class="plus-desc">
+          One flat monthly fee. Free delivery every time. Priority service always.
+          For people who eat well and hate waiting.
+        </p>
+        <div class="plus-features">
+          <div class="plus-feat">Free delivery on every single order</div>
+          <div class="plus-feat">Priority routing — your rider comes first</div>
+          <div class="plus-feat">Exclusive restaurant deals, members only</div>
+          <div class="plus-feat">Roo Pro Mode — full AI concierge features</div>
+          <div class="plus-feat">Cancel anytime, no strings</div>
+        </div>
+      </div>
+      <!-- right: pricing card -->
+      <div class="plus-right">
+        <div class="plus-price-card">
+          <div class="plus-price-label">Monthly membership</div>
+          <div class="plus-price">
+            <sup>₦</sup>2,499<sub>/month</sub>
+          </div>
+          <div class="plus-trial">First month absolutely free — no catch.</div>
+          <button class="plus-cta">Start free trial →</button>
+        </div>
+        <div style="font-family:var(--font-label);font-size:11px;color:rgba(0,73,67,0.6);text-align:center;font-weight:500;">
+          50,000 Lagos subscribers targeted by end of Year 1
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NEW: LOYALTY CARDS                      -->
+<!-- ═══════════════════════════════════════ -->
+<section class="loyalty" id="loyalty">
+  <div class="wrap">
+    <div class="loyalty-inner reveal">
+      <div class="loyalty-content">
+        <div class="eyebrow loyalty-eyebrow">Deliveroo Royalty</div>
+        <h2 class="loyalty-title">Dine like royalty.<br><em style="font-style:italic;color:var(--teal);">Earn on every bite.</em></h2>
+        <p class="loyalty-desc">Our upcoming loyalty program rewards you for every order. From the everyday cravings to the VIP dining experiences, your Roo cards unlock exclusive perks, secret menus, and priority support.</p>
+        <div class="loyalty-features">
+          <div class="loyalty-feat"><span class="feat-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Earn Roo Coins on every order</div>
+          <div class="loyalty-feat"><span class="feat-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Unlock the secret menu at top restaurants</div>
+          <div class="loyalty-feat"><span class="feat-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span> Invites to exclusive tasting events in Lagos &amp; Accra</div>
+        </div>
+      </div>
+      <div class="loyalty-cards">
+        <div class="l-card card-teal">
+          <img src="assets/loyalty_card_teal_1777192239459.png" alt="Roo Teal Card">
+        </div>
+        <div class="l-card card-black">
+          <img src="assets/loyalty_card_black_1777192261429.png" alt="Roo Black Card">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑨ JOIN US                             -->
+<!-- ═══════════════════════════════════════ -->
+<section class="join-us" id="join">
+  <div class="wrap">
+    <div class="join-grid">
+      <div class="join-card reveal reveal-delay-1">
+        <div class="join-img-wrap"><img src="assets/rider_real_1777191581492.png" alt="Become a rider"></div>
+        <h3 class="join-title">Become a rider</h3>
+        <p class="join-desc">Enjoy flexibility, freedom and competitive earnings by delivering through Deliveroo.</p>
+        <button class="join-btn">Register here</button>
+      </div>
+      <div class="join-card reveal reveal-delay-2">
+        <div class="join-img-wrap"><img src="assets/partner_real_1777191597315.png" alt="Become a partner"></div>
+        <h3 class="join-title">Become a partner</h3>
+        <p class="join-desc">Grow with Deliveroo! Our technology and user base can help you boost sales and unlock new opportunities!</p>
+        <button class="join-btn">Register here</button>
+      </div>
+      <div class="join-card reveal reveal-delay-3">
+        <div class="join-img-wrap"><img src="assets/careers_real_1777191610898.png" alt="Careers"></div>
+        <h3 class="join-title">Careers</h3>
+        <p class="join-desc">Ready for an exciting new challenge? If you're ambitious, humble, and love working with others, then we want to hear from you!</p>
+        <button class="join-btn">Register here</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NEW: STORIES                            -->
+<!-- ═══════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑩ TESTIMONIALS                          -->
+<!-- ═══════════════════════════════════════ -->
+<section class="testimonials">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;">
+      <div class="eyebrow" style="justify-content:center;">Our early restaurant partners</div>
+      <h2 class="section-title" style="margin-top:16px;">Lagos &amp; Accra are<br><em style="font-style:italic;color:var(--teal);">getting ready</em></h2>
+    </div>
+  </div>
+  <div class="test-track-wrap">
+    <div class="test-track">
+      <!-- first set -->
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We are thrilled to partner with Deliveroo. Their focus on empowering local vendors is exactly what the Lagos food scene needs."</div>
+        <div class="test-author">
+          <div class="test-avatar test-av-ph" style="background:#E8F5E9;">F</div>
+          <div><div class="test-name">Fatima A.</div><div class="test-loc">Restaurant Owner, Ikeja</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"The technology Deliveroo brings is game-changing. We can't wait to reach more customers in Victoria Island."</div>
+        <div class="test-author">
+          <div class="test-avatar test-av-ph" style="background:#E3F2FD;">E</div>
+          <div><div class="test-name">Emeka O.</div><div class="test-loc">Chef, Victoria Island</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We've been preparing our kitchen for the launch volume. Deliveroo's partner support in Accra has been phenomenal so far."</div>
+        <div class="test-author">
+          <div class="test-avatar test-av-ph" style="background:#FFF3E0;">A</div>
+          <div><div class="test-name">Akosua M.</div><div class="test-loc">Vendor, East Legon</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"The seamless integration with our existing systems means we're ready to hit the ground running on day one."</div>
+        <div class="test-author">
+          <div class="test-avatar test-av-ph" style="background:#F3E5F5;">C</div>
+          <div><div class="test-name">Chidi N.</div><div class="test-loc">Manager, Lekki Phase 1</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We are excited to offer exclusive deals to Deliveroo early access users. The anticipation in Osu is huge."</div>
+        <div class="test-author">
+          <div class="test-avatar test-av-ph" style="background:#FCE4EC;">N</div>
+          <div><div class="test-name">Nana K.</div><div class="test-loc">Owner, Osu</div></div>
+        </div>
+      </div>
+      <!-- duplicate for loop -->
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We are thrilled to partner with Deliveroo. Their focus on empowering local vendors is exactly what the Lagos food scene needs."</div>
+        <div class="test-author">
+          <div class="test-avatar"><img src="assets/fatima.png" alt="Fatima A."></div>
+          <div><div class="test-name">Fatima A.</div><div class="test-loc">Restaurant Owner, Ikeja</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"The technology Deliveroo brings is game-changing. We can't wait to reach more customers in Victoria Island."</div>
+        <div class="test-author">
+          <div class="test-avatar"><img src="assets/emeka.png" alt="Emeka O."></div>
+          <div><div class="test-name">Emeka O.</div><div class="test-loc">Chef, Victoria Island</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We've been preparing our kitchen for the launch volume. Deliveroo's partner support in Accra has been phenomenal so far."</div>
+        <div class="test-author">
+          <div class="test-avatar"><img src="assets/akosua.png" alt="Akosua M."></div>
+          <div><div class="test-name">Akosua M.</div><div class="test-loc">Vendor, East Legon</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"The seamless integration with our existing systems means we're ready to hit the ground running on day one."</div>
+        <div class="test-author">
+          <div class="test-avatar"><img src="assets/chidi.png" alt="Chidi N."></div>
+          <div><div class="test-name">Chidi N.</div><div class="test-loc">Manager, Lekki Phase 1</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <div class="test-quote">"We are excited to offer exclusive deals to Deliveroo early access users. The anticipation in Osu is huge."</div>
+        <div class="test-author">
+          <div class="test-avatar"><img src="assets/nana.png" alt="Nana K."></div>
+          <div><div class="test-name">Nana K.</div><div class="test-loc">Owner, Osu</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑪ APP DOWNLOAD CTA                      -->
+<!-- ═══════════════════════════════════════ -->
+<section class="app-cta" id="download">
+  <div class="wrap">
+    <div class="app-cta-inner">
+      <div class="app-cta-left reveal">
+        <div class="eyebrow app-cta-eyebrow">Get started today</div>
+        <h2 class="app-cta-title">
+          Be first.<br><em>Join the</em><br>
+          waitlist.
+        </h2>
+        <p class="app-cta-sub">
+          We're launching in Lagos and Accra soon. Drop your email and
+          we'll notify you the moment we go live — with a first-order surprise.
+        </p>
+        <div class="app-cta-badges">
+          <a href="#" style="display:inline-block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="assets/app-store-badges-en.svg" alt="Download on the App Store and Google Play" style="height: 48px; width: auto;">
+          </a>
+        </div>
+      </div>
+      <div class="app-cta-right" style="position:relative; height:100%; display:flex; align-items:center;">
+        <img src="assets/deliveroo waitlist.png" alt="Deliveroo Waitlist" class="reveal" style="width:120%; max-height:none; height:auto; margin-left:0; transform: translateY(-80px); transform-origin: center; z-index: 5;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NEW: FAQS                               -->
+<!-- ═══════════════════════════════════════ -->
+<section class="faqs" id="faqs">
+  <div class="bg-rooute-white" data-parallax="-0.05" style="opacity: 0.03; background-position: left center;"></div>
+  <div class="wrap">
+    <div class="faq-inner">
+      <div class="faq-left reveal">
+        <h2 class="faq-title">FAQs.</h2>
+        <div class="faq-list">
+          <div class="faq-item active" onclick="updateFaq(this, 'Deliveroo is a technology company that provides logistics services to both vendors and customers. Our services allow vendors to deliver their products seamlessly while providing customers with an easy platform to order meals, groceries, everyday essentials, and health products.')">What is Deliveroo?</div>
+          <div class="faq-item" onclick="updateFaq(this, 'Yes! Deliveroo partners with top supermarkets and local markets in Lagos and Accra to bring fresh groceries and everyday essentials directly to your doorstep in minutes.')">Does Deliveroo deliver groceries?</div>
+          <div class="faq-item" onclick="updateFaq(this, 'Absolutely. Our partners are carefully selected for quality, and our riders are trained to handle fresh produce with care. We use temperature-controlled bags to ensure everything stays fresh during transit.')">Will my groceries be fresh if I order on Deliveroo?</div>
+          <div class="faq-item" onclick="updateFaq(this, 'It\'s simple. Click the \'List your restaurant\' button in the navigation bar to access our partner portal. Fill out the form, and our onboarding team will reach out to get you set up and selling.')">How do I sign up as a vendor on Deliveroo?</div>
+          <div class="faq-item" onclick="updateFaq(this, 'Download the Deliveroo app from the App Store or Play Store and follow the simple on-screen instructions to sign up. You can also join our waitlist right here to be notified the moment we go live in your neighborhood.')">How do I create an account on Deliveroo?</div>
+        </div>
+      </div>
+      <div class="faq-right reveal reveal-delay-1">
+        <h2 class="faq-title">Ans.</h2>
+        <div class="faq-answer-box">
+          <div class="faq-star">✱</div>
+          <p class="faq-ans-text">Deliveroo is a technology company that provides logistics services to both vendors and customers. Our services allow vendors to deliver their products seamlessly while providing customers with an easy platform to order meals, groceries, everyday essentials, and health products. Our platform curates a wide range of restaurants, markets, shops, and pharmacies in customers' cities and helps them purchase...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NEW: COUNTRIES                          -->
+<!-- ═══════════════════════════════════════ -->
+<section class="countries" id="countries">
+  <div class="wrap">
+    <h2 class="section-title reveal" style="text-align: center; margin-bottom: 40px; font-size: 40px;">Where we're launching first</h2>
+    <div class="country-chips reveal reveal-delay-1">
+      <span class="country-chip">Nigeria</span>
+      <span class="country-chip">Ghana</span>
+    </div>
+    <div style="text-align: center; margin-top: 24px; font-family: var(--font-label); font-weight: 700; color: var(--ink-muted);" class="reveal reveal-delay-2">
+      More countries coming soon...
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ⑫ FOOTER                               -->
+<!-- ═══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name"><div class="footer-logo-ph"><img src="assets/logo-teal.svg" alt="Logo"></div></div>
+        <div class="footer-brand-desc">
+          We don't just deliver food. We connect Lagos and Accra to the restaurants, flavours,
+          and communities that make West African food culture extraordinary.
+        </div>
+        <div class="footer-social">
+          <a href="#" class="social-btn" title="X / Twitter"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" class="social-btn" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg></a>
+          <a href="#" class="social-btn" title="YouTube / TikTok">YT</a>
+          <a href="#" class="social-btn" title="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">For Customers</div>
+        <ul class="footer-links">
+          <li><a href="#">Order food</a></li>
+          <li><a href="#">Deliveroo Plus</a></li>
+          <li><a href="#">Meet Roo</a></li>
+          <li><a href="#">Track your order</a></li>
+          <li><a href="#">Gift cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">For Business</div>
+        <ul class="footer-links">
+          <li><a href="#">Partner with us</a></li>
+          <li><a href="#">Become a rider</a></li>
+          <li><a href="#">Restaurant portal</a></li>
+          <li><a href="#">Rider support</a></li>
+          <li><a href="#">B2B solutions</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About Deliveroo</a></li>
+          <li><a href="#">Newsroom</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Investor relations</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <span>© 2026 Deliveroo West Africa. All rights reserved.</span>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Settings</a>
+        <a href="#">Accessibility</a>
+      </div>
+      <div class="footer-country"><span style="font-size:10px;background:rgba(255,255,255,0.12);padding:2px 6px;border-radius:4px;margin-right:4px;">NG</span>Nigeria · <span style="font-size:10px;background:rgba(255,255,255,0.12);padding:2px 6px;border-radius:4px;margin-right:4px;">GH</span>Ghana</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- JS: nav scroll + reveal                 -->
+<!-- ═══════════════════════════════════════ -->
+<script src="script.js" defer></script>
+
+  <!-- ROO CHAT WIDGET -->
+  <!-- ═══════════════════════════════════════ -->
+  <!-- ⑭ COOKIE CONSENT                         -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="wrap">
+      <div class="cookie-content">
+        <div class="cookie-text">
+          <p>We use cookies to improve your experience and show you the best of Lagos and Accra. By clicking "Accept", you agree to our use of cookies.</p>
+        </div>
+        <div class="cookie-actions">
+          <button class="cookie-btn outline" onclick="dismissCookies()">Preferences</button>
+          <button class="cookie-btn primary" onclick="dismissCookies()">Accept All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="roo-chat-widget">
+    <div id="roo-chat-button" onclick="toggleChat()">
+      <img src="assets/favicon.png" alt="Roo" style="width:32px;height:32px;filter:brightness(0) invert(1);">
+      <div id="roo-chat-badge"></div>
+    </div>
+    <div id="roo-chat-window">
+      <div class="chat-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <img src="assets/favicon.png" alt="Roo" style="width:20px;height:20px;filter:brightness(0) invert(1);">
+          <span>Roo Assistant</span>
+        </div>
+        <button onclick="toggleChat()" style="background:none;border:none;color:white;cursor:pointer;font-size:16px;">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message bot">Hi there! 👋 I'm Roo, your enthusiastic delivery assistant. I can't wait for us to launch in Lagos and Accra! How can I help you today? 🍔🛵</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>
