@@ -282,136 +282,58 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin-top: 2px; line-height: 1.4;
 }
 
-/* hero phone mockup */
+/* Hero Human Visual */
 .hero-right {
-  display: flex; justify-content: center; align-items: flex-end;
+  display: flex; justify-content: center; align-items: center;
   position: relative;
 }
-.hero-phone-wrap {
-  position: relative;
-  animation: float-phone 6s ease-in-out infinite;
+.hero-visual-human {
+  position: relative; width: 100%; max-width: 580px;
+  perspective: 1500px;
 }
-.hero-phone {
-  width: 280px;
-  height: 560px;
-  background: var(--ink);
-  border-radius: 44px;
-  border: 4px solid rgba(255,255,255,0.05);
-  padding: 12px;
-  box-shadow:
-    0 40px 100px rgba(0,0,0,0.3),
-    inset 0 0 0 2px rgba(255,255,255,0.15);
-  position: relative; overflow: hidden;
+.hero-human-img {
+  width: 100%; height: auto; border-radius: 40px;
+  box-shadow: 
+    0 40px 100px rgba(0,0,0,0.2),
+    0 0 0 1px rgba(255,255,255,0.1);
+  transform: rotateY(-12deg) rotateX(6deg) scale(1);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.phone-notch {
-  width: 90px; height: 26px; border-radius: 14px;
-  background: var(--ink); margin: 0;
-  position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
-  z-index: 10;
-  box-shadow: inset 0 0 4px rgba(255,255,255,0.05);
+.hero-visual-human:hover .hero-human-img {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+  box-shadow: 0 50px 120px rgba(0,0,0,0.3);
 }
-/* phone screen contents */
-.phone-screen {
-  background: #ffffff;
-  border-radius: 32px; overflow: hidden;
-  padding: 56px 16px 20px;
-  position: relative; height: 100%;
-}
-.ps-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px;
-}
-.ps-logo {
-  font-family: var(--font-label);
-  font-size: 14px; font-weight: 700; color: var(--teal);
-}
-.ps-loc {
-  font-family: var(--font-label);
-  font-size: 9px; color: var(--ink-muted);
-  display: flex; align-items: center; gap: 3px;
-}
-.ps-hero-card {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
-  border-radius: 16px; padding: 14px 12px 14px;
-  margin-bottom: 10px; position: relative; overflow: hidden;
-}
-.ps-hero-card-emoji {
-  position: absolute; right: -4px; bottom: -4px;
-  font-size: 56px; opacity: 0.25;
-}
-.ps-hero-label {
-  font-family: var(--font-label); font-size: 7px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: rgba(0,73,67,0.7); margin-bottom: 4px;
-}
-.ps-hero-name {
-  font-family: var(--font-display); font-size: 18px; font-weight: 900;
-  letter-spacing: -0.5px; color: var(--teal-dark); line-height: 1.1;
-  margin-bottom: 8px;
-}
-.ps-hero-img {
-  position: absolute; right: -10px; bottom: -10px;
-  width: 100px; height: 100px;
-  opacity: 0.3; pointer-events: none; z-index: 0;
-}
-.ps-hero-img img { width: 100%; height: 100%; object-fit: contain; }
-.ps-hero-card > *:not(.ps-hero-img) { position: relative; z-index: 1; }
-.ps-cats {
-  display: flex; gap: 5px; margin-bottom: 10px; overflow: hidden;
-}
-.ps-cat {
-  font-family: var(--font-label); font-size: 8px; font-weight: 600;
-  padding: 4px 9px; border-radius: 9999px; white-space: nowrap;
-  background: var(--white);
-  color: var(--ink-mid);
-  border: 1px solid var(--border);
-}
-.ps-cat.active { background: var(--teal-dark); color: var(--white); border-color: transparent; }
-.ps-card {
-  background: var(--white); border-radius: 12px;
-  padding: 8px 10px; display: flex;
-  align-items: center; gap: 8px;
-  margin-bottom: 6px;
-  box-shadow: 0 2px 10px rgba(26,28,28,0.06);
-}
-.ps-card-img {
-  width: 36px; height: 36px; border-radius: 10px;
-  flex-shrink: 0; display: flex; align-items: center;
-  justify-content: center; font-size: 18px;
-}
-.ps-card-name {
-  font-family: var(--font-label); font-size: 9px; font-weight: 700;
-  color: var(--ink); margin-bottom: 1px;
-}
-.ps-card-sub { font-size: 8px; color: var(--ink-muted); }
-.ps-card-rating {
-  font-family: var(--font-label); font-size: 8px;
-  font-weight: 700; color: var(--teal-deep);
-  margin-left: auto; flex-shrink: 0;
-}
-/* phone floating badges */
+
+/* Phone Floating Badges adapted for humans */
 .phone-float-badge {
-  position: absolute;
-  background: var(--white);
-  border-radius: 14px;
-  padding: 10px 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-label);
+  position: absolute; background: var(--white);
+  border-radius: 14px; padding: 12px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-label); z-index: 10;
   animation: float-badge 5s ease-in-out infinite;
 }
 .phone-float-badge.badge-left {
-  left: -80px; top: 120px;
+  left: -40px; top: 20%;
   animation-delay: -1.5s;
 }
 .phone-float-badge.badge-right {
-  right: -80px; bottom: 160px;
+  right: -40px; bottom: 20%;
   animation-delay: -3s;
 }
-.badge-icon { font-size: 20px; }
+.badge-icon-ph {
+  width: 32px; height: 32px; background: var(--teal-light);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: var(--teal); font-size: 16px;
+}
 .badge-text { display: flex; flex-direction: column; }
-.badge-title { font-size: 10px; font-weight: 700; color: var(--ink); }
-.badge-sub { font-size: 9px; color: var(--ink-muted); }
+.badge-title { font-size: 12px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.badge-sub { font-size: 10px; color: var(--ink-muted); font-weight: 500; }
+
+@keyframes float-badge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
 
 /* ─────────────────────────────────────────── */
 /* ③ TRUST MARQUEE                             */
@@ -927,8 +849,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .roo-chat-content {
   flex: 1; display: flex; flex-direction: column;
   padding: 10px 16px 20px; overflow: hidden;
-}
-
 .chat-header {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 20px; padding-bottom: 16px;
