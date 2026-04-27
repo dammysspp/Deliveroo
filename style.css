@@ -282,57 +282,26 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin-top: 2px; line-height: 1.4;
 }
 
-/* Hero Human Visual */
+/* hero phone mockup */
 .hero-right {
-  display: flex; justify-content: center; align-items: center;
+  display: flex; justify-content: center; align-items: flex-end;
   position: relative;
 }
-.hero-visual-human {
-  position: relative; width: 100%; max-width: 580px;
-  perspective: 1500px;
+.hero-mockup-wrap {
+  position: relative; width: 100%; max-width: 440px;
+  margin: 0 auto;
 }
-.hero-human-img {
+.hero-mockup-img {
   width: 100%; height: auto; border-radius: 40px;
-  box-shadow: 
-    0 40px 100px rgba(0,0,0,0.2),
-    0 0 0 1px rgba(255,255,255,0.1);
-  transform: rotateY(-12deg) rotateX(6deg) scale(1);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+  border: 8px solid var(--ink);
+  background: var(--ink);
 }
-.hero-visual-human:hover .hero-human-img {
-  transform: rotateY(0deg) rotateX(0deg) scale(1.02);
-  box-shadow: 0 50px 120px rgba(0,0,0,0.3);
-}
-
-/* Phone Floating Badges adapted for humans */
-.phone-float-badge {
-  position: absolute; background: var(--white);
-  border-radius: 14px; padding: 12px 18px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-  display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-label); z-index: 10;
-  animation: float-badge 5s ease-in-out infinite;
-}
-.phone-float-badge.badge-left {
-  left: -40px; top: 20%;
-  animation-delay: -1.5s;
-}
-.phone-float-badge.badge-right {
-  right: -40px; bottom: 20%;
-  animation-delay: -3s;
-}
-.badge-icon-ph {
-  width: 32px; height: 32px; background: var(--teal-light);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  color: var(--teal); font-size: 16px;
-}
-.badge-text { display: flex; flex-direction: column; }
-.badge-title { font-size: 12px; font-weight: 800; color: var(--ink); line-height: 1.2; }
-.badge-sub { font-size: 10px; color: var(--ink-muted); font-weight: 500; }
-
-@keyframes float-badge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+.hero-mockup-wrap::after {
+  content: ''; position: absolute; inset: -20px;
+  border: 1px solid rgba(0,193,178,0.2);
+  border-radius: 60px; pointer-events: none;
+  z-index: -1;
 }
 
 /* ─────────────────────────────────────────── */
@@ -849,6 +818,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .roo-chat-content {
   flex: 1; display: flex; flex-direction: column;
   padding: 10px 16px 20px; overflow: hidden;
+}
+
 .chat-header {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 20px; padding-bottom: 16px;
