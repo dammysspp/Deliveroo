@@ -379,3 +379,110 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.unlockSite = unlockSite;
+
+// ───────────────────────────────────────────
+// ⑨ INTERACTIVE D3 WORLD MAP
+// ───────────────────────────────────────────
+function initWorldMap() {
+    const container = d3.select("#d3-map-container");
+    if (container.empty()) return;
+
+    // Wait a moment for layout to settle
+    setTimeout(() => {
+        const rect = container.node().getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        const svg = container.append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${width} ${height}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
+
+        const projection = d3.geoMercator()
+            .scale(width / 6.2)
+            .translate([width / 2.1, height / 1.5]);
+
+        const path = d3.geoPath().projection(projection);
+
+        const markets = [
+            // Established (Green)
+            { name: "United Kingdom", coords: [-0.12, 51.5], type: "established" },
+            { name: "France", coords: [2.35, 48.85], type: "established" },
+            { name: "Italy", coords: [12.49, 41.9], type: "established" },
+            { name: "Belgium", coords: [4.35, 50.85], type: "established" },
+            { name: "UAE", coords: [55.3, 25.2], type: "established" },
+            { name: "Kuwait", coords: [47.9, 29.3], type: "established" },
+            { name: "Qatar", coords: [51.5, 25.2], type: "established" },
+            { name: "Hong Kong", coords: [114.1, 22.3], type: "established" },
+            { name: "Singapore", coords: [103.8, 1.35], type: "established" },
+
+            // Upcoming (Red)
+            { name: "Nigeria", coords: [3.37, 6.52], type: "upcoming" },
+            { name: "Ghana", coords: [-0.18, 5.6], type: "upcoming" },
+            { name: "Kenya", coords: [36.8, -1.28], type: "upcoming" },
+            { name: "South Africa", coords: [18.4, -33.9], type: "upcoming" },
+            { name: "Egypt", coords: [31.2, 30.0], type: "upcoming" },
+            { name: "Morocco", coords: [-7.5, 33.5], type: "upcoming" },
+            { name: "Senegal", coords: [-17.4, 14.7], type: "upcoming" }
+        ];
+
+        d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(data => {
+            const countries = topojson.feature(data, data.objects.countries);
+
+            // Draw map
+            svg.append("g")
+                .selectAll("path")
+                .data(countries.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("fill", "#002b28")
+                .attr("stroke", "#004943")
+                .attr("stroke-width", 0.5)
+                .style("transition", "fill 0.3s")
+                .on("mouseover", function() { d3.select(this).attr("fill", "#004943"); })
+                .on("mouseout", function() { d3.select(this).attr("fill", "#002b28"); });
+
+            // Add markers
+            const markerGroup = svg.append("g");
+
+            const markers = markerGroup.selectAll(".market-marker")
+                .data(markets)
+                .enter().append("g")
+                .attr("class", d => `market-marker ${d.type}`)
+                .style("cursor", "pointer")
+                .attr("transform", d => {
+                    const p = projection(d.coords);
+                    return `translate(${p[0]}, ${p[1]})`;
+                });
+
+            // Pulsing circles for upcoming
+            markers.filter(d => d.type === 'upcoming')
+                .append("circle")
+                .attr("r", 5)
+                .attr("fill", "#FF4D4D")
+                .style("opacity", 0.4)
+                .append("animate")
+                .attr("attributeName", "r")
+                .attr("values", "5;15;5")
+                .attr("dur", "2s")
+                .attr("repeatCount", "indefinite");
+
+            markers.append("circle")
+                .attr("r", d => d.type === 'upcoming' ? 5 : 4)
+                .attr("fill", d => d.type === 'upcoming' ? '#FF4D4D' : '#4CAF50')
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 1.5)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).attr("r", d.type === 'upcoming' ? 8 : 7);
+                    // Could add tooltip logic here
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).attr("r", d.type === 'upcoming' ? 5 : 4);
+                });
+        });
+    }, 500);
+}
+
+// Start Map
+initWorldMap();

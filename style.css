@@ -1559,56 +1559,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .globe-container {
   position: relative; width: 100%; aspect-ratio: 16/9;
   display: flex; align-items: center; justify-content: center;
-  background: #fff; border-radius: 24px; padding: 20px;
+  background: var(--teal-dark); border-radius: 24px; padding: 0;
+  overflow: hidden; box-shadow: 0 32px 64px rgba(0,0,0,0.2);
 }
-.globe-img {
-  width: 100%; height: 100%; object-fit: contain;
-  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.05));
+.globe-container svg {
+  display: block; width: 100%; height: 100%;
 }
-.pointer {
-  position: absolute; width: 10px; height: 10px;
-  border-radius: 50%; border: 1.5px solid white;
-  box-shadow: 0 0 15px currentColor;
-  cursor: pointer; z-index: 5;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+.market-marker circle {
+  transition: r 0.3s ease, fill 0.3s ease;
 }
-.pointer:hover { transform: scale(1.8); z-index: 10; }
-.pointer::after {
-  content: attr(data-label);
-  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px);
-  background: var(--ink); color: white; padding: 4px 10px; border-radius: 6px;
-  font-family: var(--font-label); font-size: 10px; font-weight: 700;
-  white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s;
+.market-marker:hover circle {
+  stroke-width: 2px;
 }
-.pointer:hover::after { opacity: 1; transform: translateX(-50%) translateY(-12px); }
-
-.pointer.established { background: #4CAF50; color: #4CAF50; }
-.pointer.upcoming { background: #FF4D4D; color: #FF4D4D; animation: pulse-red 2s infinite; }
-
-@keyframes pulse-red {
-  0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
-  70% { box-shadow: 0 0 0 15px rgba(255, 77, 77, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+.market-marker::after {
+    /* SVG markers use different labeling, but keeping styles for potential future use */
 }
-
-/* Updated Coordinates for Flat Map - High Precision */
-.p-uk { top: 24%; left: 47%; }
-.p-fr { top: 31%; left: 47.5%; }
-.p-it { top: 36%; left: 49.5%; }
-.p-be { top: 28%; left: 48%; }
-.p-uae { top: 45%; left: 57%; }
-.p-kw { top: 42%; left: 56%; }
-.p-qa { top: 46%; left: 56.5%; }
-.p-hk { top: 42%; left: 74.5%; }
-.p-sg { top: 61%; left: 71%; }
-
-.p-ng { top: 56%; left: 49%; }
-.p-gh { top: 57%; left: 47.5%; }
-.p-ke { top: 59%; left: 54%; }
-.p-sa { top: 83%; left: 52%; }
-.p-eg { top: 34%; left: 52%; }
-.p-ma { top: 33%; left: 44.5%; }
-.p-sn { top: 52%; left: 42%; }
 
 .country-animation-mini {
   position: absolute; bottom: 20px; right: 20px;

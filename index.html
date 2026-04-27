@@ -741,31 +741,15 @@
   <div class="wrap">
     <h2 class="section-title reveal" style="text-align: center; margin-bottom: 60px; font-size: 40px;">Progress Overview</h2>
     
+    <!-- D3.js and TopoJSON for Interactive Map -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+
     <div class="globe-wrap reveal">
-      <div class="globe-container">
-        <img src="assets/world-map-modern-globe-map-generalized-world-map-world-map-on-isolated-background-illustration-vector.jpg" alt="Global Expansion" class="globe-img">
+      <div class="globe-container" id="d3-map-container">
+        <!-- D3 Map will be injected here -->
         
-        <!-- Established (Green) -->
-        <div class="pointer established p-uk" data-label="United Kingdom"></div>
-        <div class="pointer established p-fr" data-label="France"></div>
-        <div class="pointer established p-it" data-label="Italy"></div>
-        <div class="pointer established p-be" data-label="Belgium"></div>
-        <div class="pointer established p-uae" data-label="UAE"></div>
-        <div class="pointer established p-kw" data-label="Kuwait"></div>
-        <div class="pointer established p-qa" data-label="Qatar"></div>
-        <div class="pointer established p-hk" data-label="Hong Kong"></div>
-        <div class="pointer established p-sg" data-label="Singapore"></div>
-
-        <!-- Upcoming (Red) -->
-        <div class="pointer upcoming p-ng" data-label="Nigeria"></div>
-        <div class="pointer upcoming p-gh" data-label="Ghana"></div>
-        <div class="pointer upcoming p-ke" data-label="Kenya"></div>
-        <div class="pointer upcoming p-sa" data-label="South Africa"></div>
-        <div class="pointer upcoming p-eg" data-label="Egypt"></div>
-        <div class="pointer upcoming p-ma" data-label="Morocco"></div>
-        <div class="pointer upcoming p-sn" data-label="Senegal"></div>
-
-        <!-- Roo Floating -->
+        <!-- Roo Floating (Overlay) -->
         <div class="country-animation-mini">
           <video autoplay loop muted playsinline class="roo-launch-video-mini">
             <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
