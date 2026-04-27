@@ -14,13 +14,16 @@
 <body>
 
 <div id="preloader" class="preloader">
-  <div class="preloader-video-wrap">
-    <video autoplay loop muted playsinline class="preloader-video">
-      <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="preloader-progress-container">
-    <div class="preloader-progress-bar" id="preloader-bar"></div>
+  <div class="preloader-orb-wrap">
+    <svg class="preloader-orb-svg" viewBox="0 0 100 100">
+      <circle class="preloader-orb-bg" cx="50" cy="50" r="48"></circle>
+      <circle class="preloader-orb-progress" id="preloader-orb" cx="50" cy="50" r="48"></circle>
+    </svg>
+    <div class="preloader-video-wrap">
+      <video autoplay loop muted playsinline class="preloader-video">
+        <source src="assets/Character_Animation_Request_Fulfilled.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
   <div class="preloader-text">Preparing your experience...</div>
 </div>

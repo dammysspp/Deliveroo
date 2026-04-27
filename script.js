@@ -346,22 +346,32 @@ function unlockSite() {
       if (preloader) {
         preloader.style.display = 'flex';
         
-        // 3. Animate progress bar
-        const bar = document.getElementById('preloader-bar');
+        // 3. Animate progress orb
+        const orb = document.getElementById('preloader-orb');
+        const circumference = 2 * Math.PI * 48; // r=48
+        if (orb) {
+          orb.style.strokeDasharray = circumference;
+          orb.style.strokeDashoffset = circumference;
+        }
+
         let progress = 0;
         const interval = setInterval(() => {
-          progress += Math.random() * 15;
+          progress += Math.random() * 8; // Slower, smoother loading
           if (progress > 100) progress = 100;
-          if (bar) bar.style.width = `${progress}%`;
+          
+          if (orb) {
+            const offset = circumference - (progress / 100) * circumference;
+            orb.style.strokeDashoffset = offset;
+          }
           
           if (progress >= 100) {
             clearInterval(interval);
             setTimeout(() => {
               preloader.classList.add('fade-out');
               setTimeout(() => { preloader.style.display = 'none'; }, 1000);
-            }, 500);
+            }, 800);
           }
-        }, 200);
+        }, 150);
       }
     }, 600);
   } else {
