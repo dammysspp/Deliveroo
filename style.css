@@ -1565,15 +1565,34 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .globe-container svg {
   display: block; width: 100%; height: 100%;
 }
-.market-marker circle {
-  transition: r 0.3s ease, fill 0.3s ease;
+.map-tooltip {
+  position: absolute; pointer-events: none;
+  background: rgba(0, 0, 0, 0.95); color: #fff;
+  padding: 16px; border-radius: 12px;
+  font-family: var(--font-label); font-size: 13px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  min-width: 200px; z-index: 1000;
+  backdrop-filter: blur(8px);
 }
-.market-marker:hover circle {
-  stroke-width: 2px;
+.tooltip-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 15px;
 }
-.market-marker::after {
-    /* SVG markers use different labeling, but keeping styles for potential future use */
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
 }
+.status-dot.established { background: #4CAF50; box-shadow: 0 0 8px #4CAF50; }
+.status-dot.upcoming { background: #FF4D4D; box-shadow: 0 0 8px #FF4D4D; }
+
+.stat-row {
+  display: flex; justify-content: space-between;
+  margin-bottom: 6px; gap: 20px;
+}
+.stat-row span { color: rgba(255,255,255,0.5); font-weight: 500; }
+.stat-row strong { color: #fff; font-weight: 700; }
 
 .country-animation-mini {
   position: absolute; bottom: 20px; right: 20px;

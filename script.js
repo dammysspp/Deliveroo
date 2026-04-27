@@ -405,17 +405,34 @@ function initWorldMap() {
 
         const path = d3.geoPath().projection(projection);
 
-        const markets = {
-            // Established (Green) - ISO Numeric IDs
-            established: [826, 250, 380, 56, 784, 414, 634, 702, 344], // UK, France, Italy, Belgium, UAE, Kuwait, Qatar, Singapore, HK
-            // Upcoming (Red) - ISO Numeric IDs
-            upcoming: [566, 288, 404, 710, 818, 504, 686] // Nigeria, Ghana, Kenya, South Africa, Egypt, Morocco, Senegal
+        const marketStats = {
+            826: { name: "United Kingdom", type: "established", cities: "250+", restaurants: "50k+", riders: "50k+" },
+            250: { name: "France", type: "established", cities: "150+", restaurants: "20k+", riders: "30k+" },
+            380: { name: "Italy", type: "established", cities: "30+", restaurants: "15k+", riders: "20k+" },
+            56: { name: "Belgium", type: "established", cities: "15+", restaurants: "3k+", riders: "5k+" },
+            784: { name: "UAE", type: "established", cities: "5+", restaurants: "8k+", hubs: "Editions Kitchens" },
+            414: { name: "Kuwait", type: "established", cities: "3+", restaurants: "2k+", status: "Top 3 Market" },
+            634: { name: "Qatar", type: "established", cities: "2+", restaurants: "1.5k+", status: "Rapid Growth" },
+            702: { name: "Singapore", type: "established", cities: "Island-wide", restaurants: "10k+", riders: "10k+" },
+            344: { name: "Hong Kong", type: "established", status: "Strategic Hub", restaurants: "8k+" },
+            566: { name: "Nigeria", type: "upcoming", target: "Lagos & Abuja", launch: "Q4 2026", partners: "500+ Waitlist" },
+            288: { name: "Ghana", type: "upcoming", target: "Accra", launch: "Q1 2027", partners: "300+ Waitlist" },
+            404: { name: "Kenya", type: "upcoming", target: "Nairobi", launch: "2027", status: "Planning Phase" },
+            710: { name: "South Africa", type: "upcoming", target: "Cape Town", launch: "2027", status: "Market Research" },
+            818: { name: "Egypt", type: "upcoming", target: "Cairo", launch: "2027", status: "Scouting" },
+            504: { name: "Morocco", type: "upcoming", target: "Casablanca", launch: "2027", status: "Strategic Interest" },
+            686: { name: "Senegal", type: "upcoming", target: "Dakar", launch: "2027", status: "Exploration" }
         };
+
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "map-tooltip")
+            .style("opacity", 0);
 
         d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(data => {
             const countries = topojson.feature(data, data.objects.countries);
+            const establishedIds = [826, 250, 380, 56, 784, 414, 634, 702, 344];
+            const upcomingIds = [566, 288, 404, 710, 818, 504, 686];
 
-            // Draw map
             svg.append("g")
                 .selectAll("path")
                 .data(countries.features)
@@ -423,35 +440,52 @@ function initWorldMap() {
                 .attr("d", path)
                 .attr("fill", d => {
                     const id = parseInt(d.id);
-                    if (markets.established.includes(id)) return '#4CAF50'; // Green
-                    if (markets.upcoming.includes(id)) return '#FF4D4D';    // Red
-                    return '#002b28'; // Default dark teal
+                    if (establishedIds.includes(id)) return '#4CAF50';
+                    if (upcomingIds.includes(id)) return '#FF4D4D';
+                    return '#002b28';
                 })
                 .attr("stroke", "#004943")
                 .attr("stroke-width", 0.5)
                 .style("transition", "fill 0.3s, filter 0.3s")
                 .on("mouseover", function(event, d) { 
+                    const id = parseInt(d.id);
+                    const stats = marketStats[id];
+                    if (!stats) return;
+
                     d3.select(this)
-                        .attr("fill", d => {
-                            const id = parseInt(d.id);
-                            if (markets.established.includes(id)) return '#66BB6A'; 
-                            if (markets.upcoming.includes(id)) return '#FF6666';
-                            return '#004943';
-                        })
+                        .attr("fill", establishedIds.includes(id) ? '#66BB6A' : '#FF6666')
                         .style("filter", "brightness(1.2)");
+
+                    tooltip.transition().duration(200).style("opacity", 1);
+                    tooltip.html(`
+                        <div class="tooltip-header">
+                            <span class="status-dot ${stats.type}"></span>
+                            <strong>${stats.name}</strong>
+                        </div>
+                        <div class="tooltip-body">
+                            ${stats.cities ? `<div class="stat-row"><span>Cities</span><strong>${stats.cities}</strong></div>` : ''}
+                            ${stats.restaurants ? `<div class="stat-row"><span>Restaurants</span><strong>${stats.restaurants}</strong></div>` : ''}
+                            ${stats.riders ? `<div class="stat-row"><span>Riders</span><strong>${stats.riders}</strong></div>` : ''}
+                            ${stats.target ? `<div class="stat-row"><span>Focus</span><strong>${stats.target}</strong></div>` : ''}
+                            ${stats.launch ? `<div class="stat-row"><span>Launch</span><strong>${stats.launch}</strong></div>` : ''}
+                            ${stats.partners ? `<div class="stat-row"><span>Partners</span><strong>${stats.partners}</strong></div>` : ''}
+                            ${stats.status ? `<div class="stat-row"><span>Status</span><strong>${stats.status}</strong></div>` : ''}
+                        </div>
+                    `)
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 15) + "px")
+                           .style("top", (event.pageY - 28) + "px");
                 })
                 .on("mouseout", function(event, d) { 
+                    const id = parseInt(d.id);
                     d3.select(this)
-                        .attr("fill", d => {
-                            const id = parseInt(d.id);
-                            if (markets.established.includes(id)) return '#4CAF50';
-                            if (markets.upcoming.includes(id)) return '#FF4D4D';
-                            return '#002b28';
-                        })
+                        .attr("fill", establishedIds.includes(id) ? '#4CAF50' : (upcomingIds.includes(id) ? '#FF4D4D' : '#002b28'))
                         .style("filter", "none");
+                    tooltip.transition().duration(500).style("opacity", 0);
                 });
-
-            // Note: Markers removed as per user request to highlight parts instead of using circles
         });
     }, 500);
 }
