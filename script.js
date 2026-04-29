@@ -571,33 +571,20 @@ function scatterCulturalElements() {
 }
 scatterCulturalElements();
 
-// Switch Roo's outfit
-const rooImg = document.getElementById('roo-main-img');
-if (rooImg) {
-    const rooOutfits = [
-        'assets/Roo.png',
-        'assets/roo-wears/Agbada.png',
-        'assets/roo-wears/Kaftan.png',
-        'assets/roo-wears/Native.png'
-    ];
+// Switch Roo's outfit (Stacked version for glitch-free cross-fade)
+const rooStack = document.querySelector('.roo-img-stack');
+if (rooStack) {
+    const rooImages = rooStack.querySelectorAll('.roo-img-standalone');
     let rooOutfitIdx = 0;
-    
-    // Preload images to prevent flickering
-    rooOutfits.forEach(src => {
-        const img = new Image();
-        img.src = src;
-    });
 
-    // Switch outfit every 6 seconds
     setInterval(() => {
-        // Fade out
-        rooImg.style.opacity = 0;
+        // Remove active class from current image
+        rooImages[rooOutfitIdx].classList.remove('active');
         
-        setTimeout(() => {
-            // Change source and fade in
-            rooOutfitIdx = (rooOutfitIdx + 1) % rooOutfits.length;
-            rooImg.src = rooOutfits[rooOutfitIdx];
-            rooImg.style.opacity = 1;
-        }, 300); // Wait for fade out to complete
+        // Move to next image
+        rooOutfitIdx = (rooOutfitIdx + 1) % rooImages.length;
+        
+        // Add active class to next image
+        rooImages[rooOutfitIdx].classList.add('active');
     }, 6000);
 }
