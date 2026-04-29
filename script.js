@@ -570,3 +570,34 @@ function scatterCulturalElements() {
     });
 }
 scatterCulturalElements();
+
+// Switch Roo's outfit
+const rooImg = document.getElementById('roo-main-img');
+if (rooImg) {
+    const rooOutfits = [
+        'assets/Roo.png',
+        'assets/roo-wears/Agbada.png',
+        'assets/roo-wears/Kaftan.png',
+        'assets/roo-wears/Native.png'
+    ];
+    let rooOutfitIdx = 0;
+    
+    // Preload images to prevent flickering
+    rooOutfits.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+
+    // Switch outfit every 6 seconds
+    setInterval(() => {
+        // Fade out
+        rooImg.style.opacity = 0;
+        
+        setTimeout(() => {
+            // Change source and fade in
+            rooOutfitIdx = (rooOutfitIdx + 1) % rooOutfits.length;
+            rooImg.src = rooOutfits[rooOutfitIdx];
+            rooImg.style.opacity = 1;
+        }, 300); // Wait for fade out to complete
+    }, 6000);
+}
