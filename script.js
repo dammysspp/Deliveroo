@@ -502,3 +502,38 @@ function initWorldMap() {
 
 // Start Map
 initWorldMap();
+
+// Scatter cultural elements
+function scatterCulturalElements() {
+    const images = ['assets/element-drum.png', 'assets/element-fan.png', 'assets/element-mask.png'];
+    const sections = document.querySelectorAll('.cultural-pattern');
+    
+    sections.forEach(section => {
+        // Add 2 to 3 elements per section
+        const count = Math.floor(Math.random() * 2) + 2;
+        for (let i = 0; i < count; i++) {
+            const img = document.createElement('img');
+            img.src = images[Math.floor(Math.random() * images.length)];
+            img.className = 'floating-culture';
+            
+            // Randomize position avoiding the absolute center to prevent blocking main content
+            const isLeft = Math.random() > 0.5;
+            const top = Math.random() * 80 + 10; // 10% to 90%
+            const leftPos = isLeft ? Math.random() * 30 : (Math.random() * 30 + 70); // 0-30% or 70-100%
+            
+            img.style.top = `${top}%`;
+            img.style.left = `${leftPos}%`;
+            
+            // Randomize rotation and size
+            const rot = Math.random() * 360;
+            const scale = Math.random() * 0.5 + 0.8; // 0.8 to 1.3
+            img.style.transform = `rotate(${rot}deg) scale(${scale})`;
+            
+            // Randomize animation delay to make them float independently
+            img.style.animationDelay = `${Math.random() * 5}s`;
+            
+            section.appendChild(img);
+        }
+    });
+}
+scatterCulturalElements();

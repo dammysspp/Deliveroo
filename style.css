@@ -83,6 +83,16 @@ body {
   z-index: -1;
   pointer-events: none;
 }
+.floating-culture {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  width: clamp(80px, 10vw, 150px);
+  height: auto;
+  animation: float-badge 6s ease-in-out infinite;
+}
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
