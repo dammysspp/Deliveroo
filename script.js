@@ -505,32 +505,60 @@ initWorldMap();
 
 // Scatter cultural elements
 function scatterCulturalElements() {
-    const images = ['assets/element-drum.png', 'assets/element-fan.png', 'assets/element-mask.png'];
+    const images = [
+        'assets/element-drum.png', 
+        'assets/element-fan.png', 
+        'assets/element-mask.png',
+        'assets/element-cowrie.png',
+        'assets/element-beads.png',
+        'assets/element-calabash.png'
+    ];
+    
+    // Add these elements to sections with .cultural-pattern
     const sections = document.querySelectorAll('.cultural-pattern');
     
     sections.forEach(section => {
-        // Add 2 to 3 elements per section
-        const count = Math.floor(Math.random() * 2) + 2;
+        // Increase the number of elements to fill empty spaces nicely
+        const count = Math.floor(Math.random() * 3) + 4;
+        
         for (let i = 0; i < count; i++) {
             const img = document.createElement('img');
             img.src = images[Math.floor(Math.random() * images.length)];
             img.className = 'floating-culture';
             
-            // Randomize position avoiding the absolute center to prevent blocking main content
-            const isLeft = Math.random() > 0.5;
-            const top = Math.random() * 80 + 10; // 10% to 90%
-            const leftPos = isLeft ? Math.random() * 30 : (Math.random() * 30 + 70); // 0-30% or 70-100%
+            // Smart positioning: Push to far left, far right, top, or bottom margins
+            const zone = Math.random();
+            let top, leftPos;
+            
+            if (zone < 0.4) {
+                // Far left margin
+                leftPos = Math.random() * 12 - 2; // -2% to 10%
+                top = Math.random() * 90 + 5;
+            } else if (zone < 0.8) {
+                // Far right margin
+                leftPos = Math.random() * 12 + 90; // 90% to 102%
+                top = Math.random() * 90 + 5;
+            } else if (zone < 0.9) {
+                // Top margin area
+                leftPos = Math.random() * 80 + 10;
+                top = Math.random() * 10 - 2; // -2% to 8%
+            } else {
+                // Bottom margin area
+                leftPos = Math.random() * 80 + 10;
+                top = Math.random() * 10 + 92; // 92% to 102%
+            }
             
             img.style.top = `${top}%`;
             img.style.left = `${leftPos}%`;
             
             // Randomize rotation and size
             const rot = Math.random() * 360;
-            const scale = Math.random() * 0.5 + 0.8; // 0.8 to 1.3
+            const scale = Math.random() * 0.6 + 0.6; // 0.6 to 1.2
             img.style.transform = `rotate(${rot}deg) scale(${scale})`;
             
-            // Randomize animation delay to make them float independently
-            img.style.animationDelay = `${Math.random() * 5}s`;
+            // Randomize animation to make them float organically
+            img.style.animationDelay = `${Math.random() * 8}s`;
+            img.style.animationDuration = `${Math.random() * 5 + 7}s`; // 7s to 12s
             
             section.appendChild(img);
         }

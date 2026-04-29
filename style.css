@@ -87,11 +87,12 @@ body {
   position: absolute;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
-  opacity: 0.25;
-  width: clamp(80px, 10vw, 150px);
+  mix-blend-mode: darken;
+  opacity: 0.12;
+  width: clamp(60px, 8vw, 120px);
   height: auto;
-  animation: float-badge 6s ease-in-out infinite;
+  filter: grayscale(20%) contrast(1.2);
+  animation: float-badge 8s ease-in-out infinite;
 }
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
