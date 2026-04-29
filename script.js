@@ -138,10 +138,14 @@ function showTyping() {
 
 async function startConversation() {
   if (!chatMessages) return;
-  // Initial clear
-  chatMessages.innerHTML = '';
   
   while (true) {
+    // Ensure chat is clean at the start of a conversation loop
+    if (currentIdx === 0) {
+      chatMessages.innerHTML = '';
+      await new Promise(r => setTimeout(r, 1000)); // Brief pause before starting over
+    }
+
     const msg = conversation[currentIdx];
     
     if (msg.sender === 'roo') {
@@ -154,14 +158,15 @@ async function startConversation() {
 
     appendMessage(msg);
     
-    currentIdx = (currentIdx + 1) % conversation.length;
+    currentIdx++;
     
-    // Wait before next message
-    await new Promise(r => setTimeout(r, 2500));
-
-    // Clear chat if it gets too long to maintain "infinite" feel
-    if (chatMessages.children.length > 10) {
-      chatMessages.removeChild(chatMessages.firstChild);
+    if (currentIdx >= conversation.length) {
+      currentIdx = 0;
+      // Wait longer at the very end of the conversation before clearing
+      await new Promise(r => setTimeout(r, 6000)); 
+    } else {
+      // Normal wait before next message
+      await new Promise(r => setTimeout(r, 2500));
     }
   }
 }

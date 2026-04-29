@@ -885,10 +885,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .chat-messages::-webkit-scrollbar { display: none; }
 
-.msg { display: flex; gap: 10px; align-items: flex-end; animation: msg-pop 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.msg { 
+  display: flex; gap: 10px; align-items: flex-end; 
+  opacity: 0;
+  transform-origin: bottom left;
+  animation: msg-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+}
 @keyframes msg-pop {
-  from { opacity: 0; transform: translateY(10px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .msg-av {
@@ -905,7 +910,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: rgba(0,193,178,0.15); border: 1px solid rgba(0,193,178,0.25);
   color: rgba(255,255,255,0.9); border-bottom-left-radius: 4px;
 }
-.msg.from-user { flex-direction: row-reverse; }
+.msg.from-user { 
+  flex-direction: row-reverse; 
+  transform-origin: bottom right;
+}
 .msg.from-user .msg-bubble {
   background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.65);
   border-bottom-right-radius: 4px;
