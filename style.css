@@ -642,6 +642,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   pointer-events: auto;
   z-index: 2;
 }
+.roo-img-standalone.roo-cultural {
+  width: 224px; /* 70% of 320px */
+}
 .roo-character:hover .roo-img-standalone.active {
   transform: translateX(-50%) translateY(-15px) scale(1.05);
 }
