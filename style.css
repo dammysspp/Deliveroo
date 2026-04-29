@@ -50,6 +50,39 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ─────────────────────────────────────────── */
+/* UTILITIES                                   */
+/* ─────────────────────────────────────────── */
+.cultural-pattern {
+  position: relative;
+  z-index: 0;
+}
+.cultural-pattern::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('assets/african-pattern.png') repeat;
+  background-size: 300px;
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+}
+.cultural-pattern-dark {
+  position: relative;
+  z-index: 0;
+}
+.cultural-pattern-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('assets/african-pattern.png') repeat;
+  background-size: 300px;
+  opacity: 0.03;
+  filter: brightness(0) invert(1);
+  z-index: -1;
+  pointer-events: none;
+}
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
