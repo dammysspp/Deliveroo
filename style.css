@@ -3,6 +3,8 @@
 /* ─────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 :root {
@@ -76,6 +78,7 @@ body {
 .cultural-pattern {
   position: relative;
   z-index: 0;
+  overflow: hidden;
 }
 
 .cultural-pattern::before {
@@ -95,6 +98,7 @@ body {
 .cultural-pattern-dark {
   position: relative;
   z-index: 0;
+  overflow: hidden;
 }
 
 .cultural-pattern-dark::before {
@@ -145,6 +149,12 @@ button {
   max-width: var(--max);
   margin: 0 auto;
   padding: 0 40px;
+}
+
+@media (max-width: 1024px) {
+  .wrap {
+    padding: 0 32px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -208,7 +218,7 @@ button {
   font-weight: 700;
   color: var(--teal-dark);
   letter-spacing: -0.5px;
-  margin-right: 48px;
+  margin-right: clamp(24px, 4vw, 48px);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -222,7 +232,7 @@ button {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: clamp(16px, 3vw, 32px);
   list-style: none;
   flex: 1;
 }
@@ -2329,12 +2339,21 @@ button {
 /* RESPONSIVE                                  */
 /* ─────────────────────────────────────────── */
 @media (max-width: 1024px) {
+  .hero-left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .hero-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    text-align: left;
   }
 
   .hero-right {
-    display: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .roo-inner {
@@ -2342,7 +2361,7 @@ button {
   }
 
   .roo-character {
-    display: none;
+    display: flex;
   }
 
   .plus-inner {
@@ -2359,11 +2378,13 @@ button {
   }
 
   .app-cta-inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
   }
 
   .app-cta-right {
-    display: none;
+    display: flex;
+    justify-content: center;
   }
 
   .footer-top {
@@ -3804,16 +3825,70 @@ button {
     font-size: clamp(40px, 5vw, 60px);
   }
   
+  /* ROO SECTION TABLET OPTIMIZATION */
   .roo-inner {
-    grid-template-columns: 280px 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: start;
+    text-align: center;
+  }
+  
+  .roo-left {
+    grid-column: span 1;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  
+  .roo-traits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    width: 100%;
+  }
+
+  .roo-trait {
+    text-align: left;
+  }
+  
+  .roo-character {
+    grid-column: 1;
+    grid-row: auto;
+    margin: 0 auto;
+    justify-self: center;
   }
   
   .roo-right {
-    grid-column: span 2;
+    grid-column: 1;
+    grid-row: auto;
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 24px;
+  }
+
+  /* Side-by-side for medium tablets (like Samsung Tab A7 Lite) */
+  @media (min-width: 700px) {
+    .roo-inner {
+      grid-template-columns: 1fr 1fr;
+      text-align: left;
+    }
+    .roo-left {
+      grid-column: span 2;
+    }
+    .roo-character {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .roo-right {
+      grid-column: 2;
+      grid-row: 2;
+      margin-top: 0;
+    }
+  }
+
+  .roo-watermark {
+    font-size: 180px;
+    right: -20px;
+    top: 10%;
   }
 }
 
@@ -3862,33 +3937,67 @@ button {
     grid-template-columns: 1fr;
   }
   
-  /* ROO SECTION MOBILE PORTRAIT OPTIMIZATION */
+  /* ROO SECTION MOBILE OPTIMIZATION */
   .roo-inner {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     text-align: center;
-    gap: 32px 16px;
+    gap: 40px;
     align-items: center;
   }
   
   .roo-left {
-    grid-column: span 2;
+    grid-column: 1;
     order: 1;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+  }
+  
+  .roo-traits {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .roo-trait {
+    text-align: left;
   }
   
   .roo-character {
     grid-column: 1;
     order: 2;
-    margin: 0;
+    margin: 0 auto;
   }
   
   .roo-right {
-    grid-column: 2;
+    grid-column: 1;
     order: 3;
-    margin: 0;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
+  }
+
+  /* Keep side-by-side only if enough width */
+  @media (min-width: 480px) {
+    .roo-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+    .roo-left {
+      grid-column: span 2;
+    }
+    .roo-character {
+      grid-column: 1;
+      order: 2;
+    }
+    .roo-right {
+      grid-column: 2;
+      order: 3;
+    }
+  }
+
+  .roo-watermark {
+    font-size: 120px;
+    right: -10px;
+    top: 5%;
   }
   
   .roo-title {
