@@ -1055,17 +1055,15 @@ button {
 }
 
 .roo-img-standalone.roo-cultural {
-  width: 224px;
-  /* 70% of 320px */
+  width: 101px; /* ~45% of 224px */
 }
 
 .roo-img-standalone.roo-kaftan {
-  width: 185px;
-  /* 65% of 320px */
+  width: 83px; /* ~45% of 185px */
 }
 
 .roo-img-standalone.roo-agbada {
-  width: 205px;
+  width: 92px; /* ~45% of 205px */
 }
 
 .roo-character:hover .roo-img-standalone.active {
