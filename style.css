@@ -3862,7 +3862,22 @@ button {
     grid-row: auto;
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 40px;
+  }
+
+  .roo-img-stack {
+    width: 240px;
+    height: 300px;
+  }
+
+  .roo-img-standalone {
+    width: 180px;
+  }
+
+  .roo-chat {
+    width: 240px;
+    height: 460px;
+    scale: 0.95;
   }
 
   /* Side-by-side for medium tablets (like Samsung Tab A7 Lite) */
@@ -3870,6 +3885,8 @@ button {
     .roo-inner {
       grid-template-columns: 1fr 1fr;
       text-align: left;
+      gap: 60px 40px;
+      padding-top: 40px; /* Space from title */
     }
     .roo-left {
       grid-column: span 2;
@@ -3877,11 +3894,12 @@ button {
     .roo-character {
       grid-column: 1;
       grid-row: 2;
+      margin-top: 40px; /* Space from traits */
     }
     .roo-right {
       grid-column: 2;
       grid-row: 2;
-      margin-top: 0;
+      margin-top: 40px; /* Space from traits */
     }
   }
 
@@ -3980,6 +3998,7 @@ button {
   @media (min-width: 480px) {
     .roo-inner {
       grid-template-columns: 1fr 1fr;
+      gap: 40px 20px;
     }
     .roo-left {
       grid-column: span 2;
@@ -3987,11 +4006,22 @@ button {
     .roo-character {
       grid-column: 1;
       order: 2;
+      margin-top: 20px;
     }
     .roo-right {
       grid-column: 2;
       order: 3;
+      margin-top: 20px;
     }
+  }
+
+  .roo-chat {
+    width: 100%;
+    max-width: 220px; /* Increased to fix crumbled chat */
+    height: 400px;
+    margin: 0;
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
   .roo-watermark {
