@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>11 – Deliveroo Plus & Loyalty</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--td:#004943;--org:#FF6B35;--amb:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.screen{width:100%;height:100%;overflow-y:auto;scrollbar-width:none;position:relative}
+.screen::-webkit-scrollbar{display:none}
+.sb{position:sticky;top:0;z-index:30;height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;backdrop-filter:blur(14px);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+
+/* Hero gradient header */
+.plus-hero{padding:20px 20px 0;position:relative}
+.plus-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.plus-eyebrow::before{content:'';width:20px;height:2px;background:var(--teal);border-radius:1px}
+.plus-headline{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:900;line-height:1.1;letter-spacing:-.5px}
+.plus-sub{font-size:13px;line-height:1.6;margin-top:10px}
+
+/* Loyalty cards 3D tilt */
+.cards-3d{position:relative;height:200px;margin:24px 20px 8px}
+.lcard{position:absolute;width:300px;border-radius:20px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.lcard-teal{top:0;left:0;transform:rotate(-4deg);z-index:1}
+.lcard-black{top:20px;left:40px;transform:rotate(2deg);z-index:2}
+.lcard img{width:100%;display:block}
+
+/* Pricing card */
+.price-card{margin:16px 20px;padding:20px;border-radius:20px;display:flex;flex-direction:column;gap:16px;border:1px solid}
+.price-top{display:flex;align-items:flex-start;justify-content:space-between}
+.price-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.price-badge{padding:4px 12px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.5px}
+.price-amount{font-family:'Fraunces',Georgia,serif;font-size:38px;font-weight:900;line-height:1}
+.price-amount sup{font-size:18px;font-weight:700;vertical-align:super}
+.price-amount sub{font-size:14px;font-weight:400;opacity:.6}
+.price-trial{font-size:12px;margin-top:2px}
+.price-cta{padding:16px;border-radius:16px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;text-align:center;cursor:pointer;background:linear-gradient(135deg,var(--teal) 0%,var(--td) 100%);box-shadow:0 8px 24px rgba(0,193,178,.4)}
+
+/* Perks list */
+.perks-section{padding:4px 20px 20px}
+.perks-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.perk-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid}
+.perk-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.perk-text{flex:1}
+.perk-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+.perk-desc{font-size:11px;margin-top:2px;line-height:1.5}
+
+/* Roo coins */
+.coins-row{margin:0 20px 16px;padding:16px;border-radius:16px;display:flex;align-items:center;justify-content:space-between}
+.coins-left{}
+.coins-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.coins-amount{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:900;color:var(--amb)}
+.coins-sub{font-size:11px;margin-top:2px}
+.coins-icon{font-size:40px}
+
+
+
+/* Dark */
+.dk{background:#0a0f0e}
+.dk .sb{background:rgba(10,15,14,.94);color:rgba(255,255,255,.85)}
+.dk .plus-headline{color:#fff}
+.dk .plus-sub{color:rgba(255,255,255,.5)}
+.dk .price-card{background:rgba(0,193,178,.07);border-color:rgba(0,193,178,.2)}
+.dk .price-label{color:rgba(255,255,255,.4)}
+.dk .price-badge{background:rgba(0,193,178,.15);color:var(--teal)}
+.dk .price-amount{color:#fff}
+.dk .price-trial{color:rgba(255,255,255,.4)}
+.dk .perks-title{color:rgba(255,255,255,.35)}
+.dk .perk-item{border-color:rgba(255,255,255,.06)}
+.dk .perk-icon{background:rgba(255,255,255,.06)}
+.dk .perk-name{color:#fff}
+.dk .perk-desc{color:rgba(255,255,255,.4)}
+.dk .coins-row{background:rgba(255,179,71,.07);border:1px solid rgba(255,179,71,.15)}
+.dk .coins-label{color:rgba(255,255,255,.4)}
+.dk .coins-sub{color:rgba(255,255,255,.4)}
+/* Light */
+.lt{background:var(--cream)}
+.lt .sb{background:rgba(249,249,249,.94);color:rgba(26,28,28,.85)}
+.lt .plus-headline{color:var(--ink)}
+.lt .plus-sub{color:rgba(26,28,28,.5)}
+.lt .price-card{background:#fff;border-color:rgba(0,73,67,.12);box-shadow:0 4px 20px rgba(0,73,67,.08)}
+.lt .price-label{color:rgba(26,28,28,.4)}
+.lt .price-badge{background:rgba(0,73,67,.08);color:var(--td)}
+.lt .price-amount{color:var(--ink)}
+.lt .price-trial{color:rgba(26,28,28,.4)}
+.lt .price-cta{background:linear-gradient(135deg,var(--td) 0%,#002e2a 100%);box-shadow:0 8px 24px rgba(0,73,67,.35)}
+.lt .perks-title{color:rgba(26,28,28,.35)}
+.lt .perk-item{border-color:rgba(0,0,0,.06)}
+.lt .perk-icon{background:rgba(0,73,67,.06)}
+.lt .perk-name{color:var(--ink)}
+.lt .perk-desc{color:rgba(26,28,28,.45)}
+.lt .coins-row{background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.2)}
+.lt .coins-label{color:rgba(26,28,28,.4)}
+.lt .coins-sub{color:rgba(26,28,28,.4)}
+
+
+/* Floating pill nav */
+.bottom-nav-wrap{position:sticky;bottom:0;z-index:50;padding:0 20px 28px;display:flex;justify-content:center;pointer-events:none}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px;pointer-events:all}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.nav-dot{position:absolute;top:5px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--orange,#FF6B35);border:2px solid transparent}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal,#00C1B2)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.dk .nav-dot{border-color:#1c2423}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.lt .nav-dot{border-color:#fff}
+
+</style>
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head><body>
+
+<!-- DARK PLUS PAGE -->
+<div class="col"><div class="lbl">Plus & Loyalty — Dark</div>
+<div class="phone"><div class="screen dk">
+  <div class="sb"><span>9:41</span><span style="color:rgba(255,255,255,.85)">▲▲▲ WiFi 🔋</span></div>
+
+  <div class="plus-hero">
+    <div class="plus-eyebrow">Deliveroo Plus</div>
+    <div class="plus-headline">Your table is<br><em style="color:var(--teal);font-style:italic">always reserved.</em></div>
+    <div class="plus-sub">One flat monthly fee. Free delivery every time. Priority service always. For people who eat well and hate waiting.</div>
+  </div>
+
+  <!-- 3D tilted loyalty cards -->
+  <div class="cards-3d">
+    <div class="lcard lcard-teal"><img src="../assets/loyalty_card_teal_1777192239459.png" alt="Teal Card"></div>
+    <div class="lcard lcard-black"><img src="../assets/loyalty_card_black_1777192261429.png" alt="Black Card"></div>
+  </div>
+
+  <!-- Pricing card -->
+  <div class="price-card">
+    <div class="price-top">
+      <div class="price-label">Monthly Membership</div>
+      <div class="price-badge">First month FREE</div>
+    </div>
+    <div>
+      <div class="price-amount"><sup>₦</sup>2,499<sub>/month</sub></div>
+      <div class="price-trial">First month absolutely free — no catch.</div>
+    </div>
+    <div class="price-cta">Start Free Trial →</div>
+  </div>
+
+  <!-- Roo coins -->
+  <div class="coins-row">
+    <div class="coins-left">
+      <div class="coins-label">Your Roo Coins</div>
+      <div class="coins-amount">1,240 🪙</div>
+      <div class="coins-sub">= ₦1,240 wallet credit</div>
+    </div>
+    <div class="coins-icon">🏆</div>
+  </div>
+
+  <!-- Perks -->
+  <div class="perks-section">
+    <div class="perks-title">What you get</div>
+    <div class="perk-item">
+      <div class="perk-icon">🚚</div>
+      <div class="perk-text">
+        <div class="perk-name">Free delivery on every order</div>
+        <div class="perk-desc">No minimum spend. Lagos, Accra — everywhere we operate.</div>
+      </div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-icon">⚡</div>
+      <div class="perk-text">
+        <div class="perk-name">Priority routing — your rider comes first</div>
+        <div class="perk-desc">Your order jumps the queue. Guaranteed faster pickup.</div>
+      </div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-icon">🍽️</div>
+      <div class="perk-text">
+        <div class="perk-name">Secret menus &amp; exclusive deals</div>
+        <div class="perk-desc">Members-only specials at top restaurants including NOK by Alara &amp; Buka.</div>
+      </div>
+    </div>
+    <div class="perk-item">
+      <div class="perk-icon">🤖</div>
+      <div class="perk-text">
+        <div class="perk-name">Roo Pro Mode</div>
+        <div class="perk-desc">Full AI concierge, meal planning, order history insights &amp; personalised picks.</div>
+      </div>
+    </div>
+    <div class="perk-item" style="border:none">
+      <div class="perk-icon">❌</div>
+      <div class="perk-text">
+        <div class="perk-name">Cancel anytime</div>
+        <div class="perk-desc">No strings, no penalties. You're in control.</div>
+      </div>
+    </div>
+  </div>
+  <div style="height:90px"></div></div>
+    <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search</div></div>
+    <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label">Orders</div></div>
+    <div class="nav-item"><div class="nav-icon" style="color:var(--teal)">👤</div><div class="nav-label" style="color:var(--teal)">Account</div></div>
+  </div>
+</div></div></div>
+
+<!-- LIGHT PLUS PAGE -->
+<div class="col"><div class="lbl">Plus & Loyalty — Light</div>
+<div class="phone"><div class="screen lt">
+  <div class="sb"><span style="color:var(--ink)">9:41</span><span style="color:rgba(26,28,28,.7)">▲▲▲ WiFi 🔋</span></div>
+
+  <div class="plus-hero">
+    <div class="plus-eyebrow" style="color:var(--td)">Deliveroo Plus</div>
+    <div class="plus-headline" style="color:var(--ink)">Your table is<br><em style="color:var(--teal);font-style:italic">always reserved.</em></div>
+    <div class="plus-sub" style="color:rgba(26,28,28,.5)">One flat monthly fee. Free delivery every time. For people who eat well and hate waiting.</div>
+  </div>
+
+  <div class="cards-3d">
+    <div class="lcard lcard-teal"><img src="../assets/loyalty_card_teal_1777192239459.png" alt="Teal Card"></div>
+    <div class="lcard lcard-black"><img src="../assets/loyalty_card_black_1777192261429.png" alt="Black Card"></div>
+  </div>
+
+  <div class="price-card" style="background:#fff;border-color:rgba(0,73,67,.12);box-shadow:0 4px 20px rgba(0,73,67,.08)">
+    <div class="price-top">
+      <div class="price-label" style="color:rgba(26,28,28,.4)">Monthly Membership</div>
+      <div class="price-badge" style="background:rgba(0,73,67,.08);color:var(--td)">First month FREE</div>
+    </div>
+    <div>
+      <div class="price-amount" style="color:var(--ink)"><sup>GH₵</sup>49<sub>/month</sub></div>
+      <div class="price-trial" style="color:rgba(26,28,28,.4)">First month absolutely free — no catch.</div>
+    </div>
+    <div class="price-cta" style="background:linear-gradient(135deg,var(--td) 0%,#002e2a 100%);box-shadow:0 8px 24px rgba(0,73,67,.35)">Start Free Trial →</div>
+  </div>
+
+  <div class="coins-row" style="background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.2)">
+    <div class="coins-left">
+      <div class="coins-label" style="color:rgba(26,28,28,.4)">Your Roo Coins</div>
+      <div class="coins-amount" style="color:var(--amb)">540 🪙</div>
+      <div class="coins-sub" style="color:rgba(26,28,28,.4)">= GH₵ 54 wallet credit</div>
+    </div>
+    <div class="coins-icon">🏆</div>
+  </div>
+
+  <div class="perks-section">
+    <div class="perks-title" style="color:rgba(26,28,28,.35)">What you get</div>
+    <div class="perk-item" style="border-color:rgba(0,0,0,.06)">
+      <div class="perk-icon" style="background:rgba(0,73,67,.06)">🚚</div>
+      <div class="perk-text"><div class="perk-name" style="color:var(--ink)">Free delivery on every order</div><div class="perk-desc" style="color:rgba(26,28,28,.45)">No minimum spend across Lagos & Accra.</div></div>
+    </div>
+    <div class="perk-item" style="border-color:rgba(0,0,0,.06)">
+      <div class="perk-icon" style="background:rgba(0,73,67,.06)">⚡</div>
+      <div class="perk-text"><div class="perk-name" style="color:var(--ink)">Priority routing</div><div class="perk-desc" style="color:rgba(26,28,28,.45)">Your order jumps the queue every time.</div></div>
+    </div>
+    <div class="perk-item" style="border-color:rgba(0,0,0,.06)">
+      <div class="perk-icon" style="background:rgba(0,73,67,.06)">🍽️</div>
+      <div class="perk-text"><div class="perk-name" style="color:var(--ink)">Secret menus &amp; deals</div><div class="perk-desc" style="color:rgba(26,28,28,.45)">Members-only specials at top Accra spots.</div></div>
+    </div>
+    <div class="perk-item" style="border-color:rgba(0,0,0,.06)">
+      <div class="perk-icon" style="background:rgba(0,73,67,.06)">🤖</div>
+      <div class="perk-text"><div class="perk-name" style="color:var(--ink)">Roo Pro Mode</div><div class="perk-desc" style="color:rgba(26,28,28,.45)">Full AI concierge &amp; personalised food picks.</div></div>
+    </div>
+    <div class="perk-item" style="border:none">
+      <div class="perk-icon" style="background:rgba(0,73,67,.06)">❌</div>
+      <div class="perk-text"><div class="perk-name" style="color:var(--ink)">Cancel anytime</div><div class="perk-desc" style="color:rgba(26,28,28,.45)">No strings, no penalties.</div></div>
+    </div>
+  </div>
+  <div style="height:90px"></div></div>
+    <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label" style="color:rgba(26,28,28,.35)">Search</div></div>
+    <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label" style="color:rgba(26,28,28,.35)">Orders</div></div>
+    <div class="nav-item"><div class="nav-icon" style="color:var(--td)">👤</div><div class="nav-label" style="color:var(--td)">Account</div></div>
+  </div>
+</div></div></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Navigation Mappings
+        const selectors = [
+            { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },
+            { sel: '.rest-card, .trending-item', to: '05_restaurant_menu.html' },
+            { sel: '.dish-card, .menu-item', to: '06_item_customization.html' },
+            { sel: '.add-cart', to: '07_cart_checkout.html' },
+            { sel: '.checkout-btn', to: '08_live_tracking.html' },
+            { sel: '.roo-fab, .chat-btn', to: '10_roo_chat.html' },
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' },
+            { sel: '.back-btn', to: '03_home_feed.html' }
+        ];
+
+        selectors.forEach(item => {
+            document.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body></html>

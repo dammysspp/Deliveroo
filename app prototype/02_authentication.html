@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 – Authentication / Gatekeeper</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--teal-dark:#004943;--orange:#FF6B35;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+
+.sb{position:absolute;top:0;left:0;right:0;height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;z-index:20;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+
+/* ── DARK ── */
+.dark-auth{width:100%;height:100%;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:60px}
+/* Cultural pattern BG */
+.auth-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 0%,#0e2e29 0%,#070f0e 70%)}
+.auth-bg::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(0,193,178,.025) 0,rgba(0,193,178,.025) 1px,transparent 0,transparent 32px),repeating-linear-gradient(90deg,rgba(0,193,178,.025) 0,rgba(0,193,178,.025) 1px,transparent 0,transparent 32px);pointer-events:none}
+/* Adinkra large watermark */
+.auth-watermark{position:absolute;top:80px;left:50%;transform:translateX(-50%);font-size:220px;opacity:.025;color:#00C1B2;pointer-events:none;font-family:'Space Grotesk',sans-serif;white-space:nowrap;letter-spacing:-10px}
+/* Blobs */
+.blob{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
+/* Roo peek from top */
+.roo-peek{position:absolute;top:48px;left:50%;transform:translateX(-50%);width:120px;z-index:5;animation:peek 4s ease-in-out infinite}
+@keyframes peek{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+
+/* Frosted glass card */
+.glass-card{position:relative;z-index:10;width:340px;background:rgba(255,255,255,.05);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:32px 28px;display:flex;flex-direction:column;gap:20px}
+.card-logo{display:flex;justify-content:center}
+.card-logo img{height:24px;filter:brightness(0) invert(1)}
+.card-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;color:#fff;text-align:center;letter-spacing:-.5px}
+.card-sub{font-size:12px;color:rgba(255,255,255,.45);text-align:center;line-height:1.6}
+
+/* OTP state tabs */
+.auth-tabs{display:flex;background:rgba(255,255,255,.06);border-radius:12px;padding:3px;gap:2px}
+.tab{flex:1;text-align:center;padding:8px 4px;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);cursor:pointer;letter-spacing:.5px}
+.tab.active{background:var(--teal);color:#fff}
+
+/* Inputs */
+.input-group{display:flex;flex-direction:column;gap:6px}
+.input-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.4);text-transform:uppercase}
+.auth-input{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;outline:none;width:100%;transition:border-color .2s}
+.auth-input.focused{border-color:var(--teal);background:rgba(0,193,178,.07)}
+.auth-input::placeholder{color:rgba(255,255,255,.25)}
+.auth-input.error{border-color:#FF6B35;animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* Phone flag prefix */
+.phone-wrap{position:relative}
+.flag-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.6)}
+.phone-input{padding-left:68px!important}
+.divider-v{width:1px;height:16px;background:rgba(255,255,255,.15)}
+
+/* OTP boxes */
+.otp-row{display:flex;gap:8px}
+.otp-box{flex:1;height:54px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#fff;outline:none}
+.otp-box.filled{border-color:var(--teal);background:rgba(0,193,178,.08);color:var(--teal)}
+
+/* CTA button */
+.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);border:none;border-radius:16px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px;cursor:pointer;transition:opacity .2s;position:relative;overflow:hidden}
+.auth-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.1),transparent)}
+.auth-divider{display:flex;align-items:center;gap:10px}
+.auth-divider span{font-size:11px;color:rgba(255,255,255,.25);white-space:nowrap}
+.auth-divider-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+
+/* Social buttons */
+.social-row{display:flex;gap:10px}
+.soc-btn{flex:1;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,.65);cursor:pointer}
+
+/* Error msg */
+.err-msg{display:flex;align-items:center;gap:6px;color:#FF6B35;font-size:11px;font-weight:600}
+.err-dot{width:5px;height:5px;border-radius:50%;background:#FF6B35;flex-shrink:0}
+
+/* Cultural bottom kente */
+.kente-auth{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#006B3F 0%,#FCD116 20%,#CE1126 40%,#00C1B2 60%,#FF6B35 80%,#006B3F 100%)}
+
+/* ── LIGHT ── */
+.light-auth{background:#f0f9f8}
+.light-auth .auth-bg{background:radial-gradient(ellipse at 60% 0%,rgba(0,193,178,.15) 0%,#f0f9f8 60%)}
+.light-auth .glass-card{background:rgba(255,255,255,.88);border-color:rgba(0,73,67,.12);box-shadow:0 20px 60px rgba(0,73,67,.1)}
+.light-auth .card-logo img{filter:none}
+.light-auth .card-title{color:var(--ink)}
+.light-auth .card-sub{color:rgba(26,28,28,.5)}
+.light-auth .auth-tabs{background:rgba(0,73,67,.06)}
+.light-auth .tab{color:rgba(26,28,28,.4)}
+.light-auth .input-label{color:rgba(26,28,28,.45)}
+.light-auth .auth-input{background:rgba(0,73,67,.04);border-color:rgba(0,73,67,.12);color:var(--ink)}
+.light-auth .auth-input::placeholder{color:rgba(26,28,28,.3)}
+.light-auth .auth-input.focused{border-color:var(--teal);background:rgba(0,193,178,.06)}
+.light-auth .flag-prefix{color:rgba(26,28,28,.5)}
+.light-auth .divider-v{background:rgba(26,28,28,.12)}
+.light-auth .otp-box{background:rgba(0,73,67,.04);border-color:rgba(0,73,67,.12);color:var(--ink)}
+.light-auth .auth-divider span{color:rgba(26,28,28,.3)}
+.light-auth .auth-divider-line{background:rgba(26,28,28,.08)}
+.light-auth .soc-btn{background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.12);color:rgba(26,28,28,.6)}
+.light-auth .sb{color:rgba(26,28,28,.7)}
+.light-auth .auth-watermark{color:var(--teal-dark);opacity:.03}
+</style>
+
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(3) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- ── DARK – Phone+OTP state ── -->
+<div class="col">
+  <div class="lbl">Auth — Dark / Enter Phone</div>
+  <div class="phone">
+    <div class="dark-auth">
+      <div class="auth-bg"></div>
+      <div class="sb" style="color:rgba(255,255,255,.85)"><span>9:41</span><span>▲▲▲ WiFi 🔋</span></div>
+      <div class="auth-watermark">ROO</div>
+      <!-- blobs -->
+      <div class="blob" style="width:220px;height:220px;background:radial-gradient(circle,rgba(0,193,178,.16) 0%,transparent 70%);top:-60px;left:-60px"></div>
+      <div class="blob" style="width:180px;height:180px;background:radial-gradient(circle,rgba(255,107,53,.1) 0%,transparent 70%);bottom:120px;right:-50px"></div>
+
+      <!-- Roo peeks from top above card -->
+      <div class="roo-peek">
+        <img src="../assets/roo-wears/Agbada.png" alt="Roo" style="width:100%">
+      </div>
+
+      <div class="glass-card">
+        <div class="card-logo"><img src="../assets/logo-teal.svg" alt="Deliveroo"></div>
+        <div>
+          <div class="card-title">Welcome back 👋</div>
+          <div class="card-sub" style="margin-top:6px">Sign in to continue your food journey across Lagos & Accra</div>
+        </div>
+
+        <div class="auth-tabs">
+          <div class="tab active">Phone</div>
+          <div class="tab">Email</div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label">Phone Number</div>
+          <div class="phone-wrap">
+            <div class="flag-prefix">🇳🇬 <div class="divider-v"></div> +234</div>
+            <input class="auth-input phone-input focused" placeholder="080 0000 0000" value="0812 345 6789">
+          </div>
+        </div>
+
+        <button class="auth-btn">Continue →</button>
+
+        <div class="auth-divider">
+          <div class="auth-divider-line"></div>
+          <span>or continue with</span>
+          <div class="auth-divider-line"></div>
+        </div>
+        <div class="social-row">
+          <div class="soc-btn">🍎 Apple</div>
+          <div class="soc-btn">G Google</div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6">By continuing you agree to our <span style="color:var(--teal)">Terms</span> & <span style="color:var(--teal)">Privacy</span></div>
+      </div>
+      <div class="kente-auth"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DARK – OTP verification state ── -->
+<div class="col">
+  <div class="lbl">Auth — Dark / OTP State</div>
+  <div class="phone">
+    <div class="dark-auth">
+      <div class="auth-bg"></div>
+      <div class="sb" style="color:rgba(255,255,255,.85)"><span>9:41</span><span>▲▲▲ WiFi 🔋</span></div>
+      <div class="auth-watermark">ROO</div>
+      <div class="blob" style="width:220px;height:220px;background:radial-gradient(circle,rgba(0,193,178,.16) 0%,transparent 70%);top:-60px;left:-60px"></div>
+      <div class="roo-peek" style="top:52px">
+        <img src="../assets/roo-wears/Native.png" alt="Roo" style="width:100%">
+      </div>
+
+      <div class="glass-card">
+        <div class="card-logo"><img src="../assets/logo-teal.svg" alt="Deliveroo"></div>
+        <div>
+          <div class="card-title">Check your SMS 📱</div>
+          <div class="card-sub" style="margin-top:6px">We sent a 6-digit code to <span style="color:var(--teal);font-weight:700">+234 812 345 6789</span></div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label">Enter OTP Code</div>
+          <div class="otp-row">
+            <input class="otp-box filled" value="4" maxlength="1">
+            <input class="otp-box filled" value="7" maxlength="1">
+            <input class="otp-box filled" value="2" maxlength="1">
+            <input class="otp-box" placeholder="–" maxlength="1">
+            <input class="otp-box" placeholder="–" maxlength="1">
+            <input class="otp-box" placeholder="–" maxlength="1">
+          </div>
+        </div>
+
+        <button class="auth-btn">Verify &amp; Continue →</button>
+
+        <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.35)">Didn't get it? <span style="color:var(--teal);font-weight:700;cursor:pointer">Resend in 0:42</span></div>
+
+        <!-- Error state hint -->
+        <div class="err-msg" style="justify-content:center">
+          <div class="err-dot"></div>
+          Incorrect OTP. 2 attempts remaining.
+        </div>
+
+        <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.3)">← <span style="color:var(--teal);cursor:pointer">Change number</span></div>
+      </div>
+      <div class="kente-auth"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIGHT – Phone state ── -->
+<div class="col">
+  <div class="lbl">Auth — Light / Enter Phone</div>
+  <div class="phone">
+    <div class="dark-auth light-auth">
+      <div class="auth-bg"></div>
+      <div class="sb"><span>9:41</span><span style="color:rgba(26,28,28,.7)">▲▲▲ WiFi 🔋</span></div>
+      <div class="auth-watermark"></div>
+      <div class="blob" style="width:220px;height:220px;background:radial-gradient(circle,rgba(0,193,178,.14) 0%,transparent 70%);top:-60px;left:-60px"></div>
+      <div class="roo-peek">
+        <img src="../assets/roo-wears/Kaftan.png" alt="Roo" style="width:100%">
+      </div>
+
+      <div class="glass-card" style="background:rgba(255,255,255,.92);border-color:rgba(0,73,67,.12);box-shadow:0 20px 60px rgba(0,73,67,.1)">
+        <div class="card-logo"><img src="../assets/logo-teal.svg" alt="Deliveroo" style="filter:none"></div>
+        <div>
+          <div class="card-title" style="color:#1A1C1C">Welcome back 👋</div>
+          <div class="card-sub" style="color:rgba(26,28,28,.5);margin-top:6px">Sign in to continue your food journey across Lagos & Accra</div>
+        </div>
+
+        <div class="auth-tabs" style="background:rgba(0,73,67,.06)">
+          <div class="tab active">Phone</div>
+          <div class="tab" style="color:rgba(26,28,28,.4)">Email</div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label" style="color:rgba(26,28,28,.45)">Phone Number</div>
+          <div class="phone-wrap">
+            <div class="flag-prefix" style="color:rgba(26,28,28,.5)">🇬🇭 <div class="divider-v" style="background:rgba(26,28,28,.12)"></div> +233</div>
+            <input class="auth-input phone-input" style="background:rgba(0,73,67,.04);border-color:var(--teal);color:#1A1C1C" placeholder="024 000 0000" value="024 123 4567">
+          </div>
+        </div>
+
+        <button class="auth-btn">Continue →</button>
+
+        <div class="auth-divider">
+          <div class="auth-divider-line" style="background:rgba(26,28,28,.08)"></div>
+          <span style="color:rgba(26,28,28,.3);font-size:11px">or continue with</span>
+          <div class="auth-divider-line" style="background:rgba(26,28,28,.08)"></div>
+        </div>
+        <div class="social-row">
+          <div class="soc-btn" style="background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.12);color:rgba(26,28,28,.6)">🍎 Apple</div>
+          <div class="soc-btn" style="background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.12);color:rgba(26,28,28,.6)">G Google</div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:rgba(26,28,28,.3);line-height:1.6">By continuing you agree to our <span style="color:var(--teal-dark)">Terms</span> & <span style="color:var(--teal-dark)">Privacy</span></div>
+      </div>
+      <div class="kente-auth"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Navigation Mappings
+        const selectors = [
+            { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },
+            { sel: '.rest-card, .trending-item', to: '05_restaurant_menu.html' },
+            { sel: '.dish-card, .menu-item', to: '06_item_customization.html' },
+            { sel: '.add-cart', to: '07_cart_checkout.html' },
+            { sel: '.checkout-btn', to: '08_live_tracking.html' },
+            { sel: '.roo-fab, .chat-btn', to: '10_roo_chat.html' },
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' },
+            { sel: '.back-btn', to: '03_home_feed.html' }
+        ];
+
+        selectors.forEach(item => {
+            document.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

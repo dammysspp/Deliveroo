@@ -1,0 +1,678 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>08 – Live Order Tracking</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--td:#004943;--org:#FF6B35;--amb:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.screen{width:100%;height:100%;overflow-y:auto;scrollbar-width:none;position:relative}
+.screen::-webkit-scrollbar{display:none}
+.sb-abs{position:absolute;top:0;left:0;right:0;height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;z-index:30;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#fff}
+
+/* Map area (dashboard instead of standard map) */
+.map-area{height:340px;position:relative;overflow:hidden;flex-shrink:0}
+.map-bg{width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.55)}
+/* HUD grid overlay */
+.hud-overlay{position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,rgba(0,193,178,.04) 0,rgba(0,193,178,.04) 1px,transparent 0,transparent 40px),
+  repeating-linear-gradient(90deg,rgba(0,193,178,.04) 0,rgba(0,193,178,.04) 1px,transparent 0,transparent 40px);pointer-events:none}
+.map-top-fade{position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent)}
+/* Rider marker */
+.rider-marker{position:absolute;bottom:110px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;animation:riderBounce 2s ease-in-out infinite}
+@keyframes riderBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+.rider-bubble{width:50px;height:50px;border-radius:50%;background:var(--teal);border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 20px rgba(0,193,178,.6)}
+.rider-pulse{position:absolute;width:70px;height:70px;border-radius:50%;border:2px solid rgba(0,193,178,.4);animation:riderPulse 2s ease-out infinite}
+@keyframes riderPulse{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.rider-label{background:rgba(0,0,0,.7);backdrop-filter:blur(8px);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;padding:3px 10px;border-radius:8px;white-space:nowrap}
+/* ETA HUD badge */
+.eta-hud{position:absolute;top:60px;right:16px;background:rgba(0,0,0,.75);backdrop-filter:blur(12px);border:1px solid rgba(0,193,178,.3);border-radius:14px;padding:10px 14px;text-align:center}
+.eta-label{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal)}
+.eta-time{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:#fff;line-height:1}
+.eta-unit{font-size:10px;color:rgba(255,255,255,.5)}
+/* Route line */
+.route-hint{position:absolute;bottom:60px;left:30%;right:30%;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);opacity:.6}
+/* Destination marker */
+.dest-marker{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:22px}
+
+/* Panel below map */
+.track-panel{padding:20px}
+
+/* Order ID + status */
+.order-id-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.order-id{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px}
+.order-status-chip{padding:5px 12px;border-radius:10px;background:rgba(0,193,178,.15);border:1px solid rgba(0,193,178,.3);font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:var(--teal)}
+
+/* Roo monitoring banner */
+.roo-monitor{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;margin-bottom:18px;border:1px solid}
+.roo-mon-avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--teal)}
+.roo-mon-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.roo-mon-text{flex:1}
+.roo-mon-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;margin-bottom:3px}
+.roo-mon-sub{font-size:11px;line-height:1.5}
+
+/* Progress steps */
+.progress-steps{display:flex;align-items:center;margin-bottom:20px}
+.step-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid;position:relative;z-index:2}
+.step-circle.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.step-circle.active{background:var(--td);border-color:var(--teal);color:#fff;animation:stepPulse 1.5s ease-in-out infinite}
+@keyframes stepPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,193,178,.4)}50%{box-shadow:0 0 0 6px rgba(0,193,178,0)}}
+.step-circle.pending{background:transparent;color:rgba(255,255,255,.3)}
+.step-line{flex:1;height:2px;margin-top:-18px;z-index:1}
+.step-line.done{background:var(--teal)}
+.step-line.pending{background:rgba(255,255,255,.12)}
+.step-label{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center}
+.step-label.done{color:var(--teal)}
+.step-label.active{color:var(--teal)}
+.step-label.pending{color:rgba(255,255,255,.3)}
+
+/* Rider info card */
+.rider-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;margin-bottom:16px}
+.rider-photo{width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--teal)}
+.rider-photo img{width:100%;height:100%;object-fit:cover}
+.rider-info{flex:1}
+.rider-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+.rider-sub{font-size:11px;margin-top:2px}
+.rider-actions{display:flex;gap:8px}
+.rider-action{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+
+/* Dark */
+.dk{background:#0a0f0e}
+.dk .sb-abs{color:#fff}
+.dk .track-panel{color:#fff}
+.dk .order-id{color:rgba(255,255,255,.5)}
+.dk .roo-monitor{background:rgba(0,193,178,.06);border-color:rgba(0,193,178,.2)}
+.dk .roo-mon-title{color:#fff}
+.dk .roo-mon-sub{color:rgba(255,255,255,.55)}
+.dk .step-circle.pending{border-color:rgba(255,255,255,.12)}
+.dk .rider-card{background:rgba(255,255,255,.05)}
+.dk .rider-name{color:#fff}
+.dk .rider-sub{color:rgba(255,255,255,.45)}
+.dk .rider-action{background:rgba(255,255,255,.08)}
+/* Light */
+.lt{background:var(--cream)}
+.lt .track-panel{color:var(--ink)}
+.lt .order-id{color:rgba(26,28,28,.45)}
+.lt .order-status-chip{background:rgba(0,73,67,.08);border-color:rgba(0,73,67,.2);color:var(--td)}
+.lt .roo-monitor{background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.15)}
+.lt .roo-mon-title{color:var(--ink)}
+.lt .roo-mon-sub{color:rgba(26,28,28,.55)}
+.lt .step-circle.done{background:var(--td);border-color:var(--td)}
+.lt .step-circle.active{background:var(--td);border-color:var(--td)}
+.lt .step-circle.pending{border-color:rgba(0,0,0,.15);color:rgba(26,28,28,.25)}
+.lt .step-line.done{background:var(--td)}
+.lt .step-line.pending{background:rgba(0,0,0,.1)}
+.lt .step-label.done{color:var(--td)}
+.lt .step-label.active{color:var(--td)}
+.lt .step-label.pending{color:rgba(26,28,28,.25)}
+.lt .rider-card{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.lt .rider-name{color:var(--ink)}
+.lt .rider-sub{color:rgba(26,28,28,.45)}
+.lt .rider-action{background:rgba(0,0,0,.05)}
+.lt .roo-mon-avatar{border-color:var(--td)}
+.lt .roo-monitor .roo-mon-title{color:var(--ink)}
+
+
+/* Floating pill nav */
+.bottom-nav-wrap{position:sticky;bottom:0;z-index:50;padding:0 20px 28px;display:flex;justify-content:center;pointer-events:none}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px;pointer-events:all}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.nav-dot{position:absolute;top:5px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--orange,#FF6B35);border:2px solid transparent}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal,#00C1B2)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.dk .nav-dot{border-color:#1c2423}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.lt .nav-dot{border-color:#fff}
+
+</style>
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            // Try to get initial mode from parent or default to nigeria
+            document.body.classList.add('nigeria');
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head><body>
+
+<!-- DARK TRACKING -->
+<div class="col"><div class="lbl">Live Tracking — Dark (Lagos)</div>
+<div class="phone"><div class="screen dk">
+  <div class="map-area">
+    <img class="map-bg" src="../assets/map-min.svg" alt="Map" style="width:100%;height:100%;object-fit:cover">
+    <div class="hud-overlay"></div>
+    <div class="map-top-fade"></div>
+    <div class="sb-abs"><span>9:41</span><span>▲▲▲ WiFi 🔋</span></div>
+    <div class="eta-hud">
+      <div class="eta-label">ETA</div>
+      <div class="eta-time">17</div>
+      <div class="eta-unit">minutes</div>
+    </div>
+    <div class="route-hint"></div>
+    <div class="dest-marker">🏠</div>
+    <div class="rider-marker">
+      <div style="position:relative;display:flex;align-items:center;justify-content:center">
+        <div class="rider-pulse"></div>
+        <div class="rider-bubble">🛵</div>
+      </div>
+      <div class="rider-label">Emeka · 1.2km away</div>
+    </div>
+  </div>
+
+  <div class="track-panel">
+    <div class="order-id-row">
+      <div class="order-id">Order #ROO-2847-LG</div>
+      <div class="order-status-chip">En Route 🛵</div>
+    </div>
+
+    <!-- Roo Monitoring -->
+    <div class="roo-monitor">
+      <div class="roo-mon-avatar"><img src="../assets/Roo.png" alt="Roo"></div>
+      <div class="roo-mon-text">
+        <div class="roo-mon-title">Roo is monitoring your delivery 👀</div>
+        <div class="roo-mon-sub">Traffic is light on Adeola Odeku St. Emeka is making great time — all systems green! ✅</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-steps">
+      <div class="step-item">
+        <div class="step-circle done">✓</div>
+        <div class="step-label done">Confirmed</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item">
+        <div class="step-circle done">✓</div>
+        <div class="step-label done">Preparing</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item">
+        <div class="step-circle active">🛵</div>
+        <div class="step-label active">En Route</div>
+      </div>
+      <div class="step-line pending"></div>
+      <div class="step-item">
+        <div class="step-circle pending" style="border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.3)">🏠</div>
+        <div class="step-label pending">Arrived</div>
+      </div>
+    </div>
+
+    <!-- Rider card -->
+    <div class="rider-card">
+      <div class="rider-photo"><img src="../assets/rider.png" alt="Rider"></div>
+      <div class="rider-info">
+        <div class="rider-name">Emeka Okafor</div>
+        <div class="rider-sub" style="color:rgba(255,255,255,.45)">⭐ 4.8 · 1,240 deliveries · Honda CG 125</div>
+      </div>
+      <div class="rider-actions">
+        <div class="rider-action" style="background:rgba(255,255,255,.08)">📞</div>
+        <div class="rider-action" style="background:rgba(255,255,255,.08)">💬</div>
+      </div>
+    </div>
+
+    <!-- Order summary mini -->
+    <div style="padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Your Order</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7)">Mega Suya Platter × 2, Zobo Drink × 1</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--teal);margin-top:4px">₦ 10,200</div>
+      </div>
+      <div style="font-size:28px">🍖</div>
+    </div>
+  </div>
+</div></div></div>
+
+<!-- LIGHT TRACKING -->
+<div class="col"><div class="lbl">Live Tracking — Light (Accra)</div>
+<div class="phone"><div class="screen lt">
+  <div class="map-area">
+    <img class="map-bg" src="../assets/map-min.svg" alt="Map" style="width:100%;height:100%;object-fit:cover;filter:saturate(.5) brightness(.7)">
+    <div class="hud-overlay" style="background:repeating-linear-gradient(0deg,rgba(0,73,67,.04) 0,rgba(0,73,67,.04) 1px,transparent 0,transparent 40px),repeating-linear-gradient(90deg,rgba(0,73,67,.04) 0,rgba(0,73,67,.04) 1px,transparent 0,transparent 40px)"></div>
+    <div class="map-top-fade"></div>
+    <div class="sb-abs"><span>9:41</span><span>▲▲▲ WiFi 🔋</span></div>
+    <div class="eta-hud" style="background:rgba(0,0,0,.6)">
+      <div class="eta-label" style="color:var(--td)">ETA</div>
+      <div class="eta-time">22</div>
+      <div class="eta-unit">minutes</div>
+    </div>
+    <div class="route-hint" style="background:linear-gradient(90deg,transparent,var(--td),transparent)"></div>
+    <div class="dest-marker">🏠</div>
+    <div class="rider-marker">
+      <div style="position:relative;display:flex;align-items:center;justify-content:center">
+        <div class="rider-pulse" style="border-color:rgba(0,73,67,.4)"></div>
+        <div class="rider-bubble" style="background:var(--td)">🛵</div>
+      </div>
+      <div class="rider-label">Kofi · 1.8km away</div>
+    </div>
+  </div>
+
+  <div class="track-panel" style="color:var(--ink)">
+    <div class="order-id-row">
+      <div class="order-id" style="color:rgba(26,28,28,.45)">Order #ROO-1203-AC</div>
+      <div class="order-status-chip" style="background:rgba(0,73,67,.08);border-color:rgba(0,73,67,.2);color:var(--td)">En Route 🛵</div>
+    </div>
+
+    <div class="roo-monitor" style="background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.15)">
+      <div class="roo-mon-avatar" style="border-color:var(--td)"><img src="../assets/Roo.png" alt="Roo"></div>
+      <div class="roo-mon-text">
+        <div class="roo-mon-title" style="color:var(--ink)">Roo is monitoring your delivery 👀</div>
+        <div class="roo-mon-sub" style="color:rgba(26,28,28,.55)">Roads clear around Oxford Street, Osu. Kofi is almost there — ETA updated! ✅</div>
+      </div>
+    </div>
+
+    <div class="progress-steps">
+      <div class="step-item"><div class="step-circle done" style="background:var(--td);border-color:var(--td)">✓</div><div class="step-label done" style="color:var(--td)">Confirmed</div></div>
+      <div class="step-line done" style="background:var(--td)"></div>
+      <div class="step-item"><div class="step-circle done" style="background:var(--td);border-color:var(--td)">✓</div><div class="step-label done" style="color:var(--td)">Preparing</div></div>
+      <div class="step-line done" style="background:var(--td)"></div>
+      <div class="step-item"><div class="step-circle active" style="background:var(--td);border-color:var(--td)">🛵</div><div class="step-label active" style="color:var(--td)">En Route</div></div>
+      <div class="step-line pending" style="background:rgba(0,0,0,.1)"></div>
+      <div class="step-item"><div class="step-circle pending" style="border-color:rgba(0,0,0,.15);color:rgba(26,28,28,.25)">🏠</div><div class="step-label pending" style="color:rgba(26,28,28,.25)">Arrived</div></div>
+    </div>
+
+    <div class="rider-card" style="background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+      <div class="rider-photo" style="border-color:var(--td)"><img src="../assets/rider.png" alt="Rider"></div>
+      <div class="rider-info">
+        <div class="rider-name" style="color:var(--ink)">Kofi Mensah</div>
+        <div class="rider-sub" style="color:rgba(26,28,28,.45)">⭐ 4.9 · 890 deliveries · Yamaha FZ</div>
+      </div>
+      <div class="rider-actions">
+        <div class="rider-action" style="background:rgba(0,0,0,.05)">📞</div>
+        <div class="rider-action" style="background:rgba(0,0,0,.05)">💬</div>
+      </div>
+    </div>
+
+    <div style="padding:12px 16px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(26,28,28,.35);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Your Order</div>
+        <div style="font-size:12px;color:rgba(26,28,28,.65)">Waakye Special × 1, Sobolo × 1</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--td);margin-top:4px">GH₵ 63</div>
+      </div>
+      <div style="font-size:28px">🍲</div>
+      <div class="bottom-nav-wrap">
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+          <div class="nav-item active"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Determine mode/country
+        let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+        const isGhana = country === 'ghana';
+        
+        // Ensure body matches the current mode
+        document.body.classList.remove('nigeria', 'ghana');
+        document.body.classList.add('app-mode', country);
+
+        // Replace Roo avatars with country-specific wear
+        const dkAvatar = document.querySelector('.dk .roo-mon-avatar img');
+        if (dkAvatar) dkAvatar.src = '../assets/roo-wears/Agbada.png';
+        const ltAvatar = document.querySelector('.lt .roo-mon-avatar img');
+        if (ltAvatar) ltAvatar.src = '../assets/roo-wears/Kaftan.png';
+
+        // Get elements for the active container
+        const activeContainerSelector = isGhana ? '.lt' : '.dk';
+        const container = document.querySelector(activeContainerSelector);
+        
+        if (!container) return;
+
+        // Load the active order
+        let order = null;
+        try {
+            order = JSON.parse(localStorage.getItem('deliveroo_active_order'));
+        } catch(e) {}
+
+        // Fallback for testing directly
+        if (!order) {
+            order = {
+                restaurant: isGhana ? "Buka Restaurant" : "University of Suya",
+                country: country,
+                items: [
+                    { name: isGhana ? "Waakye Special" : "Mega Suya Platter", quantity: 2, price: isGhana ? 45 : 4500 }
+                ],
+                subtotal: isGhana ? 90 : 9000,
+                deliveryFee: isGhana ? 5 : 150,
+                serviceCharge: isGhana ? 2 : 50,
+                total: isGhana ? 97 : 9200
+            };
+        }
+
+        // Render Order summary details
+        const orderIdEl = container.querySelector('.order-id');
+        if (orderIdEl) {
+            orderIdEl.innerText = `Order #ROO-${Math.floor(Math.random()*9000)+1000}-${isGhana ? 'AC' : 'LG'}`;
+        }
+
+        // We can find the order summary box inside the track-panel
+        const trackPanel = container.querySelector('.track-panel');
+        if (trackPanel) {
+            // Find the last child or search for 'Your Order' text
+            let summaryBox = null;
+            trackPanel.querySelectorAll('div').forEach(div => {
+                if (div.innerText.includes('YOUR ORDER') || div.innerText.includes('Your Order')) {
+                    summaryBox = div.closest('[style*="padding:12px 16px"]');
+                }
+            });
+
+            if (summaryBox) {
+                const itemsText = order.items.map(item => `${item.name} × ${item.quantity}`).join(', ');
+                const formattedTotal = isGhana ? `GH₵ ${order.total}` : `₦ ${order.total.toLocaleString()}`;
+                
+                const itemsEl = summaryBox.querySelector('div div:nth-child(2)');
+                const priceEl = summaryBox.querySelector('div div:nth-child(3)');
+                const iconEl = summaryBox.querySelector('div:nth-child(2)');
+
+                if (itemsEl) itemsEl.innerText = itemsText;
+                if (priceEl) priceEl.innerText = formattedTotal;
+                if (iconEl) iconEl.innerText = isGhana ? '🍲' : '🍖';
+            }
+        }
+
+        // Map setup
+        const mapArea = container.querySelector('.map-area');
+        const riderMarker = container.querySelector('.rider-marker');
+        const destMarker = container.querySelector('.dest-marker');
+        const routeHint = container.querySelector('.route-hint');
+
+        // Create Restaurant Marker
+        const restMarker = document.createElement('div');
+        restMarker.innerText = isGhana ? '🏢' : '🏬';
+        restMarker.style.position = 'absolute';
+        restMarker.style.fontSize = '22px';
+        restMarker.style.left = '20%';
+        restMarker.style.bottom = '240px';
+        restMarker.style.zIndex = '5';
+        mapArea.appendChild(restMarker);
+
+        // Adjust dest marker position
+        if (destMarker) {
+            destMarker.style.left = '80%';
+            destMarker.style.bottom = '60px';
+            destMarker.style.transform = 'translateX(-50%)';
+        }
+
+        // Define route path coordinates
+        const path = [
+            { x: 20, y: 240 },
+            { x: 35, y: 210 },
+            { x: 30, y: 150 },
+            { x: 60, y: 140 },
+            { x: 55, y: 90 },
+            { x: 80, y: 60 }
+        ];
+
+        function getPointOnPath(t) {
+            if (t <= 0) return path[0];
+            if (t >= 1) return path[path.length - 1];
+            
+            const segmentCount = path.length - 1;
+            const scaledT = t * segmentCount;
+            const index = Math.floor(scaledT);
+            const localT = scaledT - index;
+            
+            const p0 = path[index];
+            const p1 = path[index + 1];
+            
+            return {
+                x: p0.x + (p1.x - p0.x) * localT,
+                y: p0.y + (p1.y - p0.y) * localT
+            };
+        }
+
+        // Progress updating function
+        function updateProgress(stepIndex) {
+            const steps = container.querySelectorAll('.progress-steps .step-item');
+            const lines = container.querySelectorAll('.progress-steps .step-line');
+            
+            steps.forEach((step, idx) => {
+                const circle = step.querySelector('.step-circle');
+                const label = step.querySelector('.step-label');
+                
+                circle.className = 'step-circle';
+                label.className = 'step-label';
+                
+                if (idx < stepIndex) {
+                    circle.classList.add('done');
+                    circle.innerHTML = '✓';
+                    label.classList.add('done');
+                } else if (idx === stepIndex) {
+                    circle.classList.add('active');
+                    if (idx === 1) circle.innerHTML = '🍳';
+                    else if (idx === 2) circle.innerHTML = '🛵';
+                    else if (idx === 3) circle.innerHTML = '🏠';
+                    label.classList.add('active');
+                } else {
+                    circle.classList.add('pending');
+                    if (idx === 1) circle.innerHTML = '🍳';
+                    else if (idx === 2) circle.innerHTML = '🛵';
+                    else if (idx === 3) circle.innerHTML = '🏠';
+                    label.classList.add('pending');
+                }
+            });
+
+            lines.forEach((line, idx) => {
+                line.className = 'step-line';
+                if (idx < stepIndex) {
+                    line.classList.add('done');
+                } else {
+                    line.classList.add('pending');
+                }
+            });
+
+            // Update status chip at the top
+            const statusChip = container.querySelector('.order-status-chip');
+            if (statusChip) {
+                if (stepIndex === 0) statusChip.innerText = 'Confirmed ✓';
+                else if (stepIndex === 1) statusChip.innerText = 'Preparing 🍳';
+                else if (stepIndex === 2) statusChip.innerText = 'En Route 🛵';
+                else if (stepIndex === 3) statusChip.innerText = 'Arrived 🏠';
+            }
+        }
+
+        // Set routeHint to connect restaurant and house
+        if (routeHint) {
+            routeHint.style.left = '20%';
+            routeHint.style.bottom = '150px';
+            routeHint.style.width = '60%';
+            routeHint.style.height = '4px';
+            routeHint.style.transform = 'rotate(-15deg)'; // Adjust angle slightly to look like a road line
+        }
+
+        // Animation Loop
+        const duration = 20000; // 20 seconds loop
+        const start = Date.now();
+
+        function animate() {
+            const elapsed = (Date.now() - start) % duration;
+            const progress = elapsed / duration; // 0 to 1
+
+            let stepIndex = 0;
+            let eta = 0;
+            let statusText = "";
+            let distanceText = "";
+
+            if (progress < 0.2) {
+                // Preparing / Waiting at Restaurant
+                stepIndex = 1;
+                eta = isGhana ? 22 : 17;
+                statusText = isGhana 
+                    ? "Roo: Buka team is preparing your Waakye. Kofi is checking details. 🍳"
+                    : "Roo: Chef is packing your Suya! Emeka is waiting at the pickup spot. 🍳";
+                distanceText = isGhana ? "Kofi · At Restaurant" : "Emeka · At Restaurant";
+                
+                // Position rider at restaurant
+                if (riderMarker) {
+                    riderMarker.style.left = `${path[0].x}%`;
+                    riderMarker.style.bottom = `${path[0].y}px`;
+                }
+            } else if (progress < 0.85) {
+                // En Route / Travelling
+                stepIndex = 2;
+                // Map progress from 0.2-0.85 to path t from 0-1
+                const t = (progress - 0.2) / 0.65;
+                const pos = getPointOnPath(t);
+                
+                if (riderMarker) {
+                    riderMarker.style.left = `${pos.x}%`;
+                    riderMarker.style.bottom = `${pos.y}px`;
+                }
+                
+                const remainingProgress = (0.85 - progress) / 0.65;
+                eta = Math.max(1, Math.round(remainingProgress * (isGhana ? 20 : 15)));
+                const km = (remainingProgress * 1.8).toFixed(1);
+                
+                statusText = isGhana
+                    ? `Roo: Kofi is on the move! Down Oxford Street. All systems green! ✅`
+                    : `Roo: Emeka is making great time! Traffic is light on Admiralty Way. ✅`;
+                distanceText = isGhana ? `Kofi · ${km}km away` : `Emeka · ${km}km away`;
+            } else {
+                // Arrived
+                stepIndex = 3;
+                eta = 0;
+                statusText = isGhana
+                    ? "Roo: Arrived! Kofi has reached your location. Akwaaba! 🎉"
+                    : "Roo: Emeka has arrived! Please meet him at your gate. Enjoy! 🎉";
+                distanceText = "Arrived";
+                
+                if (riderMarker) {
+                    riderMarker.style.left = `${path[path.length - 1].x}%`;
+                    riderMarker.style.bottom = `${path[path.length - 1].y}px`;
+                }
+            }
+
+            // Update DOM
+            updateProgress(stepIndex);
+            
+            const etaTimeEl = container.querySelector('.eta-time');
+            if (etaTimeEl) etaTimeEl.innerText = eta;
+
+            const etaUnitEl = container.querySelector('.eta-unit');
+            if (etaUnitEl) {
+                etaUnitEl.innerText = eta === 1 ? 'minute' : 'minutes';
+            }
+
+            const riderLabel = container.querySelector('.rider-label');
+            if (riderLabel) riderLabel.innerText = distanceText;
+
+            const rooSub = container.querySelector('.roo-mon-sub');
+            if (rooSub) rooSub.innerText = statusText;
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Message listener to handle parent country switch
+        window.addEventListener('message', (e) => {
+            if (e.data.type === 'setMode') {
+                localStorage.setItem('deliveroo_country', e.data.mode);
+                location.reload();
+            }
+        });
+
+        // Mappings for bottom navigation items
+        const selectors = [
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' }
+        ];
+
+        selectors.forEach(item => {
+            container.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body></html>

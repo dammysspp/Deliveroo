@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>09 – Roo Intervention Modals</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--td:#004943;--org:#FF6B35;--amb:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+
+/* Blurred background (tracking screen behind) */
+.blur-bg{width:100%;height:100%;position:relative;overflow:hidden}
+.blur-bg-img{width:100%;height:100%;object-fit:cover;filter:blur(6px) brightness(.4)}
+
+/* Dimmer overlay */
+.dimmer{position:absolute;inset:0;background:rgba(0,0,0,.65);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:40px}
+
+/* Modal card */
+.modal-card{width:350px;border-radius:28px;overflow:hidden}
+
+/* ── STATE A: DELAY ── */
+.modal-delay{background:linear-gradient(160deg,#1a0a00 0%,#0a1a18 100%);border:1px solid rgba(255,107,53,.25)}
+.modal-delay-top{padding:28px 24px 20px;text-align:center;position:relative}
+.delay-icon-wrap{width:80px;height:80px;border-radius:50%;background:rgba(255,107,53,.12);border:2px solid rgba(255,107,53,.25);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.delay-roo{width:68px;height:68px;object-fit:cover;object-position:top;border-radius:50%;animation:rooFocus 2s ease-in-out infinite}
+@keyframes rooFocus{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.delay-pulse-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(255,107,53,.3);animation:dpulse 2s ease-out infinite}
+@keyframes dpulse{0%{opacity:1;transform:scale(.9)}100%{opacity:0;transform:scale(1.2)}}
+.modal-priority-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.3);border-radius:10px;padding:4px 12px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--org);margin-bottom:14px}
+.modal-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.3px}
+.modal-body-text{font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;margin-top:10px}
+/* Credit offer */
+.credit-offer{margin:0 24px 20px;padding:14px 16px;border-radius:16px;background:rgba(255,107,53,.08);border:1px dashed rgba(255,107,53,.3);display:flex;align-items:center;gap:12px}
+.credit-icon{font-size:28px}
+.credit-text{flex:1}
+.credit-amount{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;color:var(--org);line-height:1}
+.credit-desc{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+/* Kente bar */
+.modal-kente{height:3px;background:linear-gradient(90deg,#006B3F,#FCD116,#CE1126,#00C1B2,#FF6B35)}
+/* Buttons */
+.modal-actions{padding:16px 24px 24px;display:flex;flex-direction:column;gap:8px}
+.btn-primary{padding:15px;border-radius:14px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#fff;text-align:center;cursor:pointer;letter-spacing:.3px}
+.btn-delay-primary{background:linear-gradient(135deg,var(--org) 0%,#c44a1a 100%)}
+.btn-secondary{padding:13px;border-radius:14px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;text-align:center;cursor:pointer;background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.08)}
+
+/* ── STATE B: SUCCESS ── */
+.modal-success{background:linear-gradient(160deg,#001a16 0%,#002e2a 100%);border:1px solid rgba(0,193,178,.25)}
+.success-hero{height:160px;position:relative;overflow:hidden}
+.success-bg-img{width:100%;height:100%;object-fit:cover;filter:brightness(.5)}
+.success-overlay{position:absolute;inset:0;background:linear-gradient(to top,#002e2a 0%,transparent 60%)}
+.success-roo-wrap{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:90px;animation:successBounce 1s ease-out}
+@keyframes successBounce{0%{transform:translateX(-50%) translateY(40px);opacity:0}100%{transform:translateX(-50%) translateY(0);opacity:1}}
+.success-roo{width:100%;border-radius:0}
+.confetti-dot{position:absolute;border-radius:50%;width:8px;height:8px;animation:confettiFall 2s ease-in infinite}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(180px) rotate(360deg);opacity:0}}
+.success-content{padding:20px 24px 0;text-align:center}
+.success-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,193,178,.15);border:1px solid rgba(0,193,178,.3);border-radius:10px;padding:5px 14px;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--teal);margin-bottom:14px}
+.success-title{font-family:'Fraunces',Georgia,serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:-.4px}
+.success-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:8px;line-height:1.6}
+.star-row{display:flex;justify-content:center;gap:6px;margin:14px 0 4px;font-size:24px}
+.rating-prompt{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px}
+
+
+/* Floating pill nav */
+.bottom-nav-wrap{position:sticky;bottom:0;z-index:50;padding:0 20px 28px;display:flex;justify-content:center;pointer-events:none}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px;pointer-events:all}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.nav-dot{position:absolute;top:5px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--orange,#FF6B35);border:2px solid transparent}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal,#00C1B2)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.dk .nav-dot{border-color:#1c2423}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.lt .nav-dot{border-color:#fff}
+
+</style>
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Apply app mode if inside iframe
+        if (window.self !== window.top) {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        }
+
+        // Replace Roo avatars with country-specific wear (Agbada for Nigeria/Dark, Kaftan for Ghana/Light)
+        // Nigeria columns: 1 (Delay Dark) and 3 (Success Dark)
+        document.querySelectorAll('.col:nth-of-type(1) img[src*="Roo.png"], .col:nth-of-type(3) img[src*="Roo.png"]').forEach(img => {
+            img.src = '../assets/roo-wears/Agbada.png';
+        });
+        // Ghana columns: 2 (Delay Light)
+        document.querySelectorAll('.col:nth-of-type(2) img[src*="Roo.png"]').forEach(img => {
+            img.src = '../assets/roo-wears/Kaftan.png';
+        });
+    });
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head><body>
+
+<!-- STATE A: DELAY (Dark) -->
+<div class="col"><div class="lbl">Modal — Delay / Rain Alert (Dark)</div>
+<div class="phone">
+  <div class="blur-bg">
+    <img class="blur-bg-img" src="../assets/map-min.svg" alt="">
+    <div class="dimmer">
+      <div class="modal-card modal-delay">
+        <div class="modal-kente"></div>
+        <div class="modal-delay-top">
+          <div class="delay-icon-wrap">
+            <div class="delay-pulse-ring"></div>
+            <img class="delay-roo" src="../assets/Roo.png" alt="Roo">
+          </div>
+          <div class="modal-priority-badge">⚠ Priority Update</div>
+          <div class="modal-title">Heads Up,<br>It's Raining in Lagos</div>
+          <div class="modal-body-text">Heavy rainfall has slowed traffic on Third Mainland Bridge. Your rider is safe but running <strong style="color:#fff">~12 minutes late</strong>. Roo has already rerouted via Carter Bridge.</div>
+        </div>
+        <div class="credit-offer">
+          <div class="credit-icon">💸</div>
+          <div class="credit-text">
+            <div class="credit-amount">₦ 500</div>
+            <div class="credit-desc">Wallet credit added automatically — no need to ask!</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <div class="btn-primary btn-delay-primary">Track Emeka Live 🛵</div>
+          <div class="btn-secondary">I'm okay, no rush ✌</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- STATE A: DELAY (Light) -->
+<div class="col"><div class="lbl">Modal — Delay / Rain Alert (Light)</div>
+<div class="phone">
+  <div class="blur-bg">
+    <img class="blur-bg-img" src="../assets/map-min.svg" alt="" style="filter:blur(6px) brightness(.55)">
+    <div class="dimmer" style="background:rgba(0,0,0,.5)">
+      <div class="modal-card" style="background:linear-gradient(160deg,#f0f9f7 0%,#e8f5f3 100%);border:1px solid rgba(0,73,67,.15)">
+        <div class="modal-kente"></div>
+        <div class="modal-delay-top" style="text-align:center;padding:28px 24px 20px">
+          <div class="delay-icon-wrap" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.2)">
+            <div class="delay-pulse-ring"></div>
+            <img class="delay-roo" src="../assets/Roo.png" alt="Roo">
+          </div>
+          <div class="modal-priority-badge" style="background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.25);color:var(--org)">⚠ Priority Update</div>
+          <div class="modal-title" style="color:var(--ink)">Heads Up,<br>It's Raining in Accra</div>
+          <div class="modal-body-text" style="color:rgba(26,28,28,.55)">Rainfall near Osu is causing delays. Your rider Kofi is safe but <strong style="color:var(--ink)">~10 minutes late</strong>. Roo has already applied the fastest alternate route.</div>
+        </div>
+        <div class="credit-offer" style="background:rgba(255,107,53,.06);border-color:rgba(255,107,53,.2)">
+          <div class="credit-icon">💸</div>
+          <div class="credit-text">
+            <div class="credit-amount" style="color:var(--org)">GH₵ 10</div>
+            <div class="credit-desc" style="color:rgba(26,28,28,.45)">Wallet credit added automatically — no need to ask!</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <div class="btn-primary" style="background:linear-gradient(135deg,var(--org) 0%,#c44a1a 100%)">Track Kofi Live 🛵</div>
+          <div class="btn-secondary" style="background:rgba(0,0,0,.04);color:rgba(26,28,28,.5);border-color:rgba(0,0,0,.08)">I'm okay, no rush ✌</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- STATE B: SUCCESS (Dark) -->
+<div class="col"><div class="lbl">Modal — Order Arrived! (Dark)</div>
+<div class="phone">
+  <div class="blur-bg">
+    <img class="blur-bg-img" src="../assets/delivery-moment.png" alt="" style="filter:blur(4px) brightness(.3)">
+    <div class="dimmer" style="background:rgba(0,0,0,.5)">
+      <div class="modal-card modal-success">
+        <div class="success-hero">
+          <img class="success-bg-img" src="../assets/delivery-moment.png" alt="">
+          <div class="success-overlay"></div>
+          <!-- Confetti -->
+          <div class="confetti-dot" style="left:15%;background:#FCD116;animation-delay:0s"></div>
+          <div class="confetti-dot" style="left:30%;background:#00C1B2;animation-delay:.3s;width:6px;height:6px"></div>
+          <div class="confetti-dot" style="left:55%;background:#FF6B35;animation-delay:.6s"></div>
+          <div class="confetti-dot" style="left:70%;background:#CE1126;animation-delay:.9s;width:6px;height:6px"></div>
+          <div class="confetti-dot" style="left:85%;background:#FCD116;animation-delay:.2s"></div>
+          <img class="success-roo" src="../assets/Roo.png" alt="Roo">
+        </div>
+        <div class="modal-kente"></div>
+        <div class="success-content">
+          <div class="success-badge">🎉 Delivered!</div>
+          <div class="success-title">Your food has arrived!</div>
+          <div class="success-sub">Emeka delivered your Suya in <strong style="color:#fff">19 minutes</strong>. Roo hopes you enjoy every bite! 🍖</div>
+          <div class="star-row">⭐⭐⭐⭐⭐</div>
+          <div class="rating-prompt">Rate your experience</div>
+        </div>
+        <div class="modal-actions" style="padding:16px 24px 24px;display:flex;flex-direction:column;gap:8px">
+          <div class="btn-primary" style="background:linear-gradient(135deg,var(--teal) 0%,var(--td) 100%)">Rate &amp; Review 🌟</div>
+          <div class="btn-secondary">Maybe later</div>
+        </div>
+      </div>
+      <div class="bottom-nav-wrap">
+        <div class="bottom-nav">
+          <div class="nav-item active"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Navigation Mappings
+        const selectors = [
+            { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },
+            { sel: '.rest-card, .trending-item', to: '05_restaurant_menu.html' },
+            { sel: '.dish-card, .menu-item', to: '06_item_customization.html' },
+            { sel: '.add-cart', to: '07_cart_checkout.html' },
+            { sel: '.checkout-btn', to: '08_live_tracking.html' },
+            { sel: '.roo-fab, .chat-btn', to: '10_roo_chat.html' },
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' },
+            { sel: '.back-btn', to: '03_home_feed.html' }
+        ];
+
+        selectors.forEach(item => {
+            document.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body></html>

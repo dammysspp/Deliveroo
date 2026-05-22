@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deliveroo West Africa — Prototype Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #00C1B2;
+            --teal-dark: #004943;
+            --orange: #FF6B35;
+            --ink: #1A1C1C;
+            --cream: #F9F9F9;
+            --sidebar-width: 320px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #141a19;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--teal);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        .screen-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px;
+        }
+
+        .screen-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .screen-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .screen-item.active {
+            background: var(--teal);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 193, 178, 0.3);
+        }
+
+        .screen-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            opacity: 0.5;
+            width: 20px;
+        }
+
+        .screen-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Main Viewport */
+        .viewport {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #1a2221 0%, #0d0d0d 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .viewport-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .current-info {
+            pointer-events: all;
+        }
+
+        .current-title {
+            font-family: 'Fraunces', serif;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .current-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        /* Iframe Wrapper */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+
+        /* Instructions Overlay */
+        .hint {
+            position: absolute;
+            bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hint b {
+            color: var(--teal);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Deliveroo <span>West Africa</span></div>
+        </div>
+        <div class="screen-list" id="screenList">
+            <!-- Items populated by JS -->
+        </div>
+    </div>
+
+    <div class="viewport">
+        <div class="viewport-header">
+            <div class="current-info">
+                <div class="current-title" id="activeTitle">Splash & Preloader</div>
+                <div class="current-subtitle" id="activeSub">Screen 01 of 12</div>
+            </div>
+            <div style="pointer-events: all;">
+                <button onclick="reloadFrame()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700;">RELOAD SCREEN</button>
+            </div>
+        </div>
+
+        <div class="iframe-container">
+            <iframe id="protoFrame" src="01_splash_preloader.html"></iframe>
+        </div>
+
+        <div class="hint">
+            💡 <b>Testing Tip:</b> Scroll inside the phone frames to explore full layouts. Each file shows <b>Dark</b> and <b>Light</b> modes side-by-side.
+        </div>
+    </div>
+
+    <script>
+        const screens = [
+            { id: '01', name: 'Splash & Preloader', file: '01_splash_preloader.html' },
+            { id: '02', name: 'Authentication', file: '02_authentication.html' },
+            { id: '03', name: 'Home Feed', file: '03_home_feed.html' },
+            { id: '04', name: 'Search & Explore', file: '04_search_explore.html' },
+            { id: '05', name: 'Restaurant Menu', file: '05_restaurant_menu.html' },
+            { id: '06', name: 'Item Customization', file: '06_item_customization.html' },
+            { id: '07', name: 'Cart & Checkout', file: '07_cart_checkout.html' },
+            { id: '08', name: 'Live Tracking', file: '08_live_tracking.html' },
+            { id: '09', name: 'Roo Modals', file: '09_roo_modals.html' },
+            { id: '10', name: 'Roo AI Chat', file: '10_roo_chat.html' },
+            { id: '11', name: 'Plus & Loyalty', file: '11_plus_loyalty.html' },
+            { id: '12', name: 'Profile & Settings', file: '12_profile_settings.html' }
+        ];
+
+        const listEl = document.getElementById('screenList');
+        const frame = document.getElementById('protoFrame');
+        const titleEl = document.getElementById('activeTitle');
+        const subEl = document.getElementById('activeSub');
+
+        function loadScreen(index) {
+            const screen = screens[index];
+            frame.src = screen.file;
+            titleEl.innerText = screen.name;
+            subEl.innerText = `Screen ${screen.id} of 12`;
+
+            // Update active state in list
+            document.querySelectorAll('.screen-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+            
+            // Animation reset
+            frame.parentElement.style.opacity = '0';
+            frame.parentElement.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                frame.parentElement.style.opacity = '1';
+                frame.parentElement.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        function reloadFrame() {
+            frame.contentWindow.location.reload();
+        }
+
+        // Initialize list
+        screens.forEach((screen, index) => {
+            const div = document.createElement('div');
+            div.className = `screen-item ${index === 0 ? 'active' : ''}`;
+            div.innerHTML = `
+                <div class="screen-num">${screen.id}</div>
+                <div class="screen-name">${screen.name}</div>
+            `;
+            div.onclick = () => loadScreen(index);
+            listEl.appendChild(div);
+        });
+
+        // Handle iframe message for navigation (if we add button clicks inside)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'navigate') {
+                const targetIdx = screens.findIndex(s => s.file === event.data.file);
+                if (targetIdx !== -1) loadScreen(targetIdx);
+            }
+        });
+    </script>
+</body>
+</html>

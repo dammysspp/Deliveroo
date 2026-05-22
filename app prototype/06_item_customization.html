@@ -1,0 +1,536 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>06 – Item Customization</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--td:#004943;--org:#FF6B35;--amb:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7);display:flex;flex-direction:column}
+.screen{flex:1;overflow-y:auto;scrollbar-width:none;position:relative;display:flex;flex-direction:column}
+.screen::-webkit-scrollbar{display:none}
+.sb{height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;flex-shrink:0}
+
+/* Floating pill nav */
+.bottom-nav-wrap{flex-shrink:0;padding:0 20px 28px;display:flex;justify-content:center;background:transparent}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+
+/* Background (dimmed menu behind sheet) */
+.bg-dim{width:100%;flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.bg-rest{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.35)}
+
+/* Bottom Sheet */
+.sheet{position:relative;z-index:2;border-radius:28px 28px 0 0;overflow:hidden}
+.sheet-handle{width:40px;height:4px;border-radius:2px;margin:10px auto 0}
+.sheet-food{width:100%;height:170px;object-fit:cover;display:block}
+.sheet-body{padding:18px 20px 0}
+.sheet-name{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;letter-spacing:-.3px}
+.sheet-desc{font-size:12px;line-height:1.6;margin-top:6px}
+.sheet-price{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;margin-top:8px;color:var(--teal)}
+.opt-group{margin-top:16px}
+.opt-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.opt-req{font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(255,107,53,.15);color:var(--org)}
+.opt-opt{font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px}
+.opt-item{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid}
+.opt-left{display:flex;align-items:center;gap:12px}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.radio.checked::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--teal)}
+.checkbox{width:20px;height:20px;border-radius:6px;border:2px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.checkbox.checked{background:var(--teal);border-color:var(--teal);color:#fff}
+.opt-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600}
+.opt-sub{font-size:10px;margin-top:2px}
+.opt-price{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700}
+.qty-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0 8px}
+.qty-label{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+.qty-ctrl{display:flex;align-items:center;gap:14px}
+.qty-btn{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;font-weight:300}
+.qty-num{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;min-width:24px;text-align:center}
+.add-cart{width:calc(100% - 40px);margin:8px 20px 20px;padding:16px 20px;background:linear-gradient(135deg,var(--teal) 0%,var(--td) 100%);border-radius:18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 8px 24px rgba(0,193,178,.4)}
+.add-cart-label{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.add-cart-price{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff}
+
+/* Dark */
+.dk .sb{color:rgba(255,255,255,.85)}
+.dk .sheet{background:#141a19}
+.dk .sheet-handle{background:rgba(255,255,255,.18)}
+.dk .sheet-name{color:#fff}
+.dk .sheet-desc{color:rgba(255,255,255,.45)}
+.dk .opt-title{color:rgba(255,255,255,.4)}
+.dk .opt-opt{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.dk .opt-item{border-color:rgba(255,255,255,.06)}
+.dk .radio{border-color:rgba(255,255,255,.25)}
+.dk .radio.checked{border-color:var(--teal)}
+.dk .checkbox{border-color:rgba(255,255,255,.25)}
+.dk .opt-name{color:#fff}
+.dk .opt-sub{color:rgba(255,255,255,.35)}
+.dk .opt-price{color:rgba(255,255,255,.6)}
+.dk .qty-label{color:#fff}
+.dk .qty-btn{background:rgba(255,255,255,.08);color:#fff}
+.dk .qty-num{color:#fff}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+
+/* Light */
+.lt .sb{color:rgba(26,28,28,.75)}
+.lt .sheet{background:#fff}
+.lt .sheet-handle{background:rgba(0,0,0,.12)}
+.lt .sheet-name{color:var(--ink)}
+.lt .sheet-desc{color:rgba(26,28,28,.5)}
+.lt .sheet-price{color:var(--td)}
+.lt .opt-title{color:rgba(26,28,28,.4)}
+.lt .opt-opt{background:rgba(0,0,0,.05);color:rgba(26,28,28,.45)}
+.lt .opt-item{border-color:rgba(0,0,0,.06)}
+.lt .radio{border-color:rgba(0,0,0,.2)}
+.lt .radio.checked{border-color:var(--td)}
+.lt .radio.checked::after{background:var(--td)}
+.lt .checkbox{border-color:rgba(0,0,0,.2)}
+.lt .checkbox.checked{background:var(--td);border-color:var(--td)}
+.lt .opt-name{color:var(--ink)}
+.lt .opt-sub{color:rgba(26,28,28,.4)}
+.lt .opt-price{color:rgba(26,28,28,.55)}
+.lt .qty-label{color:var(--ink)}
+.lt .qty-btn{background:rgba(0,0,0,.05);color:var(--ink)}
+.lt .qty-num{color:var(--ink)}
+.lt .add-cart{background:linear-gradient(135deg,var(--td) 0%,#002e2a 100%);box-shadow:0 8px 24px rgba(0,73,67,.35)}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+</style>
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head><body>
+
+<!-- DARK -->
+<div class="col"><div class="lbl">Item Customization — Dark</div>
+<div class="phone"><div class="screen dk">
+  <div class="sb"><span>9:41</span><span>Signal WiFi Battery</span></div>
+  <div class="bg-dim">
+    <img class="bg-rest" src="../assets/university-of-suya.jpg" alt="">
+    <div class="sheet">
+      <img class="sheet-food" src="../assets/suya.png" alt="Mega Suya">
+      <div class="sheet-handle"></div>
+      <div class="sheet-body">
+        <div class="sheet-name">Mega Suya Platter</div>
+        <div class="sheet-desc">Signature beef & chicken suya with fresh tomatoes, onions & suya spice blend</div>
+        <div class="sheet-price">&#8358; 4,500</div>
+        <div class="opt-group">
+          <div class="opt-title">Protein Choice <span class="opt-req">Required</span></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio checked"></div><div class="opt-name">Beef</div></div><div class="opt-price">Included</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio"></div><div class="opt-name">Chicken</div></div><div class="opt-price">Included</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio"></div><div><div class="opt-name">Liver (Asun)</div><div class="opt-sub">Spicy goat liver, local favourite</div></div></div><div class="opt-price">+&#8358;500</div></div>
+        </div>
+        <div class="opt-group">
+          <div class="opt-title">Extras <span class="opt-opt">Optional</span></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox checked">&#10003;</div><div><div class="opt-name">Extra Plantain</div><div class="opt-sub">Fried sweet plantain (dodo)</div></div></div><div class="opt-price">+&#8358;300</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox"></div><div><div class="opt-name">Extra Suya Spice</div><div class="opt-sub">House blend yaji seasoning</div></div></div><div class="opt-price">+&#8358;100</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox"></div><div><div class="opt-name">Zobo Drink (50cl)</div><div class="opt-sub">House-made hibiscus drink</div></div></div><div class="opt-price">+&#8358;400</div></div>
+        </div>
+        <div class="qty-row">
+          <div class="qty-label">Quantity</div>
+          <div class="qty-ctrl">
+            <div class="qty-btn">&#8722;</div>
+            <div class="qty-num">2</div>
+            <div class="qty-btn" style="background:var(--teal);color:#fff">+</div>
+          </div>
+        </div>
+      </div>
+      <div class="add-cart"><div class="add-cart-label">Add to Cart</div><div class="add-cart-price">&#8358; 9,600</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav-wrap">
+    <div class="bottom-nav">
+      <div class="nav-item active"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+    </div>
+  </div>
+</div></div></div>
+
+<!-- LIGHT -->
+<div class="col"><div class="lbl">Item Customization — Light</div>
+<div class="phone"><div class="screen lt">
+  <div class="sb"><span style="color:rgba(255,255,255,.85)">9:41</span><span style="color:rgba(255,255,255,.85)">Signal WiFi Battery</span></div>
+  <div class="bg-dim">
+    <img class="bg-rest" src="../assets/The-Buka-Restaurant-696x423.webp" alt="" style="filter:brightness(.45)">
+    <div class="sheet">
+      <img class="sheet-food" src="../assets/waakye.png" alt="Waakye">
+      <div class="sheet-handle"></div>
+      <div class="sheet-body">
+        <div class="sheet-name">Waakye Special</div>
+        <div class="sheet-desc">Waakye, fried fish, boiled egg, spaghetti, shito sauce & gari</div>
+        <div class="sheet-price">GH&#8373; 45</div>
+        <div class="opt-group">
+          <div class="opt-title">Protein <span class="opt-req">Required</span></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio checked"></div><div class="opt-name">Fried Fish</div></div><div class="opt-price">Included</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio"></div><div class="opt-name">Grilled Chicken</div></div><div class="opt-price">+GH&#8373;15</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="radio"></div><div><div class="opt-name">Beef</div><div class="opt-sub">Stewed beef cuts</div></div></div><div class="opt-price">+GH&#8373;12</div></div>
+        </div>
+        <div class="opt-group">
+          <div class="opt-title">Extras <span class="opt-opt">Optional</span></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox checked">&#10003;</div><div><div class="opt-name">Extra Shito</div><div class="opt-sub">Hot Ghanaian pepper sauce</div></div></div><div class="opt-price">+GH&#8373;3</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox"></div><div><div class="opt-name">Extra Kelewele</div><div class="opt-sub">Spiced fried plantain</div></div></div><div class="opt-price">+GH&#8373;5</div></div>
+          <div class="opt-item"><div class="opt-left"><div class="checkbox"></div><div><div class="opt-name">Sobolo Drink</div><div class="opt-sub">Chilled hibiscus drink</div></div></div><div class="opt-price">+GH&#8373;8</div></div>
+        </div>
+        <div class="qty-row">
+          <div class="qty-label">Quantity</div>
+          <div class="qty-ctrl">
+            <div class="qty-btn">&#8722;</div>
+            <div class="qty-num">1</div>
+            <div class="qty-btn" style="background:var(--td);color:#fff">+</div>
+          </div>
+        </div>
+      </div>
+      <div class="add-cart"><div class="add-cart-label">Add to Cart</div><div class="add-cart-price">GH&#8373; 48</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav-wrap">
+    <div class="bottom-nav">
+      <div class="nav-item active"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+    </div>
+  </div>
+</div></div></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Determine mode/country
+        let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+        const isGhana = country === 'ghana';
+        
+        // Ensure body matches the current mode
+        document.body.classList.remove('nigeria', 'ghana');
+        document.body.classList.add('app-mode', country);
+
+        // Load the customizing item
+        let baseItem = null;
+        try {
+            baseItem = JSON.parse(localStorage.getItem('deliveroo_customizing_item'));
+        } catch(e) {}
+
+        // Fallbacks if nothing is in localStorage
+        if (!baseItem) {
+            baseItem = {
+                name: isGhana ? "Waakye Special" : "Mega Suya Platter",
+                price: isGhana ? 45 : 4500,
+                img: isGhana ? "../assets/waakye.png" : "../assets/suya.png",
+                restaurant: isGhana ? "Buka Restaurant" : "University of Suya",
+                country: country
+            };
+        }
+
+        // Apply item details to active column
+        const activeContainerSelector = isGhana ? '.lt' : '.dk';
+        const container = document.querySelector(activeContainerSelector);
+        
+        if (container && baseItem) {
+            const nameEl = container.querySelector('.sheet-name');
+            if (nameEl) nameEl.innerText = baseItem.name;
+            
+            const foodImg = container.querySelector('.sheet-food');
+            if (foodImg && baseItem.img) foodImg.src = baseItem.img;
+            
+            const priceEl = container.querySelector('.sheet-price');
+            if (priceEl) {
+                priceEl.innerText = isGhana ? `GH₵ ${baseItem.price}` : `₦ ${baseItem.price.toLocaleString()}`;
+            }
+        }
+
+        // Quantity controls
+        let quantity = 1;
+        const qtyNumEl = container ? container.querySelector('.qty-num') : null;
+        if (qtyNumEl) quantity = parseInt(qtyNumEl.innerText.trim(), 10) || 1;
+
+        const updateQuantity = (change) => {
+            quantity += change;
+            if (quantity < 1) quantity = 1;
+            if (qtyNumEl) qtyNumEl.innerText = quantity;
+            recalculateTotal();
+        };
+
+        if (container) {
+            const qtyBtns = container.querySelectorAll('.qty-btn');
+            if (qtyBtns.length >= 2) {
+                qtyBtns[0].style.cursor = 'pointer';
+                qtyBtns[1].style.cursor = 'pointer';
+                qtyBtns[0].addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    updateQuantity(-1);
+                });
+                qtyBtns[1].addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    updateQuantity(1);
+                });
+            }
+        }
+
+        // Setup options clicks (radios and checkboxes)
+        if (container) {
+            container.querySelectorAll('.opt-item').forEach(item => {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    const radio = item.querySelector('.radio');
+                    if (radio) {
+                        const optGroup = item.closest('.opt-group');
+                        optGroup.querySelectorAll('.radio').forEach(r => r.classList.remove('checked'));
+                        radio.classList.add('checked');
+                    }
+                    
+                    const checkbox = item.querySelector('.checkbox');
+                    if (checkbox) {
+                        checkbox.classList.toggle('checked');
+                        if (checkbox.classList.contains('checked')) {
+                            checkbox.innerHTML = '&#10003;';
+                        } else {
+                            checkbox.innerHTML = '';
+                        }
+                    }
+                    
+                    recalculateTotal();
+                });
+            });
+        }
+
+        // Recalculate price
+        const recalculateTotal = () => {
+            if (!container) return 0;
+            
+            let extraPrice = 0;
+            container.querySelectorAll('.opt-item').forEach(item => {
+                const radio = item.querySelector('.radio');
+                const checkbox = item.querySelector('.checkbox');
+                
+                const isSelected = (radio && radio.classList.contains('checked')) || 
+                                     (checkbox && checkbox.classList.contains('checked'));
+                                     
+                if (isSelected) {
+                    const priceTextEl = item.querySelector('.opt-price');
+                    if (priceTextEl) {
+                        const priceText = priceTextEl.innerText.trim();
+                        if (!priceText.toLowerCase().includes('included')) {
+                            const valStr = priceText.replace(/[^0-9]/g, '');
+                            extraPrice += parseInt(valStr, 10) || 0;
+                        }
+                    }
+                }
+            });
+            
+            const totalItemPrice = (baseItem.price + extraPrice) * quantity;
+            
+            // Update display
+            const addCartPriceEl = container.querySelector('.add-cart-price');
+            if (addCartPriceEl) {
+                addCartPriceEl.innerText = isGhana ? `GH₵ ${totalItemPrice}` : `₦ ${totalItemPrice.toLocaleString()}`;
+            }
+            
+            return totalItemPrice;
+        };
+
+        // Initialize price calculation
+        recalculateTotal();
+
+        // Add to Cart click
+        if (container) {
+            const addCartBtn = container.querySelector('.add-cart');
+            if (addCartBtn) {
+                addCartBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Collect selected options
+                    const selectedExtras = [];
+                    container.querySelectorAll('.opt-item').forEach(item => {
+                        const radio = item.querySelector('.radio');
+                        const checkbox = item.querySelector('.checkbox');
+                        
+                        const isSelected = (radio && radio.classList.contains('checked')) || 
+                                             (checkbox && checkbox.classList.contains('checked'));
+                                             
+                        if (isSelected) {
+                            const nameEl = item.querySelector('.opt-name');
+                            const priceTextEl = item.querySelector('.opt-price');
+                            
+                            const optName = nameEl ? nameEl.innerText.trim() : '';
+                            const priceText = priceTextEl ? priceTextEl.innerText.trim() : '';
+                            let optPrice = 0;
+                            if (!priceText.toLowerCase().includes('included')) {
+                                optPrice = parseInt(priceText.replace(/[^0-9]/g, ''), 10) || 0;
+                            }
+                            
+                            selectedExtras.push({ name: optName, price: optPrice });
+                        }
+                    });
+                    
+                    // Get current cart or start fresh
+                    let cart = {
+                        restaurant: baseItem.restaurant,
+                        country: country,
+                        items: []
+                    };
+                    
+                    try {
+                        const existingCart = JSON.parse(localStorage.getItem('deliveroo_cart'));
+                        if (existingCart && existingCart.restaurant === baseItem.restaurant && existingCart.country === country) {
+                            cart = existingCart;
+                        }
+                    } catch(e) {}
+                    
+                    // Create cart item
+                    const cartItem = {
+                        name: baseItem.name,
+                        basePrice: baseItem.price,
+                        price: baseItem.price + selectedExtras.reduce((sum, ext) => sum + ext.price, 0),
+                        quantity: quantity,
+                        extras: selectedExtras,
+                        img: baseItem.img
+                    };
+                    
+                    // Check if duplicate item (same name and same extras)
+                    let duplicateIndex = -1;
+                    for (let i = 0; i < cart.items.length; i++) {
+                        const item = cart.items[i];
+                        if (item.name === cartItem.name && item.extras.length === cartItem.extras.length) {
+                            let match = true;
+                            for (let j = 0; j < item.extras.length; j++) {
+                                if (item.extras[j].name !== cartItem.extras[j].name) {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (match) {
+                                duplicateIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (duplicateIndex > -1) {
+                        cart.items[duplicateIndex].quantity += quantity;
+                    } else {
+                        cart.items.push(cartItem);
+                    }
+                    
+                    localStorage.setItem('deliveroo_cart', JSON.stringify(cart));
+                    navigate('07_cart_checkout.html');
+                });
+            }
+        }
+
+        // Message listener to handle parent country switch
+        window.addEventListener('message', (e) => {
+            if (e.data.type === 'setMode') {
+                localStorage.setItem('deliveroo_country', e.data.mode);
+                location.reload();
+            }
+        });
+
+        // Back button / dismissal actions
+        if (container) {
+            const bgDim = container.querySelector('.bg-dim');
+            if (bgDim) {
+                bgDim.addEventListener('click', (e) => {
+                    if (e.target === bgDim) {
+                        navigate('05_restaurant_menu.html');
+                    }
+                });
+            }
+            
+            const sheetHandle = container.querySelector('.sheet-handle');
+            if (sheetHandle) {
+                sheetHandle.style.cursor = 'pointer';
+                sheetHandle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navigate('05_restaurant_menu.html');
+                });
+            }
+        }
+    });
+</script>
+
+</body></html>

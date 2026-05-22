@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 – Search & Explore</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--teal-dark:#004943;--orange:#FF6B35;--amber:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.screen{width:100%;height:100%;overflow-y:auto;scrollbar-width:none;position:relative}
+.screen::-webkit-scrollbar{display:none}
+.sb{height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;position:sticky;top:0;z-index:50;flex-shrink:0}
+.sb-time{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+
+/* Search header */
+.search-head{padding:12px 20px 8px;position:sticky;top:48px;z-index:40;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.search-back{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back-btn{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+.search-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+.search-active{display:flex;align-items:center;gap:10px;border-radius:16px;padding:14px 16px}
+.search-icon{font-size:16px}
+.search-inp{flex:1;font-family:'DM Sans',sans-serif;font-size:14px;background:transparent;border:none;outline:none}
+.search-clear{font-size:14px;opacity:.5;cursor:pointer}
+.search-cursor{display:inline-block;width:2px;height:16px;background:var(--teal);animation:blink 1s ease infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Trending tags */
+.trending-section{padding:16px 20px 8px}
+.trend-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.trend-tags{display:flex;flex-wrap:wrap;gap:8px}
+.trend-tag{padding:7px 14px;border-radius:20px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;border:1.5px solid}
+
+/* Cuisine grid */
+.cuisine-section{padding:16px 20px}
+.cuis-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.cuis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cuis-card{border-radius:16px;overflow:hidden;position:relative;height:100px;cursor:pointer}
+.cuis-card img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.cuis-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.2) 60%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.cuis-name{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:900;color:#fff;letter-spacing:-.2px}
+.cuis-count{font-size:10px;color:rgba(255,255,255,.7);margin-top:2px;font-family:'Space Grotesk',sans-serif;font-weight:600}
+/* Kente badge on cuisine card */
+.cuis-kente{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#006B3F,#FCD116,#CE1126)}
+
+/* Recent searches */
+.recent-section{padding:16px 20px}
+.recent-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.recent-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid}
+.recent-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.recent-text{flex:1}
+.recent-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600}
+.recent-sub{font-size:11px;margin-top:2px}
+.recent-arrow{font-size:14px;opacity:.3}
+
+/* Dark */
+.dk{background:#0a0f0e}
+.dk .sb{background:#0a0f0e;color:rgba(255,255,255,.85)}
+.dk .search-head{background:rgba(10,15,14,.92)}
+.dk .back-btn{background:rgba(255,255,255,.07);color:#fff}
+.dk .search-title{color:#fff}
+.dk .search-active{background:rgba(255,255,255,.07);border:1.5px solid var(--teal)}
+.dk .search-inp{color:#fff}
+.dk .search-inp::placeholder{color:rgba(255,255,255,.3)}
+.dk .trend-title{color:rgba(255,255,255,.4)}
+.dk .trend-tag{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.dk .trend-tag:hover{border-color:var(--teal);color:var(--teal)}
+.dk .cuis-title{color:rgba(255,255,255,.4)}
+.dk .recent-title{color:rgba(255,255,255,.4)}
+.dk .recent-item{border-color:rgba(255,255,255,.06)}
+.dk .recent-name{color:#fff}
+.dk .recent-sub{color:rgba(255,255,255,.35)}
+.dk .recent-icon{background:rgba(255,255,255,.07)}
+/* Light */
+.lt{background:var(--cream)}
+.lt .sb{background:var(--cream);color:rgba(26,28,28,.85)}
+.lt .search-head{background:rgba(249,249,249,.92)}
+.lt .back-btn{background:rgba(0,0,0,.05);color:var(--ink)}
+.lt .search-title{color:var(--ink)}
+.lt .search-active{background:#fff;border:1.5px solid var(--teal-dark);box-shadow:0 4px 16px rgba(0,73,67,.08)}
+.lt .search-inp{color:var(--ink)}
+.lt .search-inp::placeholder{color:rgba(26,28,28,.3)}
+.lt .trend-title{color:rgba(26,28,28,.4)}
+.lt .trend-tag{background:#fff;border-color:rgba(0,0,0,.08);color:rgba(26,28,28,.65)}
+.lt .cuis-title{color:rgba(26,28,28,.4)}
+.lt .recent-title{color:rgba(26,28,28,.4)}
+.lt .recent-item{border-color:rgba(0,0,0,.06)}
+.lt .recent-name{color:var(--ink)}
+.lt .recent-sub{color:rgba(26,28,28,.4)}
+.lt .recent-icon{background:rgba(0,0,0,.04)}
+
+
+/* Floating pill nav */
+.bottom-nav-wrap{position:sticky;bottom:0;z-index:50;padding:0 20px 28px;display:flex;justify-content:center;pointer-events:none}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px;pointer-events:all}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.nav-dot{position:absolute;top:5px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--orange,#FF6B35);border:2px solid transparent}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal,#00C1B2)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.dk .nav-dot{border-color:#1c2423}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.lt .nav-dot{border-color:#fff}
+
+</style>
+
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- ── DARK SEARCH ── -->
+<div class="col">
+  <div class="lbl">Search & Explore — Dark</div>
+  <div class="phone">
+    <div class="screen dk">
+      <div class="sb"><span class="sb-time">9:41</span><div style="color:rgba(255,255,255,.85)">▲▲▲ WiFi 🔋</div></div>
+
+      <div class="search-head">
+        <div class="search-back">
+          <div class="back-btn">←</div>
+          <div class="search-title">Explore</div>
+        </div>
+        <div class="search-active">
+          <div class="search-icon" style="color:var(--teal)">🔍</div>
+          <input class="search-inp" placeholder="Suya, Buka, Jollof..." value="Suya">
+          <span class="search-cursor"></span>
+          <div class="search-clear">✕</div>
+        </div>
+      </div>
+
+      <div class="trending-section">
+        <div class="trend-title" style="color:rgba(255,255,255,.4)">🔥 Trending in Lagos</div>
+        <div class="trend-tags">
+          <div class="trend-tag" style="background:rgba(0,193,178,.12);border-color:var(--teal);color:var(--teal)">🍖 Suya Night</div>
+          <div class="trend-tag" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.7)">🍚 Jollof Wars</div>
+          <div class="trend-tag" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.7)">🥘 Egusi Season</div>
+          <div class="trend-tag" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.7)">🍌 Plantain & Egg</div>
+          <div class="trend-tag" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.7)">🥤 Zobo & Kunu</div>
+        </div>
+      </div>
+
+      <div class="cuisine-section">
+        <div class="cuis-title" style="color:rgba(255,255,255,.4)">Cuisines</div>
+        <div class="cuis-grid">
+          <div class="cuis-card">
+            <img src="../assets/jollof.png" alt="Jollof">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Jollof Rice</div>
+              <div class="cuis-count">43 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#006B3F,#FCD116,#CE1126)"></div>
+          </div>
+          <div class="cuis-card">
+            <img src="../assets/suya.png" alt="Suya">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Suya & Grills</div>
+              <div class="cuis-count">28 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#FF6B35,#FFB347,#CE1126)"></div>
+          </div>
+          <div class="cuis-card">
+            <img src="../assets/waakye.png" alt="Waakye">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Waakye</div>
+              <div class="cuis-count">19 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#00C1B2,#006B3F,#FCD116)"></div>
+          </div>
+          <div class="cuis-card">
+            <img src="../assets/restaurant.png" alt="Seafood">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Seafood</div>
+              <div class="cuis-count">17 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#00C1B2,#004943,#002e2a)"></div>
+          </div>
+          <div class="cuis-card">
+            <img src="../assets/zobo-drink.jpg" alt="Drinks">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Drinks & Zobo</div>
+              <div class="cuis-count">35 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#CE1126,#FF6B35,#FFB347)"></div>
+          </div>
+          <div class="cuis-card">
+            <img src="../assets/family-dinner.png" alt="Family">
+            <div class="cuis-overlay">
+              <div class="cuis-name">Family Meals</div>
+              <div class="cuis-count">52 spots</div>
+            </div>
+            <div class="cuis-kente" style="background:linear-gradient(90deg,#FFB347,#FCD116,#006B3F)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent-section">
+        <div class="recent-title">Recent Searches</div>
+        <div class="recent-item">
+          <div class="recent-icon">🍖</div>
+          <div class="recent-text">
+            <div class="recent-name">University of Suya</div>
+            <div class="recent-sub">Restaurant · Ikeja, Lagos</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-icon">🥘</div>
+          <div class="recent-text">
+            <div class="recent-name">Egusi Soup</div>
+            <div class="recent-sub">Dish · 12 restaurants nearby</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+        <div class="recent-item">
+          <div class="recent-icon">🍌</div>
+          <div class="recent-text">
+            <div class="recent-name">Plantain & Egg</div>
+            <div class="recent-sub">Dish · 8 spots open now</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+      </div>
+      <div style="height:90px"></div></div>
+        <div class="nav-item"><div class="nav-icon" style="color:var(--teal)">🔍</div><div class="nav-label" style="color:var(--teal)">Search</div></div>
+        <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label">Orders</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Account</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIGHT SEARCH ── -->
+<div class="col">
+  <div class="lbl">Search & Explore — Light</div>
+  <div class="phone">
+    <div class="screen lt">
+      <div class="sb"><span class="sb-time" style="color:var(--ink)">9:41</span><div style="color:rgba(26,28,28,.7)">▲▲▲ WiFi 🔋</div></div>
+
+      <div class="search-head" style="background:rgba(249,249,249,.92)">
+        <div class="search-back">
+          <div class="back-btn" style="background:rgba(0,0,0,.05);color:var(--ink)">←</div>
+          <div class="search-title" style="color:var(--ink)">Explore</div>
+        </div>
+        <div class="search-active" style="background:#fff;border:1.5px solid var(--teal-dark);box-shadow:0 4px 16px rgba(0,73,67,.08)">
+          <div class="search-icon" style="color:var(--teal-dark)">🔍</div>
+          <input class="search-inp" style="color:var(--ink)" placeholder="Waakye, Kelewele..." value="Waakye">
+          <span class="search-cursor" style="background:var(--teal-dark)"></span>
+          <div class="search-clear" style="color:rgba(26,28,28,.4)">✕</div>
+        </div>
+      </div>
+
+      <div class="trending-section">
+        <div class="trend-title" style="color:rgba(26,28,28,.4)">🔥 Trending in Accra</div>
+        <div class="trend-tags">
+          <div class="trend-tag" style="background:rgba(0,73,67,.08);border-color:var(--teal-dark);color:var(--teal-dark)">🍲 Waakye Special</div>
+          <div class="trend-tag" style="background:#fff;border-color:rgba(0,0,0,.08);color:rgba(26,28,28,.65)">🌶 Pepper Soup</div>
+          <div class="trend-tag" style="background:#fff;border-color:rgba(0,0,0,.08);color:rgba(26,28,28,.65)">🐟 Grilled Tilapia</div>
+          <div class="trend-tag" style="background:#fff;border-color:rgba(0,0,0,.08);color:rgba(26,28,28,.65)">🍌 Kelewele</div>
+          <div class="trend-tag" style="background:#fff;border-color:rgba(0,0,0,.08);color:rgba(26,28,28,.65)">🫖 Sobolo</div>
+        </div>
+      </div>
+
+      <div class="cuisine-section">
+        <div class="cuis-title" style="color:rgba(26,28,28,.4)">Cuisines</div>
+        <div class="cuis-grid">
+          <div class="cuis-card"><img src="../assets/waakye.png" alt="Waakye"><div class="cuis-overlay"><div class="cuis-name">Waakye</div><div class="cuis-count">31 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#006B3F,#FCD116,#CE1126)"></div></div>
+          <div class="cuis-card"><img src="../assets/suya.png" alt="Suya"><div class="cuis-overlay"><div class="cuis-name">Chinchinga</div><div class="cuis-count">15 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#FF6B35,#FFB347,#CE1126)"></div></div>
+          <div class="cuis-card"><img src="../assets/jollof.png" alt="Jollof"><div class="cuis-overlay"><div class="cuis-name">Jollof Rice</div><div class="cuis-count">28 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#00C1B2,#006B3F,#FCD116)"></div></div>
+          <div class="cuis-card"><img src="../assets/restaurant.png" alt="Tilapia"><div class="cuis-overlay"><div class="cuis-name">Grilled Tilapia</div><div class="cuis-count">22 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#00C1B2,#004943,#002e2a)"></div></div>
+          <div class="cuis-card"><img src="../assets/zobo-drink.jpg" alt="Sobolo"><div class="cuis-overlay"><div class="cuis-name">Sobolo Drinks</div><div class="cuis-count">40 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#CE1126,#FF6B35,#FFB347)"></div></div>
+          <div class="cuis-card"><img src="../assets/family-dinner.png" alt="Banku"><div class="cuis-overlay"><div class="cuis-name">Banku & Okro</div><div class="cuis-count">18 spots</div></div><div class="cuis-kente" style="background:linear-gradient(90deg,#FFB347,#FCD116,#006B3F)"></div></div>
+        </div>
+      </div>
+
+      <div class="recent-section">
+        <div class="recent-title" style="color:rgba(26,28,28,.4)">Recent Searches</div>
+        <div class="recent-item" style="border-color:rgba(0,0,0,.06)">
+          <div class="recent-icon" style="background:rgba(0,0,0,.04)">🍲</div>
+          <div class="recent-text">
+            <div class="recent-name" style="color:var(--ink)">Buka Restaurant</div>
+            <div class="recent-sub" style="color:rgba(26,28,28,.4)">Restaurant · Osu, Accra</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+        <div class="recent-item" style="border-color:rgba(0,0,0,.06)">
+          <div class="recent-icon" style="background:rgba(0,0,0,.04)">🐟</div>
+          <div class="recent-text">
+            <div class="recent-name" style="color:var(--ink)">Grilled Tilapia</div>
+            <div class="recent-sub" style="color:rgba(26,28,28,.4)">Dish · 9 restaurants nearby</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+        <div class="recent-item" style="border-color:rgba(0,0,0,.06)">
+          <div class="recent-icon" style="background:rgba(0,0,0,.04)">🍌</div>
+          <div class="recent-text">
+            <div class="recent-name" style="color:var(--ink)">Kelewele Corner</div>
+            <div class="recent-sub" style="color:rgba(26,28,28,.4)">Street food · Jamestown</div>
+          </div>
+          <div class="recent-arrow">↗</div>
+        </div>
+      </div>
+      <div style="height:90px"></div></div>
+        <div class="nav-item"><div class="nav-icon" style="color:var(--teal-dark)">🔍</div><div class="nav-label" style="color:var(--teal-dark)">Search</div></div>
+        <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label" style="color:rgba(26,28,28,.35)">Orders</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-label" style="color:rgba(26,28,28,.35)">Account</div></div>
+      </div>
+      <div class="bottom-nav-wrap">
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+          <div class="nav-item active"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Navigation Mappings
+        const selectors = [
+            { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },
+            { sel: '.rest-card, .trending-item', to: '05_restaurant_menu.html' },
+            { sel: '.dish-card, .menu-item', to: '06_item_customization.html' },
+            { sel: '.add-cart', to: '07_cart_checkout.html' },
+            { sel: '.checkout-btn', to: '08_live_tracking.html' },
+            { sel: '.roo-fab, .chat-btn', to: '10_roo_chat.html' },
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' },
+            { sel: '.back-btn', to: '03_home_feed.html' }
+        ];
+
+        selectors.forEach(item => {
+            document.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

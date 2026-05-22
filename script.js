@@ -179,6 +179,22 @@ if (cityEl) {
   let charIdx = 0;
   let isDeleting = false;
 
+  function updateRooOutfit(city) {
+    const images = document.querySelectorAll('.roo-img-standalone');
+    if (images.length === 0) return;
+    images.forEach(img => img.classList.remove('active'));
+    if (city === 'Lagos') {
+      const lagosImg = document.querySelector('.roo-agbada');
+      if (lagosImg) lagosImg.classList.add('active');
+    } else if (city === 'Accra') {
+      const accraImg = document.querySelector('.roo-kaftan');
+      if (accraImg) accraImg.classList.add('active');
+    } else {
+      const defaultImg = images[0];
+      if (defaultImg) defaultImg.classList.add('active');
+    }
+  }
+
   function type() {
     const currentCity = cities[cityIdx];
     
@@ -195,6 +211,7 @@ if (cityEl) {
     if (!isDeleting && charIdx === currentCity.length) {
       isDeleting = true;
       typeSpeed = 2500; // Pause at full word
+      updateRooOutfit(currentCity);
     } else if (isDeleting && charIdx === 0) {
       isDeleting = false;
       cityIdx = (cityIdx + 1) % cities.length;

@@ -1,0 +1,558 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>07 – Cart & Checkout</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--td:#004943;--org:#FF6B35;--amb:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7);display:flex;flex-direction:column}
+.screen{flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column}
+.screen::-webkit-scrollbar{display:none}
+.scroll-body{flex:1;overflow-y:auto;scrollbar-width:none}
+.scroll-body::-webkit-scrollbar{display:none}
+.sb{height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;flex-shrink:0;position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}
+.page-hdr{padding:8px 20px 14px;display:flex;align-items:center;gap:12px}
+.back-btn{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0}
+.page-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;letter-spacing:-.4px;flex:1}
+.cart-count-badge{padding:4px 10px;border-radius:10px;background:var(--teal);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#fff}
+.cart-section{padding:0 20px}
+.section-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.cart-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid}
+.cart-item-img{width:60px;height:60px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.cart-item-info{flex:1}
+.cart-item-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+.cart-item-extras{font-size:10px;margin-top:2px}
+.cart-item-price{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--teal);margin-top:4px}
+.qty-mini{display:flex;align-items:center;gap:8px}
+.qty-mini-btn{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer}
+.qty-mini-num{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;min-width:20px;text-align:center}
+.roo-insight{margin:14px 20px;padding:14px 16px;border-radius:16px;display:flex;gap:12px;align-items:flex-start;border:1px solid}
+.roo-insight-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--teal)}
+.roo-insight-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.roo-insight-label{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+.roo-insight-msg{font-size:12px;line-height:1.6}
+.address-card{margin:0 20px 14px;padding:14px 16px;border-radius:16px;display:flex;align-items:center;gap:12px;border:1px solid}
+.addr-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.addr-text{font-size:12px;line-height:1.5}
+.addr-change{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:var(--teal);cursor:pointer}
+.price-summary{margin:0 20px;padding:16px;border-radius:16px}
+.price-row{display:flex;justify-content:space-between;padding:5px 0}
+.price-row-label{font-size:13px}
+.price-row-val{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700}
+.price-divider{height:1px;margin:10px 0}
+.price-total-label{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+.price-total-val{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:900;color:var(--teal)}
+.pay-section{padding:14px 20px}
+.pay-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pay-option{padding:12px;border-radius:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border:2px solid}
+.pay-option.selected{border-color:var(--teal);background:rgba(0,193,178,.08)}
+.pay-icon{font-size:20px}
+.pay-name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700}
+.pay-sub{font-size:9px;margin-top:1px}
+.checkout-btn{margin:14px 20px 20px;padding:17px 20px;background:linear-gradient(135deg,var(--teal) 0%,var(--td) 100%);border-radius:18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 8px 24px rgba(0,193,178,.4)}
+.checkout-label{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.checkout-price{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff}
+
+/* Pill nav */
+.bottom-nav-wrap{flex-shrink:0;padding:0 20px 28px;display:flex;justify-content:center}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;min-width:58px}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+
+/* Dark */
+.dk{background:#0a0f0e;display:flex;flex-direction:column}
+.dk .sb{background:rgba(10,15,14,.92);color:rgba(255,255,255,.85)}
+.dk .back-btn{background:rgba(255,255,255,.07);color:#fff}
+.dk .page-title{color:#fff}
+.dk .section-label{color:rgba(255,255,255,.35)}
+.dk .cart-item{border-color:rgba(255,255,255,.06)}
+.dk .cart-item-name{color:#fff}
+.dk .cart-item-extras{color:rgba(255,255,255,.35)}
+.dk .qty-mini-btn{background:rgba(255,255,255,.08);color:#fff}
+.dk .qty-mini-num{color:#fff}
+.dk .roo-insight{background:rgba(0,193,178,.07);border-color:rgba(0,193,178,.2)}
+.dk .roo-insight-msg{color:rgba(255,255,255,.7)}
+.dk .address-card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+.dk .addr-label{color:rgba(255,255,255,.35)}
+.dk .addr-text{color:rgba(255,255,255,.7)}
+.dk .price-summary{background:rgba(255,255,255,.04)}
+.dk .price-row-label{color:rgba(255,255,255,.55)}
+.dk .price-row-val{color:rgba(255,255,255,.8)}
+.dk .price-divider{background:rgba(255,255,255,.07)}
+.dk .price-total-label{color:#fff}
+.dk .pay-title{color:rgba(255,255,255,.35)}
+.dk .pay-option{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.dk .pay-name{color:#fff}
+.dk .pay-sub{color:rgba(255,255,255,.35)}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+/* Light */
+.lt{background:var(--cream);display:flex;flex-direction:column}
+.lt .sb{background:rgba(249,249,249,.92);color:rgba(26,28,28,.85)}
+.lt .back-btn{background:rgba(0,0,0,.05);color:var(--ink)}
+.lt .page-title{color:var(--ink)}
+.lt .section-label{color:rgba(26,28,28,.35)}
+.lt .cart-item{border-color:rgba(0,0,0,.06)}
+.lt .cart-item-name{color:var(--ink)}
+.lt .cart-item-extras{color:rgba(26,28,28,.4)}
+.lt .cart-item-price{color:var(--td)}
+.lt .qty-mini-btn{background:rgba(0,0,0,.05);color:var(--ink)}
+.lt .qty-mini-num{color:var(--ink)}
+.lt .roo-insight{background:rgba(0,73,67,.05);border-color:rgba(0,73,67,.15)}
+.lt .roo-insight-label{color:var(--td)}
+.lt .roo-insight-msg{color:rgba(26,28,28,.65)}
+.lt .address-card{background:#fff;border-color:rgba(0,0,0,.07);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.lt .addr-label{color:rgba(26,28,28,.35)}
+.lt .addr-text{color:rgba(26,28,28,.65)}
+.lt .price-summary{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.lt .price-row-label{color:rgba(26,28,28,.55)}
+.lt .price-row-val{color:rgba(26,28,28,.8)}
+.lt .price-divider{background:rgba(0,0,0,.07)}
+.lt .price-total-label{color:var(--ink)}
+.lt .price-total-val{color:var(--td)}
+.lt .pay-title{color:rgba(26,28,28,.35)}
+.lt .pay-option{background:#fff;border-color:rgba(0,0,0,.08)}
+.lt .pay-option.selected{border-color:var(--td);background:rgba(0,73,67,.06)}
+.lt .pay-name{color:var(--ink)}
+.lt .pay-sub{color:rgba(26,28,28,.4)}
+.lt .checkout-btn{background:linear-gradient(135deg,var(--td) 0%,#002e2a 100%);box-shadow:0 8px 24px rgba(0,73,67,.35)}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+</style>
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            // Try to get initial mode from parent or default to nigeria
+            document.body.classList.add('nigeria');
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head><body>
+
+<!-- DARK -->
+<div class="col"><div class="lbl">Cart &amp; Checkout — Dark (Lagos)</div>
+<div class="phone"><div class="screen dk">
+  <div class="scroll-body">
+    <div class="sb"><span>9:41</span><span>Signal WiFi Battery</span></div>
+    <div class="page-hdr">
+      <div class="back-btn">&#8592;</div>
+      <div class="page-title">Your Cart</div>
+      <div class="cart-count-badge">3 items</div>
+    </div>
+    <div class="cart-section">
+      <div class="section-label">Order from University of Suya</div>
+      <div class="cart-item"><img class="cart-item-img" src="../assets/suya.png" alt=""><div class="cart-item-info"><div class="cart-item-name">Mega Suya Platter</div><div class="cart-item-extras">Beef + Extra Plantain</div><div class="cart-item-price">&#8358; 4,800</div></div><div class="qty-mini"><div class="qty-mini-btn">&#8722;</div><div class="qty-mini-num">2</div><div class="qty-mini-btn" style="background:var(--teal);color:#fff">+</div></div></div>
+      <div class="cart-item"><img class="cart-item-img" src="../assets/zobo-drink.jpg" alt=""><div class="cart-item-info"><div class="cart-item-name">Zobo Drink (50cl)</div><div class="cart-item-extras">Chilled, house-made</div><div class="cart-item-price">&#8358; 400</div></div><div class="qty-mini"><div class="qty-mini-btn">&#8722;</div><div class="qty-mini-num">1</div><div class="qty-mini-btn" style="background:var(--teal);color:#fff">+</div></div></div>
+    </div>
+    <div class="roo-insight">
+      <div class="roo-insight-avatar"><img src="../assets/Roo.png" alt="Roo"></div>
+      <div><div class="roo-insight-label">Roo Insight</div><div class="roo-insight-msg">Traffic is light on Admiralty Way. Expect your order in <strong style="color:#fff">17 minutes</strong> — faster than usual!</div></div>
+    </div>
+    <div class="address-card"><div style="font-size:20px">&#128205;</div><div style="flex:1"><div class="addr-label">Deliver to</div><div class="addr-text">12 Ozumba Mbadiwe Ave,<br>Victoria Island, Lagos</div></div><div class="addr-change">Change</div></div>
+    <div class="price-summary">
+      <div class="price-row"><span class="price-row-label">Subtotal</span><span class="price-row-val">&#8358; 10,000</span></div>
+      <div class="price-row"><span class="price-row-label">Delivery fee</span><span class="price-row-val">&#8358; 150</span></div>
+      <div class="price-row"><span class="price-row-label">Service charge</span><span class="price-row-val">&#8358; 50</span></div>
+      <div class="price-divider"></div>
+      <div class="price-row"><span class="price-total-label">Total</span><span class="price-total-val">&#8358; 10,200</span></div>
+    </div>
+    <div class="pay-section">
+      <div class="pay-title">Payment Method</div>
+      <div class="pay-grid">
+        <div class="pay-option selected"><div class="pay-name">Card</div><div class="pay-sub">Visa / Mastercard</div></div>
+        <div class="pay-option"><div class="pay-name">Paystack</div><div class="pay-sub">Instant payment</div></div>
+        <div class="pay-option"><div class="pay-name">Mobile Money</div><div class="pay-sub">MTN / Airtel</div></div>
+        <div class="pay-option"><div class="pay-name">Roo Wallet</div><div class="pay-sub">&#8358; 1,250 balance</div></div>
+      </div>
+    </div>
+    <div class="checkout-btn"><div class="checkout-label">Place Order &#8594;</div><div class="checkout-price">&#8358; 10,200</div></div>
+  </div>
+  <div class="bottom-nav-wrap">
+    <div class="bottom-nav">
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+      <div class="nav-item active"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+    </div>
+  </div>
+</div></div></div>
+
+<!-- LIGHT -->
+<div class="col"><div class="lbl">Cart &amp; Checkout — Light (Accra)</div>
+<div class="phone"><div class="screen lt">
+  <div class="scroll-body">
+    <div class="sb"><span style="color:var(--ink)">9:41</span><span style="color:rgba(26,28,28,.7)">Signal WiFi Battery</span></div>
+    <div class="page-hdr">
+      <div class="back-btn">&#8592;</div>
+      <div class="page-title">Your Cart</div>
+      <div class="cart-count-badge" style="background:var(--td)">2 items</div>
+    </div>
+    <div class="cart-section">
+      <div class="section-label">Order from Buka Restaurant</div>
+      <div class="cart-item"><img class="cart-item-img" src="../assets/waakye.png" alt=""><div class="cart-item-info"><div class="cart-item-name">Waakye Special</div><div class="cart-item-extras">Fried Fish + Extra Shito</div><div class="cart-item-price">GH&#8373; 48</div></div><div class="qty-mini"><div class="qty-mini-btn">&#8722;</div><div class="qty-mini-num">1</div><div class="qty-mini-btn" style="background:var(--td);color:#fff">+</div></div></div>
+      <div class="cart-item"><img class="cart-item-img" src="../assets/zobo-drink.jpg" alt=""><div class="cart-item-info"><div class="cart-item-name">Sobolo Drink</div><div class="cart-item-extras">Chilled hibiscus</div><div class="cart-item-price">GH&#8373; 8</div></div><div class="qty-mini"><div class="qty-mini-btn">&#8722;</div><div class="qty-mini-num">1</div><div class="qty-mini-btn" style="background:var(--td);color:#fff">+</div></div></div>
+    </div>
+    <div class="roo-insight">
+      <div class="roo-insight-avatar" style="border-color:var(--td)"><img src="../assets/Roo.png" alt="Roo"></div>
+      <div><div class="roo-insight-label">Roo Insight</div><div class="roo-insight-msg">Roads are clear around Osu. Your order should arrive in <strong style="color:var(--td)">22 minutes</strong>!</div></div>
+    </div>
+    <div class="address-card"><div style="font-size:20px">&#128205;</div><div style="flex:1"><div class="addr-label">Deliver to</div><div class="addr-text">45 Oxford Street,<br>Osu, Accra</div></div><div class="addr-change" style="color:var(--td)">Change</div></div>
+    <div class="price-summary">
+      <div class="price-row"><span class="price-row-label">Subtotal</span><span class="price-row-val">GH&#8373; 56</span></div>
+      <div class="price-row"><span class="price-row-label">Delivery fee</span><span class="price-row-val">GH&#8373; 5</span></div>
+      <div class="price-row"><span class="price-row-label">Service charge</span><span class="price-row-val">GH&#8373; 2</span></div>
+      <div class="price-divider"></div>
+      <div class="price-row"><span class="price-total-label">Total</span><span class="price-total-val">GH&#8373; 63</span></div>
+    </div>
+    <div class="pay-section">
+      <div class="pay-title">Payment Method</div>
+      <div class="pay-grid">
+        <div class="pay-option"><div class="pay-name">Card</div><div class="pay-sub">Visa / Mastercard</div></div>
+        <div class="pay-option selected"><div class="pay-name">Mobile Money</div><div class="pay-sub">MTN MoMo</div></div>
+        <div class="pay-option"><div class="pay-name">Paystack</div><div class="pay-sub">Ghana cedis</div></div>
+        <div class="pay-option"><div class="pay-name">Roo Wallet</div><div class="pay-sub">GH&#8373; 12 balance</div></div>
+      </div>
+    </div>
+    <div class="checkout-btn"><div class="checkout-label">Place Order &#8594;</div><div class="checkout-price">GH&#8373; 63</div></div>
+  </div>
+  <div class="bottom-nav-wrap">
+    <div class="bottom-nav">
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+      <div class="nav-item active"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+      <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+    </div>
+  </div>
+</div></div></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Determine mode/country
+        let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+        const isGhana = country === 'ghana';
+        
+        // Ensure body matches the current mode
+        document.body.classList.remove('nigeria', 'ghana');
+        document.body.classList.add('app-mode', country);
+
+        // Replace Roo avatars with country-specific wear in HTML
+        const dkAvatar = document.querySelector('.dk .roo-insight-avatar img');
+        if (dkAvatar) dkAvatar.src = '../assets/roo-wears/Agbada.png';
+        const ltAvatar = document.querySelector('.lt .roo-insight-avatar img');
+        if (ltAvatar) ltAvatar.src = '../assets/roo-wears/Kaftan.png';
+
+        // Get elements for the active container
+        const activeContainerSelector = isGhana ? '.lt' : '.dk';
+        const container = document.querySelector(activeContainerSelector);
+        
+        const currencySymbol = isGhana ? 'GH₵' : '₦';
+        const deliveryFee = isGhana ? 5 : 150;
+        const serviceCharge = isGhana ? 2 : 50;
+
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('deliveroo_cart')) || { restaurant: "", country: "", items: [] };
+            } catch (e) {
+                return { restaurant: "", country: "", items: [] };
+            }
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('deliveroo_cart', JSON.stringify(cart));
+        }
+
+        function renderCart() {
+            if (!container) return;
+            const cart = getCart();
+            
+            // Set restaurant name
+            const sectionLabel = container.querySelector('.section-label');
+            if (sectionLabel) {
+                sectionLabel.innerText = cart.restaurant ? `Order from ${cart.restaurant}` : `Order`;
+            }
+
+            // Update badge count
+            const badge = container.querySelector('.cart-count-badge');
+            const totalCount = cart.items ? cart.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+            if (badge) {
+                badge.innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+            }
+
+            // Render list
+            const cartSection = container.querySelector('.cart-section');
+            // Remove any existing cart-item elements (keep the section-label)
+            const items = cartSection.querySelectorAll('.cart-item');
+            items.forEach(item => item.remove());
+
+            if (!cart.items || cart.items.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'cart-item';
+                emptyMsg.style.justifyContent = 'center';
+                emptyMsg.style.padding = '30px 0';
+                emptyMsg.style.color = isGhana ? 'rgba(26,28,28,0.4)' : 'rgba(255,255,255,0.4)';
+                emptyMsg.innerText = 'Your cart is empty';
+                cartSection.appendChild(emptyMsg);
+
+                // Update prices to 0
+                updatePrices(0);
+                
+                // Hide or disable checkout button
+                const checkoutBtn = container.querySelector('.checkout-btn');
+                if (checkoutBtn) {
+                    checkoutBtn.style.opacity = '0.5';
+                    checkoutBtn.style.pointerEvents = 'none';
+                }
+                return;
+            }
+
+            // Enable checkout button
+            const checkoutBtn = container.querySelector('.checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.style.opacity = '1';
+                checkoutBtn.style.pointerEvents = 'auto';
+            }
+
+            cart.items.forEach((item, index) => {
+                const cartItemEl = document.createElement('div');
+                cartItemEl.className = 'cart-item';
+                
+                const extrasText = item.extras && item.extras.length > 0 
+                    ? item.extras.map(e => e.name).join(' + ') 
+                    : 'Standard';
+                
+                const formattedPrice = isGhana 
+                    ? `GH₵ ${item.price * item.quantity}` 
+                    : `₦ ${(item.price * item.quantity).toLocaleString()}`;
+
+                const plusBg = isGhana ? 'var(--td)' : 'var(--teal)';
+
+                cartItemEl.innerHTML = `
+                    <img class="cart-item-img" src="${item.img || '../assets/restaurant.png'}" alt="">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-extras">${extrasText}</div>
+                        <div class="cart-item-price">${formattedPrice}</div>
+                    </div>
+                    <div class="qty-mini">
+                        <div class="qty-mini-btn minus-btn" data-index="${index}">&#8722;</div>
+                        <div class="qty-mini-num">${item.quantity}</div>
+                        <div class="qty-mini-btn plus-btn" style="background:${plusBg};color:#fff" data-index="${index}">+</div>
+                    </div>
+                `;
+                
+                cartSection.appendChild(cartItemEl);
+            });
+
+            // Bind click handlers to quantity buttons
+            container.querySelectorAll('.minus-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(btn.getAttribute('data-index'), 10);
+                    const cart = getCart();
+                    if (cart.items[index]) {
+                        cart.items[index].quantity -= 1;
+                        if (cart.items[index].quantity <= 0) {
+                            cart.items.splice(index, 1);
+                        }
+                        saveCart(cart);
+                        renderCart();
+                    }
+                });
+            });
+
+            container.querySelectorAll('.plus-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(btn.getAttribute('data-index'), 10);
+                    const cart = getCart();
+                    if (cart.items[index]) {
+                        cart.items[index].quantity += 1;
+                        saveCart(cart);
+                        renderCart();
+                    }
+                });
+            });
+
+            // Calculate subtotals
+            const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            updatePrices(subtotal);
+        }
+
+        function updatePrices(subtotal) {
+            const total = subtotal > 0 ? (subtotal + deliveryFee + serviceCharge) : 0;
+            
+            const subtotalValEl = container.querySelector('.price-row:nth-of-type(1) .price-row-val');
+            if (subtotalValEl) {
+                subtotalValEl.innerText = isGhana ? `GH₵ ${subtotal}` : `₦ ${subtotal.toLocaleString()}`;
+            }
+
+            const deliveryValEl = container.querySelector('.price-row:nth-of-type(2) .price-row-val');
+            if (deliveryValEl) {
+                deliveryValEl.innerText = isGhana ? `GH₵ ${subtotal > 0 ? deliveryFee : 0}` : `₦ ${(subtotal > 0 ? deliveryFee : 0).toLocaleString()}`;
+            }
+
+            const serviceValEl = container.querySelector('.price-row:nth-of-type(3) .price-row-val');
+            if (serviceValEl) {
+                serviceValEl.innerText = isGhana ? `GH₵ ${subtotal > 0 ? serviceCharge : 0}` : `₦ ${(subtotal > 0 ? serviceCharge : 0).toLocaleString()}`;
+            }
+
+            const totalValEl = container.querySelector('.price-total-val');
+            if (totalValEl) {
+                totalValEl.innerText = isGhana ? `GH₵ ${total}` : `₦ ${total.toLocaleString()}`;
+            }
+
+            const checkoutPriceEl = container.querySelector('.checkout-price');
+            if (checkoutPriceEl) {
+                checkoutPriceEl.innerText = isGhana ? `GH₵ ${total}` : `₦ ${total.toLocaleString()}`;
+            }
+        }
+
+        // Place Order button handler
+        if (container) {
+            const checkoutBtn = container.querySelector('.checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const cart = getCart();
+                    if (!cart.items || cart.items.length === 0) return;
+                    
+                    const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const total = subtotal + deliveryFee + serviceCharge;
+
+                    const activeOrder = {
+                        restaurant: cart.restaurant,
+                        country: country,
+                        items: cart.items,
+                        subtotal: subtotal,
+                        deliveryFee: deliveryFee,
+                        serviceCharge: serviceCharge,
+                        total: total,
+                        timestamp: Date.now()
+                    };
+
+                    localStorage.setItem('deliveroo_active_order', JSON.stringify(activeOrder));
+                    localStorage.removeItem('deliveroo_cart'); // Clear cart after order placement
+                    
+                    navigate('08_live_tracking.html');
+                });
+            }
+        }
+
+        // Render initially
+        renderCart();
+
+        // Message listener to handle parent country switch
+        window.addEventListener('message', (e) => {
+            if (e.data.type === 'setMode') {
+                localStorage.setItem('deliveroo_country', e.data.mode);
+                location.reload();
+            }
+        });
+
+        // Back button navigation
+        const backBtn = container.querySelector('.back-btn');
+        if (backBtn) {
+            backBtn.style.cursor = 'pointer';
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigate('05_restaurant_menu.html');
+            });
+        }
+
+        // Mappings for bottom navigation items
+        const selectors = [
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' }
+        ];
+
+        selectors.forEach(item => {
+            container.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+    });
+</script>
+
+</body></html>

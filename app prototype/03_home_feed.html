@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 – Home Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,700;0,9..144,900&family=DM+Sans:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#00C1B2;--teal-dark:#004943;--orange:#FF6B35;--amber:#FFB347;--ink:#1A1C1C;--cream:#F9F9F9}
+body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:center;flex-wrap:wrap;font-family:'DM Sans',sans-serif}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.phone{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;flex-shrink:0;border:1.5px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.7)}
+
+/* Shared inner scroll */
+.screen{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+
+/* Status bar */
+.sb{height:48px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;position:sticky;top:0;z-index:50;flex-shrink:0}
+.sb-time{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700}
+.sb-icons{display:flex;gap:4px;align-items:center;font-size:11px}
+
+/* ── HEADER ── */
+.home-header{padding:0 20px 14px;position:sticky;top:48px;z-index:40;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.loc-row{display:flex;align-items:center;justify-content:space-between}
+.loc-left{display:flex;align-items:center;gap:8px}
+.loc-pin{font-size:18px}
+.loc-area{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:-.2px}
+.loc-city{font-size:11px;display:flex;align-items:center;gap:4px;margin-top:1px}
+.loc-drop{font-size:9px}
+.loc-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid var(--teal)}
+.loc-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* Search bar */
+.search-bar{display:flex;align-items:center;gap:10px;border-radius:16px;padding:12px 16px;margin-top:12px}
+.search-icon{font-size:16px;opacity:.5}
+.search-ph{font-size:13px;opacity:.45;flex:1}
+.search-filter{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px}
+
+/* Category chips */
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 20px 4px;scrollbar-width:none;flex-shrink:0}
+.cat-scroll::-webkit-scrollbar{display:none}
+.chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;flex-shrink:0;border:1.5px solid transparent}
+.chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* Banner hero */
+.banner{margin:16px 20px;border-radius:20px;overflow:hidden;position:relative;height:160px}
+.banner img{width:100%;height:100%;object-fit:cover}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.65) 0%,transparent 70%);display:flex;flex-direction:column;justify-content:flex-end;padding:18px 18px}
+.banner-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+.banner-title{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:#fff;line-height:1.1}
+.banner-sub{font-size:11px;color:rgba(255,255,255,.7);margin-top:4px}
+.banner-kente{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#006B3F,#FCD116,#CE1126,#00C1B2)}
+
+/* Section title row */
+.sec-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 10px}
+.sec-title{font-family:'Fraunces',Georgia,serif;font-size:18px;font-weight:900;letter-spacing:-.3px}
+.sec-link{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--teal)}
+
+/* Restaurant grid */
+.rest-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 20px}
+.rest-card{border-radius:16px;overflow:hidden;cursor:pointer}
+.rest-img{height:110px;position:relative;overflow:hidden}
+.rest-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.rest-badge-pill{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.5px}
+.badge-feat{background:var(--teal);color:#fff}
+.badge-pop{background:var(--amber);color:#1A1C1C}
+.badge-new{background:var(--orange);color:#fff}
+.rest-body{padding:10px}
+.rest-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:-.2px}
+.rest-meta{font-size:10px;opacity:.5;margin-top:2px;line-height:1.4}
+.rest-foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.rest-rating{font-size:10px;font-weight:700}
+.rest-eta{font-size:10px;font-weight:600;color:var(--teal)}
+
+/* Roo FAB */
+.roo-fab{position:absolute;bottom:90px;right:20px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,193,178,.45);z-index:30;cursor:pointer;animation:fabFloat 3s ease-in-out infinite}
+.roo-fab img{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top}
+.fab-badge{position:absolute;top:0;right:0;width:16px;height:16px;border-radius:50%;background:#FF6B35;font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+@keyframes fabFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+
+
+/* ── DARK ── */
+.dk{background:#0a0f0e}
+.dk .sb{background:#0a0f0e;color:rgba(255,255,255,.85)}
+.dk .home-header{background:rgba(10,15,14,.9)}
+.dk .loc-area{color:#fff}
+.dk .loc-city{color:rgba(255,255,255,.45)}
+.dk .search-bar{background:rgba(255,255,255,.06)}
+.dk .search-ph{color:rgba(255,255,255,.45)}
+.dk .search-filter{background:var(--teal)}
+.dk .chip{color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08)}
+.dk .chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.dk .sec-title{color:#fff}
+.dk .rest-card{background:#141a19}
+.dk .rest-name{color:#fff}
+.dk .rest-meta{color:rgba(255,255,255,.45)}
+.dk .rest-rating{color:rgba(255,255,255,.8)}
+
+/* ── LIGHT ── */
+.lt{background:var(--cream)}
+.lt .sb{background:var(--cream);color:rgba(26,28,28,.85)}
+.lt .home-header{background:rgba(249,249,249,.92)}
+.lt .loc-area{color:var(--ink)}
+.lt .loc-city{color:rgba(26,28,28,.45)}
+.lt .search-bar{background:rgba(0,0,0,.04)}
+.lt .search-ph{color:rgba(26,28,28,.35)}
+.lt .search-filter{background:var(--teal-dark)}
+.lt .chip{color:rgba(26,28,28,.55);background:#fff;border-color:rgba(0,0,0,.1)}
+.lt .chip.active{background:var(--teal-dark);color:#fff;border-color:var(--teal-dark)}
+.lt .sec-title{color:var(--ink)}
+.lt .rest-card{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.lt .rest-name{color:var(--ink)}
+.lt .rest-rating{color:rgba(26,28,28,.8)}
+
+
+/* Floating pill nav */
+.bottom-nav-wrap{position:sticky;bottom:0;z-index:50;padding:0 20px 28px;display:flex;justify-content:center;pointer-events:none}
+.bottom-nav{display:inline-flex;align-items:center;gap:4px;padding:6px;border-radius:60px;pointer-events:all}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border-radius:50px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);min-width:58px;position:relative}
+.nav-item.active{flex-direction:row;gap:8px;padding:12px 22px}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-icon img{width:100%;height:100%;object-fit:contain;transition:filter .2s}
+.nav-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.nav-dot{position:absolute;top:5px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--orange,#FF6B35);border:2px solid transparent}
+.dk .bottom-nav{background:#1c2423;box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06)}
+.dk .nav-item .nav-icon img{filter:brightness(0) invert(1) opacity(.35)}
+.dk .nav-item .nav-label{color:rgba(255,255,255,.38)}
+.dk .nav-item.active{background:var(--teal,#00C1B2)}
+.dk .nav-item.active .nav-label{color:#fff}
+.dk .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+.dk .nav-dot{border-color:#1c2423}
+.lt .bottom-nav{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06)}
+.lt .nav-item .nav-icon img{filter:opacity(.3)}
+.lt .nav-item .nav-label{color:rgba(26,28,28,.38)}
+.lt .nav-item.active{background:#1A1C1C}
+.lt .nav-item.active .nav-label{color:#fff}
+.lt .nav-item.active .nav-icon img{filter:brightness(0) invert(1)}
+
+/* Floating Cart Bar */
+.feed-cart-bar {
+  display: none;
+  position: absolute;
+  bottom: 160px;
+  left: 20px;
+  right: 20px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  border-radius: 18px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 9999;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 193, 178, 0.4);
+}
+.lt .feed-cart-bar {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, #002e2a 100%);
+  box-shadow: 0 8px 24px rgba(0, 73, 67, 0.35);
+}
+.cart-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cart-count {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+.cart-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.cart-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+</style>
+
+<style id="mode-style">
+    body.app-mode { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        justify-content: flex-start !important; 
+        overflow: hidden !important;
+        background: #000 !important;
+    }
+    body.app-mode .col { display: none !important; width: 390px; height: 844px; }
+    body.app-mode.nigeria .col:nth-of-type(1) { display: flex !important; }
+    body.app-mode.ghana .col:nth-of-type(2) { display: flex !important; }
+    body.app-mode .phone { 
+        width: 390px !important; 
+        height: 844px !important; 
+        border-radius: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important;
+    }
+    body.app-mode .lbl { display: none !important; }
+</style>
+<script>
+    window.addEventListener('message', (e) => {
+        if (e.data.type === 'setMode') {
+            document.body.classList.add('app-mode');
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(e.data.mode);
+        }
+    });
+    // Default to app mode if inside iframe
+    if (window.self !== window.top) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('app-mode');
+            let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+            document.body.classList.remove('nigeria', 'ghana');
+            document.body.classList.add(country);
+        });
+    }
+</script>
+
+
+<style id="nav-fix-style">
+    /* Force the navigation to stay at the bottom of the device frame */
+    body.app-mode .bottom-nav-wrap {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        width: 390px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+    body.app-mode .bottom-nav {
+        pointer-events: auto !important;
+        transform: scale(0.95); /* Slight scale down to ensure fit */
+    }
+    /* Ensure the screen content doesn't get hidden behind the nav */
+    body.app-mode .screen {
+        padding-bottom: 100px !important;
+        height: 844px !important;
+        width: 390px !important;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- ── DARK HOME FEED ── -->
+<div class="col">
+  <div class="lbl">Home Feed — Dark</div>
+  <div class="phone">
+    <div class="screen dk">
+      <!-- Status bar -->
+      <div class="sb"><span class="sb-time">9:41</span><div class="sb-icons" style="color:rgba(255,255,255,.85)">▲▲▲ WiFi 🔋</div></div>
+
+      <!-- Header -->
+      <div class="home-header">
+        <div class="loc-row">
+          <div class="loc-left">
+            <div class="loc-pin">📍</div>
+            <div>
+              <div class="loc-area">Victoria Island <span style="color:var(--teal);font-size:10px">▾</span></div>
+              <div class="loc-city">Lagos, Nigeria <span class="loc-drop">▾</span></div>
+            </div>
+          </div>
+          <div class="loc-avatar"><img src="../assets/emeka.png" alt="User"></div>
+        </div>
+        <div class="search-bar">
+          <div class="search-icon" style="color:rgba(255,255,255,.5)">🔍</div>
+          <div class="search-ph">Suya, Jollof, Buka...</div>
+          <div class="search-filter" style="background:var(--teal);color:#fff">⚙</div>
+        </div>
+      </div>
+
+      <!-- Category chips -->
+      <div class="cat-scroll">
+        <div class="chip active">🍖 Suya</div>
+        <div class="chip">🍚 Jollof</div>
+        <div class="chip">🥘 Soups</div>
+        <div class="chip">🍌 Plantain</div>
+        <div class="chip">🧁 Pastries</div>
+        <div class="chip">🥤 Drinks</div>
+        <div class="chip">🐟 Seafood</div>
+      </div>
+
+      <!-- Hero banner -->
+      <div class="banner">
+        <img src="../assets/jollof.png" alt="Jollof Rice">
+        <div class="banner-overlay">
+          <div class="banner-eyebrow">🔥 Trending Tonight</div>
+          <div class="banner-title">Jollof Season<br>is Here</div>
+          <div class="banner-sub">Order from 40+ Jollof spots near you</div>
+        </div>
+        <div class="banner-kente"></div>
+      </div>
+
+      <!-- Featured restaurants -->
+      <div class="sec-row">
+        <div class="sec-title" style="color:#fff">Top Picks 🏆</div>
+        <div class="sec-link">See all →</div>
+      </div>
+      <div class="rest-grid">
+        <div class="rest-card">
+          <div class="rest-img">
+            <img src="../assets/Chicken Republic.png" alt="Chicken Republic">
+            <div class="rest-badge-pill badge-feat">Featured</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name">Chicken Republic</div>
+            <div class="rest-meta">Chicken & Local Sides · VI</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(255,255,255,.8)">⭐ 4.6</div>
+              <div class="rest-eta">🛵 15 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card">
+          <div class="rest-img">
+            <img src="../assets/university-of-suya.jpg" alt="Suya">
+            <div class="rest-badge-pill badge-pop">Popular</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name">Univ. of Suya</div>
+            <div class="rest-meta">Suya & Grills · Ikeja</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(255,255,255,.8)">⭐ 4.9</div>
+              <div class="rest-eta">🛵 20 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card">
+          <div class="rest-img">
+            <img src="../assets/bukka hut.jpg" alt="Bukka Hut">
+            <div class="rest-badge-pill badge-pop">Popular</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name">Bukka Hut</div>
+            <div class="rest-meta">Traditional Nigerian · Lekki</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(255,255,255,.8)">⭐ 4.7</div>
+              <div class="rest-eta">🛵 22 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card">
+          <div class="rest-img">
+            <img src="../assets/nok-by-alara.jpg" alt="NOK">
+            <div class="rest-badge-pill badge-new">Premium</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name">NOK by Alara</div>
+            <div class="rest-meta">Modern African · VI</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(255,255,255,.8)">⭐ 4.9</div>
+              <div class="rest-eta">🛵 30 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:100px"></div>
+
+      <!-- Roo FAB -->
+      <div class="roo-fab">
+        <img src="../assets/roo-wears/Agbada.png" alt="Roo">
+        <div class="fab-badge">AI</div>
+      </div>
+
+      <!-- Floating Cart Bar (Nigeria) -->
+      <div class="feed-cart-bar" id="cartBarNG">
+        <div class="cart-left">
+          <div class="cart-count">0</div>
+          <div class="cart-label">View Cart</div>
+        </div>
+        <div class="cart-price">₦ 0</div>
+      </div>
+
+      <div class="bottom-nav-wrap">
+        <div class="bottom-nav">
+          <div class="nav-item active"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIGHT HOME FEED ── -->
+<div class="col">
+  <div class="lbl">Home Feed — Light</div>
+  <div class="phone">
+    <div class="screen lt">
+      <div class="sb"><span class="sb-time" style="color:var(--ink)">9:41</span><div class="sb-icons" style="color:rgba(26,28,28,.7)">▲▲▲ WiFi 🔋</div></div>
+
+      <div class="home-header" style="background:rgba(249,249,249,.92)">
+        <div class="loc-row">
+          <div class="loc-left">
+            <div class="loc-pin">📍</div>
+            <div>
+              <div class="loc-area" style="color:var(--ink)">East Legon <span style="color:var(--teal-dark);font-size:10px">▾</span></div>
+              <div class="loc-city" style="color:rgba(26,28,28,.45)">Accra, Ghana <span class="loc-drop">▾</span></div>
+            </div>
+          </div>
+          <div class="loc-avatar" style="border-color:var(--teal-dark)"><img src="../assets/akosua.png" alt="User"></div>
+        </div>
+        <div class="search-bar" style="background:rgba(0,0,0,.05)">
+          <div class="search-icon" style="color:rgba(26,28,28,.35)">🔍</div>
+          <div class="search-ph" style="color:rgba(26,28,28,.35)">Waakye, Kelewele, Banku...</div>
+          <div class="search-filter" style="background:var(--teal-dark);color:#fff">⚙</div>
+        </div>
+      </div>
+
+      <div class="cat-scroll">
+        <div class="chip" style="background:var(--teal-dark);color:#fff;border-color:var(--teal-dark)">🍲 Waakye</div>
+        <div class="chip" style="background:#fff;border-color:rgba(0,0,0,.1);color:rgba(26,28,28,.55)">🍌 Kelewele</div>
+        <div class="chip" style="background:#fff;border-color:rgba(0,0,0,.1);color:rgba(26,28,28,.55)">🐟 Tilapia</div>
+        <div class="chip" style="background:#fff;border-color:rgba(0,0,0,.1);color:rgba(26,28,28,.55)">🥘 Light Soup</div>
+        <div class="chip" style="background:#fff;border-color:rgba(0,0,0,.1);color:rgba(26,28,28,.55)">🧁 Chinchinga</div>
+      </div>
+
+      <div class="banner">
+        <img src="../assets/waakye.png" alt="Waakye">
+        <div class="banner-overlay">
+          <div class="banner-eyebrow">🇬🇭 Accra's Favourite</div>
+          <div class="banner-title">Waakye &<br>Pepper Soup</div>
+          <div class="banner-sub">East Legon's top street spots</div>
+        </div>
+        <div class="banner-kente"></div>
+      </div>
+
+      <div class="sec-row">
+        <div class="sec-title" style="color:var(--ink)">Near You 📍</div>
+        <div class="sec-link" style="color:var(--teal-dark)">See all →</div>
+      </div>
+      <div class="rest-grid">
+        <div class="rest-card" style="box-shadow:0 4px 16px rgba(0,0,0,.06)">
+          <div class="rest-img">
+            <img src="../assets/The-Buka-Restaurant-696x423.webp" alt="Buka">
+            <div class="rest-badge-pill badge-feat">Featured</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name" style="color:var(--ink)">Buka Restaurant</div>
+            <div class="rest-meta" style="color:rgba(26,28,28,.45)">Ghanaian · Osu</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(26,28,28,.7)">⭐ 4.8</div>
+              <div class="rest-eta" style="color:var(--teal-dark)">🛵 25 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card" style="box-shadow:0 4px 16px rgba(0,0,0,.06)">
+          <div class="rest-img">
+            <img src="../assets/pizzaman-chickenman.jpg" alt="Pizzaman">
+            <div class="rest-badge-pill badge-pop">Popular</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name" style="color:var(--ink)">Pizzaman</div>
+            <div class="rest-meta" style="color:rgba(26,28,28,.45)">Pizza & Chicken · Accra</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(26,28,28,.7)">⭐ 4.6</div>
+              <div class="rest-eta" style="color:var(--teal-dark)">🛵 18 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card" style="box-shadow:0 4px 16px rgba(0,0,0,.06)">
+          <div class="rest-img">
+            <img src="../assets/suya.png" alt="Suya">
+            <div class="rest-badge-pill badge-new">New</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name" style="color:var(--ink)">Suya Corner GH</div>
+            <div class="rest-meta" style="color:rgba(26,28,28,.45)">Grills & Sides · Labone</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(26,28,28,.7)">⭐ 4.7</div>
+              <div class="rest-eta" style="color:var(--teal-dark)">🛵 14 min</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-card" style="box-shadow:0 4px 16px rgba(0,0,0,.06)">
+          <div class="rest-img">
+            <img src="../assets/restaurant.png" alt="Rest">
+            <div class="rest-badge-pill badge-feat">Featured</div>
+          </div>
+          <div class="rest-body">
+            <div class="rest-name" style="color:var(--ink)">Nana's Kitchen</div>
+            <div class="rest-meta" style="color:rgba(26,28,28,.45)">Home Cooking · Madina</div>
+            <div class="rest-foot">
+              <div class="rest-rating" style="color:rgba(26,28,28,.7)">⭐ 4.9</div>
+              <div class="rest-eta" style="color:var(--teal-dark)">🛵 28 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:100px"></div>
+
+      <!-- Roo FAB light -->
+      <div class="roo-fab" style="background:linear-gradient(135deg,var(--teal-dark) 0%,#002e2a 100%)">
+        <img src="../assets/roo-wears/Kaftan.png" alt="Roo">
+        <div class="fab-badge">AI</div>
+      </div>
+
+      <!-- Floating Cart Bar (Ghana) -->
+      <div class="feed-cart-bar" id="cartBarGH">
+        <div class="cart-left">
+          <div class="cart-count">0</div>
+          <div class="cart-label">View Cart</div>
+        </div>
+        <div class="cart-price">GH₵ 0</div>
+      </div>
+
+      <div class="bottom-nav-wrap">
+        <div class="bottom-nav">
+          <div class="nav-item active"><div class="nav-icon"><img src="./feather/home.svg" alt="Home"></div><div class="nav-label">Home</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/search.svg" alt="Search"></div><div class="nav-label">Search</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/package.svg" alt="Orders"></div><div class="nav-label">Orders</div></div>
+          <div class="nav-item"><div class="nav-icon"><img src="./feather/user.svg" alt="Account"></div><div class="nav-label">Account</div></div>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navigate = (file) => {
+            window.parent.postMessage({ type: 'navigate', file: file }, '*');
+        };
+
+        // Navigation Mappings
+        const selectors = [
+            { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },
+            { sel: '.rest-card, .trending-item', to: '05_restaurant_menu.html' },
+            { sel: '.dish-card, .menu-item', to: '06_item_customization.html' },
+            { sel: '.add-cart', to: '07_cart_checkout.html' },
+            { sel: '.checkout-btn', to: '08_live_tracking.html' },
+            { sel: '.roo-fab, .chat-btn', to: '10_roo_chat.html' },
+            { sel: '.nav-item:nth-child(1)', to: '03_home_feed.html' },
+            { sel: '.nav-item:nth-child(2)', to: '04_search_explore.html' },
+            { sel: '.nav-item:nth-child(3)', to: '08_live_tracking.html' },
+            { sel: '.nav-item:nth-child(4)', to: '12_profile_settings.html' },
+            { sel: '.back-btn', to: '03_home_feed.html' }
+        ];
+
+        selectors.forEach(item => {
+            document.querySelectorAll(item.sel).forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigate(item.to);
+                });
+            });
+        });
+
+        // Cart bar update logic
+        function updateCartBar() {
+            try {
+                const cartData = JSON.parse(localStorage.getItem('deliveroo_cart') || 'null');
+                const barNG = document.getElementById('cartBarNG');
+                const barGH = document.getElementById('cartBarGH');
+                
+                if (cartData && cartData.items && cartData.items.length > 0) {
+                    const count = cartData.items.reduce((sum, item) => sum + item.quantity, 0);
+                    const total = cartData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    if (barNG) {
+                        barNG.style.display = 'flex';
+                        barNG.querySelector('.cart-count').innerText = count;
+                        barNG.querySelector('.cart-price').innerText = '₦ ' + total.toLocaleString();
+                    }
+                    if (barGH) {
+                        barGH.style.display = 'flex';
+                        barGH.querySelector('.cart-count').innerText = count;
+                        barGH.querySelector('.cart-price').innerText = 'GH₵ ' + total.toLocaleString();
+                    }
+                } else {
+                    if (barNG) barNG.style.display = 'none';
+                    if (barGH) barGH.style.display = 'none';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        updateCartBar();
+        
+        // Add click listener to cart bars
+        document.querySelectorAll('.feed-cart-bar').forEach(el => {
+            el.addEventListener('click', () => {
+                navigate('07_cart_checkout.html');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
