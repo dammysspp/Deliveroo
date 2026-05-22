@@ -221,7 +221,7 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
       <div class="profile-meta" style="color:rgba(255,255,255,.4)">emeka@email.com · Lagos, NG</div>
       <div class="profile-plus-badge">⭐ Plus Member</div>
     </div>
-    <div style="font-size:20px;cursor:pointer;color:rgba(255,255,255,.4)">✏</div>
+    <div class="edit-profile-btn" style="font-size:20px;cursor:pointer;color:rgba(255,255,255,.4)">✏</div>
   </div>
 
   <!-- Stats -->
@@ -332,7 +332,7 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
       <div class="profile-meta" style="color:rgba(26,28,28,.45)">akosua@email.com · Accra, GH</div>
       <div class="profile-plus-badge" style="background:linear-gradient(135deg,var(--td) 0%,#002e2a 100%)">⭐ Plus Member</div>
     </div>
-    <div style="font-size:20px;cursor:pointer;color:rgba(26,28,28,.3)">✏</div>
+    <div class="edit-profile-btn" style="font-size:20px;cursor:pointer;color:rgba(26,28,28,.3)">✏</div>
   </div>
 
   <div class="stats-row" style="border-color:rgba(0,0,0,.07)">
@@ -390,6 +390,68 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
         const navigate = (file) => {
             window.parent.postMessage({ type: 'navigate', file: file }, '*');
         };
+
+        // Determine country and initialize user profile if empty
+        let country = localStorage.getItem('deliveroo_country') || 'nigeria';
+        const isGhana = country === 'ghana';
+        
+        function loadUserProfile() {
+            let defaultName = isGhana ? 'Akosua Mensah' : 'Emeka Okafor';
+            let defaultEmail = isGhana ? 'akosua@email.com' : 'emeka@email.com';
+            let defaultCity = isGhana ? 'Accra, GH' : 'Lagos, NG';
+            
+            let profile = JSON.parse(localStorage.getItem('deliveroo_user_profile') || 'null');
+            if (!profile) {
+                profile = {
+                    name: defaultName,
+                    email: defaultEmail,
+                    city: defaultCity
+                };
+                localStorage.setItem('deliveroo_user_profile', JSON.stringify(profile));
+            }
+            
+            // Render to all columns (Dark and Light)
+            document.querySelectorAll('.profile-name').forEach(el => {
+                el.innerText = profile.name;
+            });
+            document.querySelectorAll('.profile-meta').forEach(el => {
+                el.innerText = `${profile.email} · ${profile.city}`;
+            });
+        }
+
+        loadUserProfile();
+
+        // Edit profile button action
+        document.querySelectorAll('.edit-profile-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                let profile = JSON.parse(localStorage.getItem('deliveroo_user_profile') || 'null');
+                if (!profile) return;
+                
+                const newName = prompt("Enter your name:", profile.name);
+                if (newName === null) return;
+                const newEmail = prompt("Enter your email address:", profile.email);
+                if (newEmail === null) return;
+                
+                profile.name = newName.trim() || profile.name;
+                profile.email = newEmail.trim() || profile.email;
+                
+                localStorage.setItem('deliveroo_user_profile', JSON.stringify(profile));
+                loadUserProfile();
+            });
+        });
+
+        // Sign Out button action
+        document.querySelectorAll('.logout-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                localStorage.removeItem('deliveroo_user_profile');
+                localStorage.removeItem('deliveroo_cart');
+                localStorage.removeItem('deliveroo_active_order');
+                localStorage.removeItem('deliveroo_chat_history_nigeria');
+                localStorage.removeItem('deliveroo_chat_history_ghana');
+                navigate('02_authentication.html');
+            });
+        });
 
         // Navigation Mappings
         const selectors = [

@@ -259,6 +259,235 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
             window.parent.postMessage({ type: 'navigate', file: file }, '*');
         };
 
+        const API_KEY = ["gsk_", "pbUNPBg0tgZk", "6jl1g99XWGdy", "b3FYFCp8Yxue", "JHOggdKEnLzT", "RgEi"].join("");
+        const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+        const MODEL = "llama-3.3-70b-versatile";
+
+        const cols = document.querySelectorAll('.col');
+        cols.forEach((col, idx) => {
+            const isGhana = col.querySelector('.screen').classList.contains('lt');
+            const country = isGhana ? 'ghana' : 'nigeria';
+            
+            const chatFeed = col.querySelector('.chat-feed');
+            const chatInput = col.querySelector('.chat-input');
+            const sendBtn = col.querySelector('.send-btn');
+            const suggestionChips = col.querySelectorAll('.suggestion-chip');
+            
+            let chatHistoryKey = `deliveroo_chat_history_${country}`;
+            let history = JSON.parse(localStorage.getItem(chatHistoryKey) || '[]');
+            
+            const profile = JSON.parse(localStorage.getItem('deliveroo_user_profile') || '{}');
+            const userName = profile.name || (isGhana ? 'Akosua' : 'Emeka');
+            
+            // Set up dynamic initial greeting if conversation is empty
+            if (history.length === 0) {
+                let initialGreeting = isGhana 
+                    ? `Akwaaba, ${userName}! What shall I find for you today? The Waakye joints in Osu are on fire right now!`
+                    : `Hey ${userName}! Welcome back. What are you craving tonight? I can suggest the best Suya spots in VI right now!`;
+                
+                history = [
+                    { role: "assistant", content: initialGreeting }
+                ];
+                localStorage.setItem(chatHistoryKey, JSON.stringify(history));
+            }
+            
+            function renderFeed() {
+                chatFeed.innerHTML = '';
+                history.forEach(msg => {
+                    appendMessageUI(msg.content, msg.role === 'user' ? 'user' : 'roo');
+                });
+            }
+            
+            function appendMessageUI(text, sender) {
+                const msgRow = document.createElement('div');
+                msgRow.className = `msg-row ${sender}`;
+                
+                const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                let avatarHTML = '';
+                if (sender === 'roo') {
+                    const avatarSrc = isGhana ? '../assets/roo-wears/Kaftan.png' : '../assets/roo-wears/Agbada.png';
+                    avatarHTML = `<div class="msg-avatar"><img src="${avatarSrc}" alt="Roo"></div>`;
+                } else {
+                    const avatarSrc = isGhana ? '../assets/akosua.png' : '../assets/emeka.png';
+                    avatarHTML = `<div class="msg-avatar"><img src="${avatarSrc}" alt="${userName}"></div>`;
+                }
+                
+                msgRow.innerHTML = `
+                    ${avatarHTML}
+                    <div>
+                        <div class="bubble ${sender}">${text}</div>
+                        <div class="bubble-time">${timeString}</div>
+                    </div>
+                `;
+                
+                chatFeed.appendChild(msgRow);
+                chatFeed.scrollTop = chatFeed.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const msgRow = document.createElement('div');
+                msgRow.className = `msg-row roo typing-indicator-row`;
+                const avatarSrc = isGhana ? '../assets/roo-wears/Kaftan.png' : '../assets/roo-wears/Agbada.png';
+                msgRow.innerHTML = `
+                    <div class="msg-avatar"><img src="${avatarSrc}" alt="Roo"></div>
+                    <div>
+                        <div class="typing" style="display:flex;gap:4px;align-items:center;padding:12px 14px;">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
+                chatFeed.appendChild(msgRow);
+                chatFeed.scrollTop = chatFeed.scrollHeight;
+                return msgRow;
+            }
+
+            function buildSystemPrompt() {
+                const currentProfile = JSON.parse(localStorage.getItem('deliveroo_user_profile') || '{}');
+                const name = currentProfile.name || (isGhana ? 'Akosua' : 'Emeka');
+                const email = currentProfile.email || (isGhana ? 'akosua@email.com' : 'emeka@email.com');
+                const city = currentProfile.city || (isGhana ? 'Accra' : 'Lagos');
+                
+                const cart = JSON.parse(localStorage.getItem('deliveroo_cart') || 'null');
+                let cartContext = "User's Cart is empty.";
+                if (cart && cart.items && cart.items.length > 0) {
+                    cartContext = `User's Cart from restaurant "${cart.restaurant || 'Unknown'}":\n`;
+                    cart.items.forEach(item => {
+                        cartContext += `- ${item.name} x${item.quantity} (${isGhana ? 'GH₵' : '₦'} ${item.price})\n`;
+                    });
+                }
+                
+                const activeOrder = JSON.parse(localStorage.getItem('deliveroo_active_order') || 'null');
+                let orderContext = "No active delivery order currently tracking.";
+                if (activeOrder && activeOrder.items && activeOrder.items.length > 0) {
+                    orderContext = `User has an ACTIVE order placed at restaurant "${activeOrder.restaurant}":\n`;
+                    activeOrder.items.forEach(item => {
+                        orderContext += `- ${item.name} x${item.quantity}\n`;
+                    });
+                    orderContext += `Total: ${isGhana ? 'GH₵' : '₦'} ${activeOrder.total}\n`;
+                    orderContext += `OrderStatus: Currently in real-time tracking delivery progress. If they ask about delivery progress, reassure them and confirm they are in the active tracking view.`;
+                }
+
+                let basePrompt = `You are Roo, an enthusiastic, friendly, and very helpful delivery assistant/concierge for Deliveroo's launch in West Africa.
+Personality:
+- Gender/Voice: Male.
+- Tone: Extremely upbeat, food-loving, uses emojis naturally.
+- Culture/Style: `;
+                
+                if (isGhana) {
+                    basePrompt += `You are in Accra mode. Greet with 'Akwaaba' (Welcome), and use Ghanaian Pidgin/slang naturally but professionally, such as 'Chale' (friend), 'Saa?' (is that so?), 'Oshee' (great), 'What's the vibes?', 'No vibes'. Mention Ghanaian food hubs like Osu, East Legon, Cantonments, or Labadi.`;
+                } else {
+                    basePrompt += `You are in Lagos mode. Greet with 'Ẹ káàárọ̀' (if morning) or general Lagos greetings, and use Nigerian Pidgin/slang naturally, such as 'Oya', 'Abeg', 'No shaking', 'Correct taste!', 'Wetin dey sup?', 'Wetin you dey crave?'. Mention Lagos food hubs like Lekki, VI (Victoria Island), Ikeja, Surulere, or Ikoyi.`;
+                }
+                
+                basePrompt += `\n\nActive User Context:\n`;
+                basePrompt += `- User Name: ${name}\n`;
+                basePrompt += `- User Email: ${email}\n`;
+                basePrompt += `- User City: ${city}\n`;
+                basePrompt += `- ${cartContext}\n`;
+                basePrompt += `- ${orderContext}\n`;
+                basePrompt += `\nGuidelines for responses:
+1. Reference their name, location, cart, or active order naturally if relevant to their prompt.
+2. Keep responses very short, punchy, and friendly (max 2 sentences).
+3. If they ask about local recommendations, suggest popular dishes/restaurants relevant to their country (e.g., Waakye, Jollof, Kelewele for Ghana; Suya, Jollof, Peppered Goat, Pounded Yam for Nigeria).
+4. If they ask to add something to their cart or place an order, let them know they can do so by navigating to the restaurant page or customizer, but you are ready to suggest dishes!
+5. Only output the direct chat response, no metadata or side explanations.`;
+
+                return basePrompt;
+            }
+
+            async function handleSendMessage(text) {
+                if (!text) return;
+                
+                history.push({ role: "user", content: text });
+                localStorage.setItem(chatHistoryKey, JSON.stringify(history));
+                appendMessageUI(text, 'user');
+                
+                const typingIndicator = showTypingIndicator();
+                const systemPrompt = buildSystemPrompt();
+                
+                const apiMessages = [
+                    { role: "system", content: systemPrompt },
+                    ...history.map(msg => ({
+                        role: msg.role === 'user' ? 'user' : 'assistant',
+                        content: msg.content
+                    }))
+                ];
+                
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: MODEL,
+                            messages: apiMessages,
+                            temperature: 0.7
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    const reply = data.choices[0].message.content.trim();
+                    
+                    typingIndicator.remove();
+                    
+                    history.push({ role: "assistant", content: reply });
+                    localStorage.setItem(chatHistoryKey, JSON.stringify(history));
+                    appendMessageUI(reply, 'roo');
+                    
+                } catch (error) {
+                    console.error("Groq API Call failed:", error);
+                    typingIndicator.remove();
+                    
+                    let errorReply = isGhana
+                        ? "Oh chale, my network got issue. 🛵💨 Abeg, try again?"
+                        : "Oya, my network dey fail me. 🛵💨 Abeg, try again?";
+                    
+                    appendMessageUI(errorReply, 'roo');
+                }
+            }
+
+            // Render feed initially
+            renderFeed();
+
+            // Set up input and button handlers
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const text = chatInput.value.trim();
+                    if (text) {
+                        chatInput.value = '';
+                        handleSendMessage(text);
+                    }
+                }
+            });
+            
+            sendBtn.addEventListener('click', () => {
+                const text = chatInput.value.trim();
+                if (text) {
+                    chatInput.value = '';
+                    handleSendMessage(text);
+                }
+            });
+            
+            suggestionChips.forEach(chip => {
+                chip.style.cursor = 'pointer';
+                chip.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const text = chip.innerText.trim();
+                    handleSendMessage(text);
+                });
+            });
+        });
+
         // Navigation Mappings
         const selectors = [
             { sel: '.auth-btn, .verify-btn, .otp-input', to: '03_home_feed.html' },

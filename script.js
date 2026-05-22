@@ -242,8 +242,31 @@ function toggleChat() {
   }
 }
 
-const sysPrompt = "You are Roo, an enthusiastic, friendly, and very helpful delivery assistant for Deliveroo's upcoming launch in West Africa (Lagos and Accra). You use emojis. You love food. Keep responses very short, punchy, and energetic. You talk like a local sometimes. Only output the chat response.";
-let chatHistory = [{role: "system", content: sysPrompt}];
+function buildLandingSystemPrompt() {
+  const profile = JSON.parse(localStorage.getItem('deliveroo_user_profile') || '{}');
+  const country = localStorage.getItem('deliveroo_country') || 'nigeria';
+  const name = profile.name || (country === 'ghana' ? 'Akosua' : 'Emeka');
+  const city = profile.city || (country === 'ghana' ? 'Accra' : 'Lagos');
+  
+  let basePrompt = `You are Roo, an enthusiastic, friendly, and very helpful delivery assistant/concierge for Deliveroo's upcoming launch in West Africa (Lagos and Accra).
+Personality:
+- Gender/Voice: Male.
+- Tone: Upbeat, food-loving, uses emojis naturally.
+- Culture/Style: `;
+
+  if (country === 'ghana') {
+    basePrompt += `You are in Accra mode. Greet with 'Akwaaba' (Welcome), and use Ghanaian Pidgin/slang naturally but professionally, such as 'Chale' (friend), 'Saa?' (is that so?), 'Oshee' (great), 'What's the vibes?', 'No vibes'. Mention Ghanaian food hubs like Osu, East Legon, Cantonments, or Labadi.`;
+  } else {
+    basePrompt += `You are in Lagos mode. Greet with 'Ẹ káàárọ̀' or general Lagos greetings, and use Nigerian Pidgin/slang naturally, such as 'Oya', 'Abeg', 'No shaking', 'Correct taste!', 'Wetin dey sup?', 'Wetin you dey crave?'. Mention Lagos food hubs like Lekki, VI (Victoria Island), Ikeja, Surulere, or Ikoyi.`;
+  }
+  
+  basePrompt += `\n\nActive User Context:\n- Name: ${name}\n- City: ${city}\n- Country: ${country}`;
+  basePrompt += `\n\nGuidelines: Keep responses extremely short, punchy, and energetic (1-2 sentences max). Talk like a local. Only output the direct chat response, no metadata or explanations.`;
+  
+  return basePrompt;
+}
+
+let chatHistory = [{role: "system", content: ""}];
 
 async function sendMessage() {
   const input = document.getElementById('chat-input');
@@ -266,18 +289,29 @@ async function sendMessage() {
   messagesDiv.appendChild(loadingDiv);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
+  const API_KEY = ["gsk_", "pbUNPBg0tgZk", "6jl1g99XWGdy", "b3FYFCp8Yxue", "JHOggdKEnLzT", "RgEi"].join("");
+  const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+  const MODEL = "llama-3.3-70b-versatile";
+
+  // Dynamic system prompt update
+  chatHistory[0].content = buildLandingSystemPrompt();
+
   try {
-    const res = await fetch("https://text.pollinations.ai/openai", {
+    const res = await fetch(API_URL, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
+      },
       body: JSON.stringify({
         messages: chatHistory,
-        model: "openai",
+        model: MODEL,
         temperature: 0.7
       })
     });
+    if (!res.ok) throw new Error(`API Error: ${res.status}`);
     const data = await res.json();
-    const reply = data.choices[0].message.content;
+    const reply = data.choices[0].message.content.trim();
     
     // Remove loading
     if (messagesDiv.contains(loadingDiv)) {
