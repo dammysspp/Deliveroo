@@ -283,7 +283,7 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
         </div>
         <div class="search-bar">
           <div class="search-icon" style="color:rgba(255,255,255,.5)">🔍</div>
-          <div class="search-ph">Suya, Jollof, Buka...</div>
+          <div class="search-ph">Suya, Egusi, Buka...</div>
           <div class="search-filter" style="background:var(--teal);color:#fff">⚙</div>
         </div>
       </div>
@@ -291,8 +291,8 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
       <!-- Category chips -->
       <div class="cat-scroll">
         <div class="chip active">🍖 Suya</div>
-        <div class="chip">🍚 Jollof</div>
-        <div class="chip">🥘 Soups</div>
+        <div class="chip">🍲 Swallows</div>
+        <div class="chip">🥘 Soups</div></div>
         <div class="chip">🍌 Plantain</div>
         <div class="chip">🧁 Pastries</div>
         <div class="chip">🥤 Drinks</div>
@@ -301,11 +301,11 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
 
       <!-- Hero banner -->
       <div class="banner">
-        <img src="../assets/jollof.png" alt="Jollof Rice">
+        <img src="../assets/egusi_soup.png" alt="Swallow Feast">
         <div class="banner-overlay">
-          <div class="banner-eyebrow">🔥 Trending Tonight</div>
-          <div class="banner-title">Jollof Season<br>is Here</div>
-          <div class="banner-sub">Order from 40+ Jollof spots near you</div>
+          <div class="banner-eyebrow">🍲 Swallow Festival</div>
+          <div class="banner-title">Egusi & Swallow Feast</div>
+          <div class="banner-sub">Pounded yam, Amala, and more from Lekki's top spots</div>
         </div>
         <div class="banner-kente"></div>
       </div>
@@ -546,6 +546,186 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
         const navigate = (file) => {
             window.parent.postMessage({ type: 'navigate', file: file }, '*');
         };
+
+        // Taste Personalization logic
+        function applyTastePersonalization() {
+            const preference = localStorage.getItem('deliveroo_food_preference') || 'traditional';
+            
+            // Nigeria Personalization
+            const dkBanner = document.querySelector('.dk .banner');
+            if (dkBanner) {
+                const img = dkBanner.querySelector('img');
+                const eyebrow = dkBanner.querySelector('.banner-eyebrow');
+                const title = dkBanner.querySelector('.banner-title');
+                const sub = dkBanner.querySelector('.banner-sub');
+                
+                if (preference === 'traditional') {
+                    img.src = '../assets/egusi_soup.png';
+                    eyebrow.innerText = '🍲 Swallow Festival';
+                    title.innerHTML = 'Egusi & Swallow Feast';
+                    sub.innerText = 'Pounded yam, Amala, and more from Lekki\'s top spots';
+                } else if (preference === 'spicy') {
+                    img.src = '../assets/suya.png';
+                    eyebrow.innerText = '🔥 Late Night Spice';
+                    title.innerHTML = 'Suya & Grills Night';
+                    sub.innerText = 'Get 10% off your favorite peppered meat grills';
+                } else if (preference === 'fastfood') {
+                    img.src = '../assets/Chicken Republic.png';
+                    eyebrow.innerText = '⚡ Quick Cravings';
+                    title.innerHTML = 'Mega Chicken Feast';
+                    sub.innerText = 'Fast delivery from local top chicken spots';
+                }
+            }
+
+            // Ghana Personalization
+            const ltBanner = document.querySelector('.lt .banner');
+            if (ltBanner) {
+                const img = ltBanner.querySelector('img');
+                const eyebrow = ltBanner.querySelector('.banner-eyebrow');
+                const title = ltBanner.querySelector('.banner-title');
+                const sub = ltBanner.querySelector('.banner-sub');
+                
+                if (preference === 'traditional') {
+                    img.src = '../assets/waakye.png';
+                    eyebrow.innerText = '🍲 Ghanaian Classics';
+                    title.innerHTML = 'Waakye & Tilapia Feast';
+                    sub.innerText = 'Order the most authentic local food near you';
+                } else if (preference === 'spicy') {
+                    img.src = '../assets/kelewele.png';
+                    eyebrow.innerText = '🔥 Sweet & Spicy';
+                    title.innerHTML = 'Kelewele & Grills Fest';
+                    sub.innerText = 'Perfect night snacks with roasted peanuts';
+                } else if (preference === 'fastfood') {
+                    img.src = '../assets/pizzaman-chickenman.jpg';
+                    eyebrow.innerText = '⚡ Late Night Cravings';
+                    title.innerHTML = 'Pizzaman Chicken Feast';
+                    sub.innerText = 'Best deals on pizza and fried chicken';
+                }
+            }
+
+            // Reorder restaurant cards
+            // Nigeria Grid
+            const dkGrid = document.querySelector('.dk .rest-grid');
+            if (dkGrid) {
+                const cards = Array.from(dkGrid.querySelectorAll('.rest-card'));
+                const mapping = {
+                    'Chicken Republic': 'fastfood',
+                    'Univ. of Suya': 'spicy',
+                    'Bukka Hut': 'traditional',
+                    'NOK by Alara': 'traditional'
+                };
+                
+                // Clear old taste badges
+                cards.forEach(card => {
+                    const badge = card.querySelector('.badge-pref-taste');
+                    if (badge) badge.remove();
+                });
+
+                // Sort cards
+                cards.sort((a, b) => {
+                    const nameA = a.querySelector('.rest-name').innerText.trim();
+                    const nameB = b.querySelector('.rest-name').innerText.trim();
+                    const catA = mapping[nameA] || '';
+                    const catB = mapping[nameB] || '';
+                    
+                    if (catA === preference && catB !== preference) return -1;
+                    if (catA !== preference && catB === preference) return 1;
+                    return 0;
+                });
+
+                // Append matching badge to preferred cards
+                cards.forEach(card => {
+                    const name = card.querySelector('.rest-name').innerText.trim();
+                    const cat = mapping[name] || '';
+                    if (cat === preference) {
+                        const imgDiv = card.querySelector('.rest-img');
+                        if (imgDiv) {
+                            const badge = document.createElement('div');
+                            badge.className = 'rest-badge-pill badge-pref-taste';
+                            badge.style.right = '8px';
+                            badge.style.left = 'auto';
+                            badge.style.background = 'var(--teal)';
+                            badge.style.color = '#fff';
+                            badge.style.position = 'absolute';
+                            badge.style.top = '8px';
+                            badge.style.padding = '3px 8px';
+                            badge.style.borderRadius = '10px';
+                            badge.style.fontFamily = "'Space Grotesk', sans-serif";
+                            badge.style.fontSize = '9px';
+                            badge.style.fontWeight = '700';
+                            badge.style.letterSpacing = '0.5px';
+                            
+                            const icon = preference === 'traditional' ? '🍲' : (preference === 'spicy' ? '🌶️' : '🍗');
+                            badge.innerText = `Matches Taste ${icon}`;
+                            imgDiv.appendChild(badge);
+                        }
+                    }
+                    dkGrid.appendChild(card);
+                });
+            }
+
+            // Ghana Grid
+            const ltGrid = document.querySelector('.lt .rest-grid');
+            if (ltGrid) {
+                const cards = Array.from(ltGrid.querySelectorAll('.rest-card'));
+                const mapping = {
+                    'Buka Restaurant': 'traditional',
+                    'Pizzaman': 'fastfood',
+                    'Suya Corner GH': 'spicy',
+                    'Nana\'s Kitchen': 'traditional'
+                };
+
+                // Clear old taste badges
+                cards.forEach(card => {
+                    const badge = card.querySelector('.badge-pref-taste');
+                    if (badge) badge.remove();
+                });
+
+                // Sort cards
+                cards.sort((a, b) => {
+                    const nameA = a.querySelector('.rest-name').innerText.trim();
+                    const nameB = b.querySelector('.rest-name').innerText.trim();
+                    const catA = mapping[nameA] || '';
+                    const catB = mapping[nameB] || '';
+                    
+                    if (catA === preference && catB !== preference) return -1;
+                    if (catA !== preference && catB === preference) return 1;
+                    return 0;
+                });
+
+                // Append matching badge to preferred cards
+                cards.forEach(card => {
+                    const name = card.querySelector('.rest-name').innerText.trim();
+                    const cat = mapping[name] || '';
+                    if (cat === preference) {
+                        const imgDiv = card.querySelector('.rest-img');
+                        if (imgDiv) {
+                            const badge = document.createElement('div');
+                            badge.className = 'rest-badge-pill badge-pref-taste';
+                            badge.style.right = '8px';
+                            badge.style.left = 'auto';
+                            badge.style.background = 'var(--teal-dark)';
+                            badge.style.color = '#fff';
+                            badge.style.position = 'absolute';
+                            badge.style.top = '8px';
+                            badge.style.padding = '3px 8px';
+                            badge.style.borderRadius = '10px';
+                            badge.style.fontFamily = "'Space Grotesk', sans-serif";
+                            badge.style.fontSize = '9px';
+                            badge.style.fontWeight = '700';
+                            badge.style.letterSpacing = '0.5px';
+                            
+                            const icon = preference === 'traditional' ? '🍲' : (preference === 'spicy' ? '🌶️' : '🍗');
+                            badge.innerText = `Matches Taste ${icon}`;
+                            imgDiv.appendChild(badge);
+                        }
+                    }
+                    ltGrid.appendChild(card);
+                });
+            }
+        }
+
+        applyTastePersonalization();
 
         // Navigation Mappings
         const selectors = [

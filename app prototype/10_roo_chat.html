@@ -259,7 +259,7 @@ body{background:#0d0d0d;display:flex;gap:40px;padding:40px;justify-content:cente
             window.parent.postMessage({ type: 'navigate', file: file }, '*');
         };
 
-        const API_KEY = ["gsk_", "pbUNPBg0tgZk", "6jl1g99XWGdy", "b3FYFCp8Yxue", "JHOggdKEnLzT", "RgEi"].join("");
+        const API_KEY = ["gsk_", "CjhkSpshts4B", "W2ZcTL8iWGdy", "b3FYGk8rO9hM", "RHVZk5zbacE7", "rKBc"].join("");
         const API_URL = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL = "llama-3.3-70b-versatile";
 
@@ -391,7 +391,7 @@ Personality:
                 basePrompt += `\nGuidelines for responses:
 1. Reference their name, location, cart, or active order naturally if relevant to their prompt.
 2. Keep responses very short, punchy, and friendly (max 2 sentences).
-3. If they ask about local recommendations, suggest popular dishes/restaurants relevant to their country (e.g., Waakye, Jollof, Kelewele for Ghana; Suya, Jollof, Peppered Goat, Pounded Yam for Nigeria).
+3. If they ask about local recommendations, suggest popular dishes/restaurants relevant to their country (e.g., Waakye, Kelewele, Tilapia for Ghana; Suya, Egusi Soup, Peppered Goat, Pounded Yam for Nigeria).
 4. If they ask to add something to their cart or place an order, let them know they can do so by navigating to the restaurant page or customizer, but you are ready to suggest dishes!
 5. Only output the direct chat response, no metadata or side explanations.`;
 

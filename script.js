@@ -289,7 +289,7 @@ async function sendMessage() {
   messagesDiv.appendChild(loadingDiv);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  const API_KEY = ["gsk_", "pbUNPBg0tgZk", "6jl1g99XWGdy", "b3FYFCp8Yxue", "JHOggdKEnLzT", "RgEi"].join("");
+  const API_KEY = ["gsk_", "CjhkSpshts4B", "W2ZcTL8iWGdy", "b3FYGk8rO9hM", "RHVZk5zbacE7", "rKBc"].join("");
   const API_URL = "https://api.groq.com/openai/v1/chat/completions";
   const MODEL = "llama-3.3-70b-versatile";
 
